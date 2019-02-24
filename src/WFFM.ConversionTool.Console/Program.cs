@@ -20,22 +20,23 @@ namespace WFFM.ConversionTool.Console
 
 		static Program()
 		{
-			container = new Container();
-
-			container.RegisterConditional(typeof(ILogger),
-				c => typeof(Log4NetAdapter<>).MakeGenericType(c.Consumer.ImplementationType),
-				Lifestyle.Singleton,
-				c => true);
-
-			container.Register<Widget>();
-
-			container.Verify();
+			container = IoC.Initialize();
 		}
 
 		static void Main(string[] args)
 		{
+			// Configure connection strings
+			
+			// Analize source data
+
+			// Convert & Migrate data
+
+
 			var widget = container.GetInstance<Widget>();
 			widget.Foo();
 		}
+
+		
 	}
+
 }
