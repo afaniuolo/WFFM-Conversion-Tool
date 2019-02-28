@@ -4,8 +4,8 @@ namespace WFFM.ConversionTool.Library.Database.Forms
 {
 	public partial class SitecoreForms : DbContext
 	{
-		public SitecoreForms()
-			: base("name=SitecoreForms")
+		public SitecoreForms(string nameOrConnectionString)
+			: base(nameOrConnectionString)
 		{
 		}
 

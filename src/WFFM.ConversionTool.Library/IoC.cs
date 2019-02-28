@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using SimpleInjector;
 using WFFM.ConversionTool.Library.Database.Forms;
+using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Processors;
 
 namespace WFFM.ConversionTool.Library
 {
@@ -23,8 +25,10 @@ namespace WFFM.ConversionTool.Library
 			// Entity Framework Contexts registration
 			container.RegisterSingleton<Database.WFFM.WFFM>(CreateNewSourceContext);
 			container.RegisterSingleton<SitecoreForms>(CreateNewDestContext);
+			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
+			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
 
-			container.Register<Widget>();
+			container.Register<FormProcessor>();
 
 			container.Verify();
 
@@ -33,14 +37,28 @@ namespace WFFM.ConversionTool.Library
 
 		private static Database.WFFM.WFFM CreateNewSourceContext()
 		{
-			var myContext = new Database.WFFM.WFFM();
+			var myContext = new Database.WFFM.WFFM("name=WFFM");
 			myContext.Configuration.ProxyCreationEnabled = false;
 			return myContext;
 		}
 
 		private static SitecoreForms CreateNewDestContext()
 		{
-			var myContext = new SitecoreForms();
+			var myContext = new SitecoreForms("name=SitecoreForms");
+			myContext.Configuration.ProxyCreationEnabled = false;
+			return myContext;
+		}
+
+		private static SourceMasterDb createMasterDbSourceContext()
+		{
+			var myContext = new SourceMasterDb("name=SourceMasterDb");
+			myContext.Configuration.ProxyCreationEnabled = false;
+			return myContext;
+		}
+
+		private static DestMasterDb createMasterDbDestContext()
+		{
+			var myContext = new DestMasterDb("name=DestMasterDb");
 			myContext.Configuration.ProxyCreationEnabled = false;
 			return myContext;
 		}

@@ -55,6 +55,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\Master\Item.cs" />
+    <Compile Include="Database\Master\DestMasterDb.cs" />
+    <Compile Include="Database\Master\SourceMasterDb.cs" />
+    <Compile Include="Database\Master\SharedField.cs" />
+    <Compile Include="Database\Master\UnversionedField.cs" />
+    <Compile Include="Database\Master\VersionedField.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log4NetAdapter.cs" />
@@ -65,13 +71,16 @@
     <Compile Include="Database\WFFM\FieldData.cs" />
     <Compile Include="Database\WFFM\FormData.cs" />
     <Compile Include="Database\WFFM\WFFM.cs" />
+    <Compile Include="Processors\FormProcessor.cs" />
+    <Compile Include="Processors\IFormProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Widget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mappers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

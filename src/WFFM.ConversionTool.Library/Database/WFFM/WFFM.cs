@@ -4,8 +4,8 @@ namespace WFFM.ConversionTool.Library.Database.WFFM
 {
 	public partial class WFFM : DbContext
 	{
-		public WFFM()
-			: base("name=WFFM")
+		public WFFM(string nameOrConnectionString)
+			: base(nameOrConnectionString)
 		{
 		}
 

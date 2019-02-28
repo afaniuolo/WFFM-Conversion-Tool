@@ -10,6 +10,7 @@ using log4net.Core;
 using SimpleInjector;
 using WFFM.ConversionTool.Library;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Processors;
 using ILogger = WFFM.ConversionTool.Library.Logging.ILogger;
 
 namespace WFFM.ConversionTool.Console
@@ -27,13 +28,13 @@ namespace WFFM.ConversionTool.Console
 		{
 			// Configure connection strings
 			
-			// Analize source data
+			// Read and analyze source data
+			var formProcessor = container.GetInstance<FormProcessor>();
+			formProcessor.ConvertForms();
 
 			// Convert & Migrate data
 
 
-			var widget = container.GetInstance<Widget>();
-			widget.Foo();
 		}
 
 		
