@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\IConverter.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Database\WFFM\FieldData.cs" />
     <Compile Include="Database\WFFM\FormData.cs" />
     <Compile Include="Database\WFFM\WFFM.cs" />
+    <Compile Include="Models\Field.cs" />
     <Compile Include="Processors\FormProcessor.cs" />
     <Compile Include="Processors\IFormProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +82,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Converters\FieldConverters\" />
     <Folder Include="Mappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
