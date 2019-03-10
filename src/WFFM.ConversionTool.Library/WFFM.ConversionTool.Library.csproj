@@ -72,7 +72,8 @@
     <Compile Include="Database\WFFM\FieldData.cs" />
     <Compile Include="Database\WFFM\FormData.cs" />
     <Compile Include="Database\WFFM\WFFM.cs" />
-    <Compile Include="Models\Field.cs" />
+    <Compile Include="Models\SCItem.cs" />
+    <Compile Include="Models\SCField.cs" />
     <Compile Include="Processors\FormProcessor.cs" />
     <Compile Include="Processors\IFormProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

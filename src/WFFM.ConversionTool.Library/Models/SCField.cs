@@ -6,6 +6,7 @@ namespace WFFM.ConversionTool.Library.Models
 	{
 		public string Value { get; set; }
 		public Guid Id { get; set; }
+		public Guid FieldId { get; set; }
 		public Guid ItemId { get; set; }
 		public DateTime Created { get; set; }
 		public DateTime Updated { get; set; }

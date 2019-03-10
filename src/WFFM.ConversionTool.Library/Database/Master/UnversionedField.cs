@@ -12,28 +12,23 @@ namespace WFFM.ConversionTool.Library.Database.Master
         [Column(Order = 0)]
         public Guid Id { get; set; }
 
-        [Key]
         [Column(Order = 1)]
         public Guid ItemId { get; set; }
 
-        [Key]
         [Column(Order = 2)]
         [StringLength(50)]
         public string Language { get; set; }
 
-        [Key]
         [Column(Order = 3)]
         public Guid FieldId { get; set; }
 
-        [Key]
         [Column(Order = 4)]
-        public string Value { get; set; }
+        [MaxLength]
+		public string Value { get; set; }
 
-        [Key]
         [Column(Order = 5)]
         public DateTime Created { get; set; }
 
-        [Key]
         [Column(Order = 6)]
         public DateTime Updated { get; set; }
     }
