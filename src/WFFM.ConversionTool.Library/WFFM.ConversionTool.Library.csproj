@@ -55,7 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\ConverterInstantiator.cs" />
+    <Compile Include="Converters\FieldConverters\BooleanExistenceConverter.cs" />
     <Compile Include="Converters\FormConverter.cs" />
+    <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
@@ -90,7 +93,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\FieldConverters\" />
     <Folder Include="Mappers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

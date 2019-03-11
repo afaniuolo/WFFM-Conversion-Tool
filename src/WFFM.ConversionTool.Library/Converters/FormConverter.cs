@@ -53,18 +53,8 @@ namespace WFFM.ConversionTool.Library.Converters
 				switch (field.FieldId.ToString().ToUpper())
 				{
 					case "B0A67B2A-8B07-4E0B-8809-69F751709806":
-						destField = new SCField()
-						{
-							Created = DateTime.Now,
-							Updated = DateTime.Now,
-							ItemId = field.ItemId,
-							Language = field.Language,
-							Version = field.Version,
-							Type = field.Type,
-							Value = field.Value != string.Empty ? "1" : "0",
-							FieldId = field.FieldId,
-							Id = Guid.NewGuid()
-						};
+						var converter = ConverterInstantiator.CreateInstance("WFFM.ConversionTool.Library.Converters.FieldConverters.BooleanExistenceConverter, WFFM.ConversionTool.Library");
+						destField = converter.Convert(field);
 						break;
 					case "5DD74568-4D4B-44C1-B513-0AF5F4CDA34F":
 					case "BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A":
