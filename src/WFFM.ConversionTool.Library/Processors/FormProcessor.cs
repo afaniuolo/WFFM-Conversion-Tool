@@ -21,9 +21,9 @@ namespace WFFM.ConversionTool.Library.Processors
 		private ILogger logger;
 		private IDestMasterRepository _masterRepository;
 		private ISourceMasterRepository _sourceMasterRepository;
-		private IFormConverter _formConverter;
+		private IItemConverter _formConverter;
 
-		public FormProcessor(ILogger iLogger, IDestMasterRepository masterRepository, IFormConverter formConverter, ISourceMasterRepository sourceMasterRepository)
+		public FormProcessor(ILogger iLogger, IDestMasterRepository masterRepository, IItemConverter formConverter, ISourceMasterRepository sourceMasterRepository)
 		{
 			logger = iLogger;
 			_masterRepository = masterRepository;

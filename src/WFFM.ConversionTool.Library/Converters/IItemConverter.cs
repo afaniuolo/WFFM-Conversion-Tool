@@ -7,7 +7,7 @@ using WFFM.ConversionTool.Library.Models;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
-	public interface IFormConverter
+	public interface IItemConverter
 	{
 		SCItem Convert(SCItem scItem);
 	}

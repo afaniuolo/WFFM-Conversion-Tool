@@ -56,8 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\FormConverter.cs" />
-    <Compile Include="Converters\IFieldConverter.cs" />
-    <Compile Include="Converters\IFormConverter.cs" />
+    <Compile Include="Converters\IItemConverter.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />

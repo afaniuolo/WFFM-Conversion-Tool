@@ -36,7 +36,7 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<IFieldFactory, FieldFactory>();
 
-			container.Register<IFormConverter, FormConverter>();
+			container.Register<IItemConverter, FormConverter>();
 
 			container.Register<FormProcessor>();
 

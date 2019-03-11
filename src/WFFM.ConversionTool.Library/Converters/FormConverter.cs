@@ -8,7 +8,7 @@ using WFFM.ConversionTool.Library.Models;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
-	public class FormConverter : IFormConverter
+	public class FormConverter : IItemConverter
 	{
 		private IFieldFactory _fieldFactory;
 
