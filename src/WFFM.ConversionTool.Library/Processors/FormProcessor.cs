@@ -43,9 +43,8 @@ namespace WFFM.ConversionTool.Library.Processors
 			{
 				ConvertForm(form);
 			}
-
 		}
-
+		
 		private void ConvertForm(Item formItem)
 		{
 			logger.Log(new LogEntry(LoggingEventType.Debug, string.Format("FormID={0}", formItem.ID)));
@@ -54,8 +53,20 @@ namespace WFFM.ConversionTool.Library.Processors
 			var childrenItems = _sourceMasterDb.Items.Where(item => item.ParentID == formItem.ID);
 			logger.Log(new LogEntry(LoggingEventType.Debug, string.Format("Number of child items={0}", childrenItems.Count())));
 
+			// Read source
+			var sourceFormItem = GetSourceFormItemAndFields(formItem);
 
-			var sourceFormItem = new SCItem()
+			// Convert
+			var destFormItem = ConvertFormItemAndFields(sourceFormItem);
+
+			// Write to dest
+			WriteSitecoreForm(destFormItem);
+
+		}
+
+		private SCItem GetSourceFormItemAndFields(Item formItem)
+		{
+			return new SCItem()
 			{
 				ID = formItem.ID,
 				Name = formItem.Name,
@@ -66,9 +77,11 @@ namespace WFFM.ConversionTool.Library.Processors
 				Updated = formItem.Updated,
 				Fields = GetWFFMFormFields(formItem.ID),
 			};
+		}
 
-			// Map
-			var destFormItem = new SCItem()
+		private SCItem ConvertFormItemAndFields(SCItem sourceFormItem)
+		{
+			return new SCItem()
 			{
 				ID = sourceFormItem.ID,
 				Name = sourceFormItem.Name,
@@ -79,8 +92,10 @@ namespace WFFM.ConversionTool.Library.Processors
 				TemplateID = SitecoreFormsTemplateId,
 				Fields = ConvertFields(sourceFormItem.Fields)
 			};
+		}
 
-			// Create item
+		private void WriteSitecoreForm(SCItem destFormItem)
+		{
 			var dbFormItem = new Item()
 			{
 				ID = destFormItem.ID,
@@ -93,13 +108,13 @@ namespace WFFM.ConversionTool.Library.Processors
 			};
 			_destMasterDb.Items.AddOrUpdate(dbFormItem);
 
-			_destMasterDb.SaveChanges();
-
 			// Create fields
 			foreach (SCField scField in destFormItem.Fields)
 			{
 				if (scField.Type == FieldType.Shared)
 				{
+					var fieldCheck = _destMasterDb.SharedFields.FirstOrDefault(field =>
+						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId);
 					_destMasterDb.SharedFields.AddOrUpdate(new SharedField()
 					{
 						Created = scField.Created,
@@ -107,12 +122,13 @@ namespace WFFM.ConversionTool.Library.Processors
 						FieldId = scField.FieldId,
 						ItemId = scField.ItemId,
 						Value = scField.Value,
-						Id = scField.Id
+						Id = fieldCheck?.Id ?? scField.Id
 					});
 				}
 				else if (scField.Type == FieldType.Unversioned)
 				{
-
+					var fieldCheck = _destMasterDb.UnversionedFields.FirstOrDefault(field =>
+						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language);
 					_destMasterDb.UnversionedFields.AddOrUpdate(new UnversionedField()
 					{
 						Created = scField.Created,
@@ -120,12 +136,14 @@ namespace WFFM.ConversionTool.Library.Processors
 						FieldId = scField.FieldId,
 						ItemId = scField.ItemId,
 						Value = scField.Value,
-						Id = scField.Id,
+						Id = fieldCheck?.Id ?? scField.Id,
 						Language = scField.Language
 					});
 				}
 				else if (scField.Type == FieldType.Versioned)
 				{
+					var fieldCheck = _destMasterDb.VersionedFields.FirstOrDefault(field =>
+						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language && field.Version == scField.Version);
 					_destMasterDb.VersionedFields.AddOrUpdate(new VersionedField()
 					{
 						Created = scField.Created,
@@ -133,7 +151,7 @@ namespace WFFM.ConversionTool.Library.Processors
 						FieldId = scField.FieldId,
 						ItemId = scField.ItemId,
 						Value = scField.Value,
-						Id = scField.Id,
+						Id = fieldCheck?.Id ?? scField.Id,
 						Language = scField.Language,
 						Version = scField.Version ?? 1
 					});
@@ -141,9 +159,13 @@ namespace WFFM.ConversionTool.Library.Processors
 			}
 
 			_destMasterDb.SaveChanges();
-
 		}
 
+		/// <summary>
+		/// Converts WFFM form fields in Sitecore Forms fields
+		/// </summary>
+		/// <param name="fields"></param>
+		/// <returns></returns>
 		private List<SCField> ConvertFields(List<SCField> fields)
 		{
 			var destFields = new List<SCField>();
@@ -235,20 +257,6 @@ namespace WFFM.ConversionTool.Library.Processors
 					.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Versioned, Language = field.Language, Version = field.Version, FieldId = field.FieldId }));
 
 			return formFields.ToList();
-
-			var formStandardValuesItem =
-				_sourceMasterDb.Items.FirstOrDefault(
-					item => item.TemplateID == WFFMFormTemplateId && item.Name == "__Standard values");
-
-			// fields inherited and set in the standard values item
-			var formStandardValuesFields = _sourceMasterDb.SharedFields.Where(field => field.ItemId == formStandardValuesItem.ID)
-				.Select(field => new SCField() { Id = field.FieldId, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Shared })
-				.Union(_sourceMasterDb.UnversionedFields.Where(field => field.ItemId == formStandardValuesItem.ID)
-					.Select(field => new SCField() { Id = field.FieldId, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Unversioned, Language = field.Language }))
-				.Union(_sourceMasterDb.VersionedFields.Where(field => field.ItemId == formStandardValuesItem.ID)
-					.Select(field => new SCField() { Id = field.FieldId, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Versioned, Language = field.Language, Version = field.Version })).Where(f => !formFields.Select(field => field.Id).Contains(f.Id));
-
-			return formFields.Union(formStandardValuesFields).ToList();
 		}
 	}
 }
