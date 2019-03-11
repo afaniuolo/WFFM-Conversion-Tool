@@ -8,6 +8,7 @@ using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Processors;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library
 {
@@ -27,6 +28,8 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<SitecoreForms>(CreateNewDestContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
+
+			container.Register<IMasterRepository, MasterRepository>();
 
 			container.Register<FormProcessor>();
 

@@ -11,6 +11,7 @@ using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Processors
 {
@@ -20,19 +21,19 @@ namespace WFFM.ConversionTool.Library.Processors
 		private Database.WFFM.WFFM _wffmContext;
 		private SitecoreForms _sitecoreFormsContext;
 		private SourceMasterDb _sourceMasterDb;
-		private DestMasterDb _destMasterDb;
+		private IMasterRepository _masterRepository;
 
 		private readonly Guid WFFMFormTemplateId = new Guid("FFB1DA32-2764-47DB-83B0-95B843546A7E");
 		private readonly Guid DestFormsFolderID = new Guid("B701850A-CB8A-4943-B2BC-DDDB1238C103");
 		private readonly Guid SitecoreFormsTemplateId = new Guid("6ABEE1F2-4AB4-47F0-AD8B-BDB36F37F64C");
 
-		public FormProcessor(ILogger iLogger, Database.WFFM.WFFM wffmContext, SitecoreForms sitecoreFormsContext, SourceMasterDb sourceMasterDb, DestMasterDb destMasterDb)
+		public FormProcessor(ILogger iLogger, Database.WFFM.WFFM wffmContext, SitecoreForms sitecoreFormsContext, SourceMasterDb sourceMasterDb, IMasterRepository masterRepository)
 		{
 			logger = iLogger;
 			_wffmContext = wffmContext;
 			_sitecoreFormsContext = sitecoreFormsContext;
 			_sourceMasterDb = sourceMasterDb;
-			_destMasterDb = destMasterDb;
+			_masterRepository = masterRepository;
 		}
 
 		public void ConvertForms()
@@ -41,7 +42,10 @@ namespace WFFM.ConversionTool.Library.Processors
 			List<FormEntry> sitecoreFormsEntries = new List<FormEntry>();
 			foreach (var form in forms)
 			{
+				// Convert and Migrate items
 				ConvertForm(form);
+
+				// Migrate Data
 			}
 		}
 		
@@ -96,69 +100,24 @@ namespace WFFM.ConversionTool.Library.Processors
 
 		private void WriteSitecoreForm(SCItem destFormItem)
 		{
-			var dbFormItem = new Item()
-			{
-				ID = destFormItem.ID,
-				Name = destFormItem.Name,
-				MasterID = destFormItem.MasterID,
-				ParentID = destFormItem.ParentID,
-				Created = destFormItem.Created,
-				Updated = destFormItem.Updated,
-				TemplateID = destFormItem.TemplateID
-			};
-			_destMasterDb.Items.AddOrUpdate(dbFormItem);
+			_masterRepository.AddOrUpdateForm(destFormItem);
 
 			// Create fields
 			foreach (SCField scField in destFormItem.Fields)
 			{
-				if (scField.Type == FieldType.Shared)
+				switch (scField.Type)
 				{
-					var fieldCheck = _destMasterDb.SharedFields.FirstOrDefault(field =>
-						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId);
-					_destMasterDb.SharedFields.AddOrUpdate(new SharedField()
-					{
-						Created = scField.Created,
-						Updated = scField.Updated,
-						FieldId = scField.FieldId,
-						ItemId = scField.ItemId,
-						Value = scField.Value,
-						Id = fieldCheck?.Id ?? scField.Id
-					});
-				}
-				else if (scField.Type == FieldType.Unversioned)
-				{
-					var fieldCheck = _destMasterDb.UnversionedFields.FirstOrDefault(field =>
-						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language);
-					_destMasterDb.UnversionedFields.AddOrUpdate(new UnversionedField()
-					{
-						Created = scField.Created,
-						Updated = scField.Updated,
-						FieldId = scField.FieldId,
-						ItemId = scField.ItemId,
-						Value = scField.Value,
-						Id = fieldCheck?.Id ?? scField.Id,
-						Language = scField.Language
-					});
-				}
-				else if (scField.Type == FieldType.Versioned)
-				{
-					var fieldCheck = _destMasterDb.VersionedFields.FirstOrDefault(field =>
-						field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language && field.Version == scField.Version);
-					_destMasterDb.VersionedFields.AddOrUpdate(new VersionedField()
-					{
-						Created = scField.Created,
-						Updated = scField.Updated,
-						FieldId = scField.FieldId,
-						ItemId = scField.ItemId,
-						Value = scField.Value,
-						Id = fieldCheck?.Id ?? scField.Id,
-						Language = scField.Language,
-						Version = scField.Version ?? 1
-					});
+					case FieldType.Shared:
+						_masterRepository.AddOrUpdateSharedField(scField);
+						break;
+					case FieldType.Unversioned:
+						_masterRepository.AddOrUpdateUnversionedField(scField);
+						break;
+					case FieldType.Versioned:
+						_masterRepository.AddOrUpdateVersionedField(scField);
+						break;
 				}
 			}
-
-			_destMasterDb.SaveChanges();
 		}
 
 		/// <summary>
