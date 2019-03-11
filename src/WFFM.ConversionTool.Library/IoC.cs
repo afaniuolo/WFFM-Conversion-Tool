@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleInjector;
+using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
+using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Repositories;
@@ -29,7 +31,12 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
 
-			container.Register<IMasterRepository, MasterRepository>();
+			container.Register<IDestMasterRepository, DestMasterRepository>();
+			container.Register<ISourceMasterRepository, SourceMasterRepository>();
+
+			container.Register<IFieldFactory, FieldFactory>();
+
+			container.Register<IFormConverter, FormConverter>();
 
 			container.Register<FormProcessor>();
 

@@ -55,13 +55,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\IConverter.cs" />
+    <Compile Include="Converters\FormConverter.cs" />
+    <Compile Include="Converters\IFieldConverter.cs" />
+    <Compile Include="Converters\IFormConverter.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />
     <Compile Include="Database\Master\SharedField.cs" />
     <Compile Include="Database\Master\UnversionedField.cs" />
     <Compile Include="Database\Master\VersionedField.cs" />
+    <Compile Include="Factories\FieldFactory.cs" />
+    <Compile Include="Factories\IFieldFactory.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log4NetAdapter.cs" />
@@ -77,8 +81,10 @@
     <Compile Include="Processors\FormProcessor.cs" />
     <Compile Include="Processors\IFormProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IMasterRepository.cs" />
-    <Compile Include="Repositories\MasterRepository.cs" />
+    <Compile Include="Repositories\IDestMasterRepository.cs" />
+    <Compile Include="Repositories\DestMasterRepository.cs" />
+    <Compile Include="Repositories\ISourceMasterRepository.cs" />
+    <Compile Include="Repositories\SourceMasterRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -10,12 +10,12 @@ using WFFM.ConversionTool.Library.Models;
 
 namespace WFFM.ConversionTool.Library.Repositories
 {
-	public class MasterRepository : IMasterRepository
+	public class DestMasterRepository : IDestMasterRepository
 	{
 		private ILogger logger;
 		private DestMasterDb _destMasterDb;
 
-		public MasterRepository(ILogger iLogger, DestMasterDb destMasterDb)
+		public DestMasterRepository(ILogger iLogger, DestMasterDb destMasterDb)
 		{
 			logger = iLogger;
 			_destMasterDb = destMasterDb;

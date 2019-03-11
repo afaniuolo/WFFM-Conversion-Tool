@@ -7,11 +7,8 @@ using WFFM.ConversionTool.Library.Models;
 
 namespace WFFM.ConversionTool.Library.Repositories
 {
-	public interface IMasterRepository
+	public interface ISourceMasterRepository
 	{
-		void AddOrUpdateForm(SCItem scItem);
-		void AddOrUpdateSharedField(SCField scField);
-		void AddOrUpdateUnversionedField(SCField scField);
-		void AddOrUpdateVersionedField(SCField scField);
+		List<SCItem> GetForms();
 	}
 }
