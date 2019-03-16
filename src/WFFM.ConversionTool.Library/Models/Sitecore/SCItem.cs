@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WFFM.ConversionTool.Library.Models
+namespace WFFM.ConversionTool.Library.Models.Sitecore
 {
 	public class SCItem
 	{

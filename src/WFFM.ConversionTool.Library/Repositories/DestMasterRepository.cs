@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Repositories
 {

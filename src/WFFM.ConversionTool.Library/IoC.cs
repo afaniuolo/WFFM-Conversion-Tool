@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SimpleInjector;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Repositories;
 
@@ -30,6 +32,9 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<SitecoreForms>(CreateNewDestContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
+
+			// App Settings
+			container.RegisterSingleton<AppSettings>(createAppSettings);
 
 			container.Register<IDestMasterRepository, DestMasterRepository>();
 			container.Register<ISourceMasterRepository, SourceMasterRepository>();
@@ -71,6 +76,14 @@ namespace WFFM.ConversionTool.Library
 			var myContext = new DestMasterDb("name=DestMasterDb");
 			myContext.Configuration.ProxyCreationEnabled = false;
 			return myContext;
+		}
+
+		private static AppSettings createAppSettings()
+		{
+			//Read json file
+			var appSettingsFile = System.IO.File.ReadAllText("Metadata/AppSettings.json"); // TODO: Add null checks
+			// Deserialize Json to Object
+			return JsonConvert.DeserializeObject<AppSettings>(appSettingsFile);
 		}
 	}
 }

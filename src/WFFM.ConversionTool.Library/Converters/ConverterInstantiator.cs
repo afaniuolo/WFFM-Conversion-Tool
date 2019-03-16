@@ -12,6 +12,9 @@ namespace WFFM.ConversionTool.Library.Converters
 	{
 		public static IFieldConverter CreateInstance(string converterType)
 		{
+			if (string.IsNullOrEmpty(converterType))
+				return null;
+
 			var parts = converterType.Split(',');
 			var typeName = parts[0];
 			var assemblyName = parts[1];

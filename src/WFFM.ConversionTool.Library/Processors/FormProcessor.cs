@@ -12,6 +12,7 @@ using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Processors

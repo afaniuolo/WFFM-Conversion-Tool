@@ -39,6 +39,9 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector, Version=4.4.3.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SimpleInjector.4.4.3\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
@@ -78,8 +81,10 @@
     <Compile Include="Database\WFFM\FieldData.cs" />
     <Compile Include="Database\WFFM\FormData.cs" />
     <Compile Include="Database\WFFM\WFFM.cs" />
-    <Compile Include="Models\SCItem.cs" />
-    <Compile Include="Models\SCField.cs" />
+    <Compile Include="Models\Metadata\MetadataTemplate.cs" />
+    <Compile Include="Models\Metadata\AppSettings.cs" />
+    <Compile Include="Models\Sitecore\SCItem.cs" />
+    <Compile Include="Models\Sitecore\SCField.cs" />
     <Compile Include="Processors\FormProcessor.cs" />
     <Compile Include="Processors\IFormProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,6 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Metadata\AppSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Form.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

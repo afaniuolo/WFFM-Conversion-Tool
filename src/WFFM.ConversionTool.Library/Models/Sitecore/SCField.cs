@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WFFM.ConversionTool.Library.Models
+namespace WFFM.ConversionTool.Library.Models.Sitecore
 {
 	public class SCField
 	{
