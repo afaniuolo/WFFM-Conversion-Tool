@@ -63,6 +63,9 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			var itemId = fields.First().ItemId;
 
+			IEnumerable<Tuple<string,int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string,int>(f.Language, (int)f.Version)).Distinct();
+			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
+
 			foreach (var existingField in _formMetadataTemplate.fields.existingFields)
 			{
 				SCField destField = null;
@@ -92,20 +95,33 @@ namespace WFFM.ConversionTool.Library.Converters
 				{
 					case FieldType.Shared:
 						destField = _fieldFactory.CreateSharedField(newField.fieldId, itemId, newField.value);
+						if (destField != null)
+						{
+							destFields.Add(destField);
+						}
 						break;
 					case FieldType.Versioned:
-						//destField = _fieldFactory.CreateVersionedField(newField.fieldId, itemId, newField.value);
+						foreach (var langVersion in langVersions)
+						{
+							destField = _fieldFactory.CreateVersionedField(newField.fieldId, itemId, newField.value, langVersion.Item2, langVersion.Item1);
+							if (destField != null)
+							{
+								destFields.Add(destField);
+							}
+						}
 						break;
 					case FieldType.Unversioned:
-						//destField = _fieldFactory.CreateUnversionedField(newField.fieldId, itemId, newField.value);
+						foreach (var language in languages)
+						{
+							destField = _fieldFactory.CreateUnversionedField(newField.fieldId, itemId, newField.value, language);
+							if (destField != null)
+							{
+								destFields.Add(destField);
+							}
+						}
 						break;
 					//default:
 						//throw new ArgumentOutOfRangeException(); TODO: To implement meanful error message
-				}
-
-				if (destField != null)
-				{
-					destFields.Add(destField);
 				}
 			}
 			
