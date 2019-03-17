@@ -13,47 +13,45 @@ using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
-	public class FormConverter : IItemConverter
+	public class ItemConverter : IItemConverter
 	{
 		private IFieldFactory _fieldFactory;
-		private MetadataTemplate _formMetadataTemplate;
+		private MetadataTemplate _itemMetadataTemplate;
 		private AppSettings _appSettings;
 
-		private readonly Guid DestFormsFolderID = new Guid("B701850A-CB8A-4943-B2BC-DDDB1238C103");
-
-		public FormConverter(IFieldFactory fieldFactory, AppSettings appSettings)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
 		}
 
-		public SCItem Convert(SCItem scItem)
+		public SCItem Convert(SCItem scItem, Guid destParentId)
 		{
-			ReadFormMetadata(scItem.TemplateID);
-			return ConvertFormItemAndFields(scItem);
+			ReadItemMetadata(scItem.TemplateID);
+			return ConvertItemAndFields(scItem, destParentId);
 		}
 
-		private void ReadFormMetadata(Guid sourceTemplateId)
+		private void ReadItemMetadata(Guid sourceTemplateId)
 		{
 			// Read json file
 			var filePath = string.Format("{0}/{1}", _appSettings.metadataFolderRelativePath, _appSettings.metadataFiles.FirstOrDefault(m => m.sourceTemplateId == sourceTemplateId)?.metadataFileName);
-			var formMeta = System.IO.File.ReadAllText(filePath);
+			var itemMeta = System.IO.File.ReadAllText(filePath);
 			// Deserialize Json to Object
-			_formMetadataTemplate = JsonConvert.DeserializeObject<MetadataTemplate>(formMeta);
+			_itemMetadataTemplate = JsonConvert.DeserializeObject<MetadataTemplate>(itemMeta);
 		}
 
-		private SCItem ConvertFormItemAndFields(SCItem sourceFormItem)
+		private SCItem ConvertItemAndFields(SCItem sourceItem, Guid destParentId)
 		{
 			return new SCItem()
 			{
-				ID = sourceFormItem.ID,
-				Name = sourceFormItem.Name,
+				ID = sourceItem.ID,
+				Name = sourceItem.Name,
 				MasterID = Guid.Empty,
-				ParentID = DestFormsFolderID,
-				Created = sourceFormItem.Created,
-				Updated = sourceFormItem.Updated,
-				TemplateID = _formMetadataTemplate.templateId,
-				Fields = ConvertFields(sourceFormItem.Fields)
+				ParentID = destParentId,
+				Created = sourceItem.Created,
+				Updated = sourceItem.Updated,
+				TemplateID = _itemMetadataTemplate.templateId,
+				Fields = ConvertFields(sourceItem.Fields)
 			};
 		}
 
@@ -66,7 +64,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			IEnumerable<Tuple<string,int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string,int>(f.Language, (int)f.Version)).Distinct();
 			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
-			foreach (var existingField in _formMetadataTemplate.fields.existingFields)
+			foreach (var existingField in _itemMetadataTemplate.fields.existingFields)
 			{
 				SCField destField = null;
 				IFieldConverter converter;
@@ -87,7 +85,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 
-			foreach (var newField in _formMetadataTemplate.fields.newFields)
+			foreach (var newField in _itemMetadataTemplate.fields.newFields)
 			{
 				SCField destField = null;
 

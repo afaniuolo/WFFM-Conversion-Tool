@@ -24,6 +24,8 @@ namespace WFFM.ConversionTool.Library.Processors
 		private ISourceMasterRepository _sourceMasterRepository;
 		private IItemConverter _formConverter;
 
+		private readonly Guid DestFormsFolderID = new Guid("B701850A-CB8A-4943-B2BC-DDDB1238C103");
+
 		public FormProcessor(ILogger iLogger, IDestMasterRepository masterRepository, IItemConverter formConverter, ISourceMasterRepository sourceMasterRepository)
 		{
 			logger = iLogger;
@@ -49,7 +51,7 @@ namespace WFFM.ConversionTool.Library.Processors
 			logger.Log(new LogEntry(LoggingEventType.Debug, string.Format("FormID={0}", formItem.ID)));
 
 			// Convert
-			var destFormItem = _formConverter.Convert(formItem);
+			var destFormItem = _formConverter.Convert(formItem, DestFormsFolderID);
 
 			// Write to dest
 			WriteSitecoreForm(destFormItem);
