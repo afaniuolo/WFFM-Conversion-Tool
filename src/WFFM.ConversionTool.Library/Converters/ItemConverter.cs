@@ -64,19 +64,27 @@ namespace WFFM.ConversionTool.Library.Converters
 			IEnumerable<Tuple<string,int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string,int>(f.Language, (int)f.Version)).Distinct();
 			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
-			foreach (var existingField in _itemMetadataTemplate.fields.existingFields)
+			var filteredSourceFields = fields.Where(f =>
+				_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId));
+
+			foreach (var filteredSourceField in filteredSourceFields)
 			{
 				SCField destField = null;
 				IFieldConverter converter;
-				var sourceField = fields.FirstOrDefault(f => f.FieldId == existingField.fieldId);
+				var existingField =
+					_itemMetadataTemplate.fields.existingFields.FirstOrDefault(mf => mf.fieldId == filteredSourceField.FieldId);
+
+				if (existingField == null)
+					continue;
+
 				if(!string.IsNullOrEmpty(existingField.fieldConverter))
 				{
 					converter = ConverterInstantiator.CreateInstance(_appSettings.converters.FirstOrDefault(c => c.name == existingField.fieldConverter)?.converterType);
-					destField = converter?.Convert(sourceField);
+					destField = converter?.Convert(filteredSourceField);
 				}
 				else
 				{
-					destField = sourceField;
+					destField = filteredSourceField;
 				}
 
 				if (destField != null && destField.FieldId != Guid.Empty)
