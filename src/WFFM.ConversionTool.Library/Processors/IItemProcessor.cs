@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
-namespace WFFM.ConversionTool.Library.Repositories
+namespace WFFM.ConversionTool.Library.Processors
 {
-	public interface IDestMasterRepository
+	public interface IItemProcessor
 	{
-		void AddOrUpdateSitecoreItem(SCItem scItem);
+		void ConvertAndWriteItem(SCItem sourceItem, Guid parentId);
 	}
 }

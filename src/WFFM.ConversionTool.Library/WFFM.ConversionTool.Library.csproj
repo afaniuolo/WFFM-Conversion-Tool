@@ -87,6 +87,8 @@
     <Compile Include="Models\Sitecore\SCField.cs" />
     <Compile Include="Processors\FormProcessor.cs" />
     <Compile Include="Processors\IFormProcessor.cs" />
+    <Compile Include="Processors\IItemProcessor.cs" />
+    <Compile Include="Processors\ItemProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IDestMasterRepository.cs" />
     <Compile Include="Repositories\DestMasterRepository.cs" />

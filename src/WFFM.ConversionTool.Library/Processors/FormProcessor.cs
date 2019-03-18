@@ -12,72 +12,41 @@ using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Processors
 {
-	public class FormProcessor : IFormProcessor
+	public class FormProcessor : ItemProcessor, IFormProcessor
 	{
 		private ILogger logger;
-		private IDestMasterRepository _masterRepository;
 		private ISourceMasterRepository _sourceMasterRepository;
-		private IItemConverter _formConverter;
+		private AppSettings _appSettings;
 
-		private readonly Guid DestFormsFolderID = new Guid("B701850A-CB8A-4943-B2BC-DDDB1238C103");
-
-		public FormProcessor(ILogger iLogger, IDestMasterRepository masterRepository, IItemConverter formConverter, ISourceMasterRepository sourceMasterRepository)
+		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IDestMasterRepository destMasterRepository, IItemConverter itemConverter) : base(destMasterRepository, itemConverter)
 		{
 			logger = iLogger;
-			_masterRepository = masterRepository;
 			_sourceMasterRepository = sourceMasterRepository;
-			_formConverter = formConverter;
+			_appSettings = appSettings;
 		}
 
 		public void ConvertForms()
 		{
-			var forms = _sourceMasterRepository.GetForms();
+			var sourceFormTemplateId =
+				_appSettings.metadataFiles.FirstOrDefault(m => m.templateName.ToLower() == "form")?.sourceTemplateId;
+
+			if (sourceFormTemplateId == null)
+				return;
+
+			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 			foreach (var form in forms)
 			{
 				// Convert and Migrate items
-				ConvertAndWriteForm(form);
+				ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
 
 				// Migrate Data
-			}
-		}
-		
-		private void ConvertAndWriteForm(SCItem formItem)
-		{
-			logger.Log(new LogEntry(LoggingEventType.Debug, string.Format("FormID={0}", formItem.ID)));
 
-			// Convert
-			var destFormItem = _formConverter.Convert(formItem, DestFormsFolderID);
-
-			// Write to dest
-			WriteSitecoreForm(destFormItem);
-		}
-
-		
-
-		private void WriteSitecoreForm(SCItem destFormItem)
-		{
-			_masterRepository.AddOrUpdateForm(destFormItem);
-
-			// Create fields
-			foreach (SCField scField in destFormItem.Fields)
-			{
-				switch (scField.Type)
-				{
-					case FieldType.Shared:
-						_masterRepository.AddOrUpdateSharedField(scField);
-						break;
-					case FieldType.Unversioned:
-						_masterRepository.AddOrUpdateUnversionedField(scField);
-						break;
-					case FieldType.Versioned:
-						_masterRepository.AddOrUpdateVersionedField(scField);
-						break;
-				}
 			}
 		}
 	}

@@ -9,7 +9,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 {
 	public class AppSettings
 	{
-		public Dictionary<string, string> itemReferences { get; set; }
+		public Dictionary<string, Guid> itemReferences { get; set; }
 
 		public List<Converter> converters { get; set; }
 

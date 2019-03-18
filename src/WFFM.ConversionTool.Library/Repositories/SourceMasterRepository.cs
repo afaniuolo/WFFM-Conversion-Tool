@@ -13,63 +13,61 @@ namespace WFFM.ConversionTool.Library.Repositories
 	{
 		private SourceMasterDb _sourceMasterDb;
 
-		private readonly Guid WFFMFormTemplateId = new Guid("FFB1DA32-2764-47DB-83B0-95B843546A7E");
-
 		public SourceMasterRepository(SourceMasterDb sourceMasterDb)
 		{
 			_sourceMasterDb = sourceMasterDb;
 		}
 
-		public List<SCItem> GetForms()
+		public List<SCItem> GetSitecoreItems(Guid templateId)
 		{
-			var forms = GetWFFMForms();
+			var items = GetItems(templateId);
 			List<SCItem> scItems = new List<SCItem>();
-			foreach (var form in forms)
+			foreach (var item in items)
 			{
-				scItems.Add(GetSourceFormItemAndFields(form));
+				scItems.Add(GetSourceItemAndFields(item));
 			}
 
 			return scItems;
 		}
 
-		private SCItem GetSourceFormItemAndFields(Item formItem)
+		private SCItem GetSourceItemAndFields(Item sourceItem)
 		{
 			return new SCItem()
 			{
-				ID = formItem.ID,
-				Name = formItem.Name,
-				MasterID = formItem.MasterID,
-				ParentID = formItem.ParentID,
-				TemplateID = formItem.TemplateID,
-				Created = formItem.Created,
-				Updated = formItem.Updated,
-				Fields = GetWFFMFormFields(formItem.ID),
+				ID = sourceItem.ID,
+				Name = sourceItem.Name,
+				MasterID = sourceItem.MasterID,
+				ParentID = sourceItem.ParentID,
+				TemplateID = sourceItem.TemplateID,
+				Created = sourceItem.Created,
+				Updated = sourceItem.Updated,
+				Fields = GetItemFields(sourceItem.ID),
 			};
 		}
 
 		/// <summary>
-		/// Get the list of existing WFFM forms in source master database
+		/// Get the list of existing items by templateId in source master database
 		/// </summary>
 		/// <returns></returns>
-		private List<Item> GetWFFMForms()
+		private List<Item> GetItems(Guid templateId)
 		{
-			return _sourceMasterDb.Items.Where(item => item.TemplateID == WFFMFormTemplateId && item.Name != "__Standard Values").ToList();
+			return _sourceMasterDb.Items.Where(item => item.TemplateID == templateId && item.Name != "__Standard Values").ToList();
 		}
 
 		/// <summary>
-		/// Get list of fields of a WFFM form from the source master database
+		/// Get list of fields of a Sitecore item from the source master database
 		/// </summary>
-		private List<SCField> GetWFFMFormFields(Guid formItemId)
+		private List<SCField> GetItemFields(Guid itemId)
 		{
-			// fields from form template
-			var formFields = _sourceMasterDb.SharedFields.Where(field => field.ItemId == formItemId)
+			// fields from item template
+			var fields = _sourceMasterDb.SharedFields.Where(field => field.ItemId == itemId)
 				.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Shared, Language = null, Version = null, FieldId = field.FieldId })
-				.Union(_sourceMasterDb.UnversionedFields.Where(field => field.ItemId == formItemId)
+				.Union(_sourceMasterDb.UnversionedFields.Where(field => field.ItemId == itemId)
 					.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Unversioned, Language = field.Language, Version = null, FieldId = field.FieldId }))
-				.Union(_sourceMasterDb.VersionedFields.Where(field => field.ItemId == formItemId)
+				.Union(_sourceMasterDb.VersionedFields.Where(field => field.ItemId == itemId)
 					.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Versioned, Language = field.Language, Version = field.Version, FieldId = field.FieldId }));
 
-			return formFields.ToList();
+			return fields.ToList();
 		}
 	}
 }

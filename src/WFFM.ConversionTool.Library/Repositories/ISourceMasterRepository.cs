@@ -10,6 +10,6 @@ namespace WFFM.ConversionTool.Library.Repositories
 {
 	public interface ISourceMasterRepository
 	{
-		List<SCItem> GetForms();
+		List<SCItem> GetSitecoreItems(Guid templateId);
 	}
 }

@@ -22,9 +22,30 @@ namespace WFFM.ConversionTool.Library.Repositories
 			_destMasterDb = destMasterDb;
 		}
 
-		public void AddOrUpdateForm(SCItem scItem)
+		public void AddOrUpdateSitecoreItem(SCItem destItem)
 		{
-			var dbFormItem = new Item()
+			AddOrUpdateItem(destItem);
+
+			foreach (SCField scField in destItem.Fields)
+			{
+				switch (scField.Type)
+				{
+					case FieldType.Shared:
+						AddOrUpdateSharedField(scField);
+						break;
+					case FieldType.Unversioned:
+						AddOrUpdateUnversionedField(scField);
+						break;
+					case FieldType.Versioned:
+						AddOrUpdateVersionedField(scField);
+						break;
+				}
+			}
+		}
+
+		private void AddOrUpdateItem(SCItem scItem)
+		{
+			var dbItem = new Item()
 			{
 				ID = scItem.ID,
 				Name = scItem.Name,
@@ -34,11 +55,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Updated = scItem.Updated,
 				TemplateID = scItem.TemplateID
 			};
-			_destMasterDb.Items.AddOrUpdate(dbFormItem);
+			_destMasterDb.Items.AddOrUpdate(dbItem);
 			_destMasterDb.SaveChanges();
 		}
 
-		public void AddOrUpdateSharedField(SCField scField)
+		private void AddOrUpdateSharedField(SCField scField)
 		{
 			var fieldCheck = _destMasterDb.SharedFields.FirstOrDefault(field =>
 				field.FieldId == scField.FieldId && field.ItemId == scField.ItemId);
@@ -54,7 +75,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			_destMasterDb.SaveChanges();
 		}
 
-		public void AddOrUpdateUnversionedField(SCField scField)
+		private void AddOrUpdateUnversionedField(SCField scField)
 		{
 			var fieldCheck = _destMasterDb.UnversionedFields.FirstOrDefault(field =>
 				field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language);
@@ -71,7 +92,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			_destMasterDb.SaveChanges();
 		}
 
-		public void AddOrUpdateVersionedField(SCField scField)
+		private void AddOrUpdateVersionedField(SCField scField)
 		{
 			var fieldCheck = _destMasterDb.VersionedFields.FirstOrDefault(field =>
 				field.FieldId == scField.FieldId && field.ItemId == scField.ItemId && field.Language == scField.Language && field.Version == scField.Version);
