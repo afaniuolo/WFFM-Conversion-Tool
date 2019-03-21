@@ -105,13 +105,13 @@ namespace WFFM.ConversionTool.Library.Factories
 			switch (valueType.ToLower())
 			{
 				case "system.datetime":
-					value = DateTime.Now.ToString();
+					value = DateTime.UtcNow.ToString("yyyyMMddThhmmssZ");
 					break;
 				case "system.guid":
 					value = Guid.NewGuid().ToString();
 					break;
 				case "system.string":
-					value = Guid.NewGuid().ToString("N");
+					value = Guid.NewGuid().ToString("N").ToUpper();
 					break;
 				default:
 					value = string.Empty;
