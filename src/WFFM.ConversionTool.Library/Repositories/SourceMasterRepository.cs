@@ -30,6 +30,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return scItems;
 		}
 
+		public bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem)
+		{
+			return _sourceMasterDb.Items.Any(item => item.TemplateID == templateId && item.ParentID == scItem.ID);
+		}
+
 		private SCItem GetSourceItemAndFields(Item sourceItem)
 		{
 			return new SCItem()

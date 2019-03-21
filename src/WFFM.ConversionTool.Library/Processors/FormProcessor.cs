@@ -57,8 +57,11 @@ namespace WFFM.ConversionTool.Library.Processors
 			{
 				// Convert and Migrate Form items
 				ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
-				// Create Page items for each form
-				WriteNewItem((Guid)destPageTemplateId,form);
+				// Create Page items for each form (only once)
+				if (!_sourceMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
+				{
+					WriteNewItem((Guid) destPageTemplateId, form);
+				}
 
 				// Migrate Data
 
