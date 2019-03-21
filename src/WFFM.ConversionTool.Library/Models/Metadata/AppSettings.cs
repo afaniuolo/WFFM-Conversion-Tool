@@ -26,6 +26,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public class MetadataFile
 		{
 			public Guid sourceTemplateId { get; set; }
+			public Guid destTemplateId { get; set; }
 			public string templateName { get; set; }
 			public string metadataFileName { get; set; }
 		}

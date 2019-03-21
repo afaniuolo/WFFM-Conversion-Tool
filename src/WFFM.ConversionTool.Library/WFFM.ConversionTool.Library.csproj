@@ -71,6 +71,10 @@
     <Compile Include="Database\Master\VersionedField.cs" />
     <Compile Include="Factories\FieldFactory.cs" />
     <Compile Include="Factories\IFieldFactory.cs" />
+    <Compile Include="Factories\IItemFactory.cs" />
+    <Compile Include="Factories\ItemFactory.cs" />
+    <Compile Include="Readers\IMetadataReader.cs" />
+    <Compile Include="Readers\MetadataReader.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log4NetAdapter.cs" />
@@ -103,10 +107,14 @@
     <None Include="Metadata\Form.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Metadata\Page.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Section.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mappers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

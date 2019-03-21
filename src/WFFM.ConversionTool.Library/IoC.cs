@@ -12,6 +12,7 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
+using WFFM.ConversionTool.Library.Readers;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library
@@ -35,6 +36,7 @@ namespace WFFM.ConversionTool.Library
 
 			// App Settings
 			container.RegisterSingleton<AppSettings>(createAppSettings);
+			container.Register<IMetadataReader, MetadataReader>();
 
 			container.Register<IDestMasterRepository, DestMasterRepository>();
 			container.Register<ISourceMasterRepository, SourceMasterRepository>();
@@ -42,6 +44,7 @@ namespace WFFM.ConversionTool.Library
 			container.Register<IFieldFactory, FieldFactory>();
 
 			container.Register<IItemConverter, ItemConverter>();
+			container.Register<IItemFactory, ItemFactory>();
 
 			container.Register<FormProcessor>();
 

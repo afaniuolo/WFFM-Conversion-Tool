@@ -9,8 +9,10 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 {
 	public class MetadataTemplate
 	{
-		public Guid templateId { get; set; }
-		public string templateName { get; set; }
+		public Guid sourceTemplateId { get; set; }
+		public string sourceTemplateName { get; set; }
+		public Guid destTemplateId { get; set; }
+		public string destTemplateName { get; set; }
 		public MetadataFields fields { get; set; }
 
 		public class MetadataFields
@@ -29,6 +31,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 				public FieldType fieldType { get; set; }
 				public Guid fieldId { get; set; }
 				public string value { get; set; }
+				public string valueType { get; set; }
 			}
 		}
 	}

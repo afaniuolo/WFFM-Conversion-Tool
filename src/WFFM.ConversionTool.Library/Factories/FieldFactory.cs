@@ -12,20 +12,20 @@ namespace WFFM.ConversionTool.Library.Factories
 	{
 		public SCField CreateSharedField(Guid fieldId, Guid itemID, string value)
 		{
-			return CreateField(fieldId, itemID, value);
+			return CreateField(fieldId, itemID, value, FieldType.Shared);
 		}
 
 		public SCField CreateUnversionedField(Guid fieldId, Guid itemID, string value, string language)
 		{
-			return CreateField(fieldId, itemID, value, null, language);
+			return CreateField(fieldId, itemID, value, FieldType.Unversioned, null, language);
 		}
 
 		public SCField CreateVersionedField(Guid fieldId, Guid itemID, string value, int version, string language)
 		{
-			return CreateField(fieldId, itemID, value, version, language);
+			return CreateField(fieldId, itemID, value, FieldType.Versioned, version, language);
 		}
 
-		private SCField CreateField(Guid fieldId, Guid itemID, string value, int? version = null, string language = null)
+		private SCField CreateField(Guid fieldId, Guid itemID, string value, FieldType fieldType, int? version = null, string language = null)
 		{
 			return new SCField()
 			{
@@ -34,7 +34,7 @@ namespace WFFM.ConversionTool.Library.Factories
 				Created = DateTime.Now,
 				ItemId = itemID,
 				Updated = DateTime.Now,
-				Type = FieldType.Shared,
+				Type = fieldType,
 				Value = value,
 				Version = version,
 				Language = language

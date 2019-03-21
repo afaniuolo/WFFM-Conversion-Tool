@@ -1,14 +1,8 @@
 ﻿{
-    "sourceTemplateId": "FFB1DA32-2764-47DB-83B0-95B843546A7E",
-    "sourceTemplateName": "Form",
-    "destTemplateId": "6ABEE1F2-4AB4-47F0-AD8B-BDB36F37F64C",
-    "destTemplateName": "Form",
+    "sourceTemplateId": "CF47DBAE-6E22-465A-B9B5-3EB6BCF9ECBF",
+    "templateName": "Form Section",
     "fields": {
         "existingFields": [
-            {
-                "fieldConverter": "BooleanExistence",
-                "fieldId": "B0A67B2A-8B07-4E0B-8809-69F751709806"
-            },
             {
                 "fieldConverter": null,
                 "fieldId": "5DD74568-4D4B-44C1-B513-0AF5F4CDA34F"
@@ -36,10 +30,6 @@
             {
                 "fieldConverter": null,
                 "fieldId": "D9CF14B1-FA16-4BA6-9288-E8A174D4D522"
-            },
-            {
-                "fieldConverter": null,
-                "fieldId": "B5E02AD9-D56F-4C41-A065-A133DB87BDEB"
             }
         ],
         "newFields": [
@@ -55,7 +45,7 @@
             },
             {
                 "fieldType": "shared",
-                "fieldId": "9EB86F19-2E5D-48DB-9795-0EE4868EFF11",
+                "fieldId": "9EB86F19-2E5D-48DB-9795-0EE4868EFF11", // TO BE REVIEWED
                 "value": "1"
             }
         ]

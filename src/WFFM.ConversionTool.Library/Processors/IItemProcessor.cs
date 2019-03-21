@@ -10,5 +10,6 @@ namespace WFFM.ConversionTool.Library.Processors
 	public interface IItemProcessor
 	{
 		void ConvertAndWriteItem(SCItem sourceItem, Guid parentId);
+		void WriteNewItem(Guid destTemplateId, SCItem parentItem);
 	}
 }

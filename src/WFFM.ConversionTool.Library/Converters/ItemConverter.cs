@@ -10,6 +10,7 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
+using WFFM.ConversionTool.Library.Readers;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
@@ -18,26 +19,19 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IFieldFactory _fieldFactory;
 		private MetadataTemplate _itemMetadataTemplate;
 		private AppSettings _appSettings;
+		private IMetadataReader _metadataReader;
 
-		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataReader metadataReader)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
+			_metadataReader = metadataReader;
 		}
 
 		public SCItem Convert(SCItem scItem, Guid destParentId)
 		{
-			ReadItemMetadata(scItem.TemplateID);
+			_itemMetadataTemplate = _metadataReader.GetItemMetadata(scItem.TemplateID);
 			return ConvertItemAndFields(scItem, destParentId);
-		}
-
-		private void ReadItemMetadata(Guid sourceTemplateId)
-		{
-			// Read json file
-			var filePath = string.Format("{0}/{1}", _appSettings.metadataFolderRelativePath, _appSettings.metadataFiles.FirstOrDefault(m => m.sourceTemplateId == sourceTemplateId)?.metadataFileName);
-			var itemMeta = System.IO.File.ReadAllText(filePath);
-			// Deserialize Json to Object
-			_itemMetadataTemplate = JsonConvert.DeserializeObject<MetadataTemplate>(itemMeta);
 		}
 
 		private SCItem ConvertItemAndFields(SCItem sourceItem, Guid destParentId)
@@ -50,7 +44,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				ParentID = destParentId,
 				Created = sourceItem.Created,
 				Updated = sourceItem.Updated,
-				TemplateID = _itemMetadataTemplate.templateId,
+				TemplateID = _itemMetadataTemplate.destTemplateId,
 				Fields = ConvertFields(sourceItem.Fields)
 			};
 		}
