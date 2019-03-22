@@ -11,5 +11,8 @@ namespace WFFM.ConversionTool.Library.Repositories
 	public interface IDestMasterRepository
 	{
 		void AddOrUpdateSitecoreItem(SCItem scItem);
+		bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem);
+
+		List<SCItem> GetSitecoreChildrenItems(Guid templateId, Guid parentId);
 	}
 }

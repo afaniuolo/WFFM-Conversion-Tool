@@ -43,6 +43,23 @@ namespace WFFM.ConversionTool.Library.Repositories
 			}
 		}
 
+		public bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem)
+		{
+			return _destMasterDb.Items.Any(item => item.TemplateID == templateId && item.ParentID == scItem.ID);
+		}
+
+		public List<SCItem> GetSitecoreChildrenItems(Guid templateId, Guid parentId)
+		{
+			var childrenItems = GetChildrenItems(templateId, parentId);
+			List<SCItem> scItems = new List<SCItem>();
+			foreach (var item in childrenItems)
+			{
+				scItems.Add(GetSourceItemAndFields(item));
+			}
+
+			return scItems;
+		}
+
 		private void AddOrUpdateItem(SCItem scItem)
 		{
 			var dbItem = new Item()
@@ -108,6 +125,57 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Version = scField.Version ?? 1
 			});
 			_destMasterDb.SaveChanges();
+		}
+
+		private SCItem GetSourceItemAndFields(Item sourceItem)
+		{
+			return new SCItem()
+			{
+				ID = sourceItem.ID,
+				Name = sourceItem.Name,
+				MasterID = sourceItem.MasterID,
+				ParentID = sourceItem.ParentID,
+				TemplateID = sourceItem.TemplateID,
+				Created = sourceItem.Created,
+				Updated = sourceItem.Updated,
+				Fields = GetItemFields(sourceItem.ID),
+			};
+		}
+
+		/// <summary>
+		/// Get the list of existing items by templateId in source master database
+		/// </summary>
+		/// <returns></returns>
+		private List<Item> GetItems(Guid templateId)
+		{
+			return _destMasterDb.Items.Where(item => item.TemplateID == templateId && item.Name != "__Standard Values").ToList();
+		}
+
+		/// <summary>
+		/// Get the list of existing children items of a specific template of a parent item in source master database
+		/// </summary>
+		/// <param name="templateId"></param>
+		/// <param name="parentId"></param>
+		/// <returns></returns>
+		private List<Item> GetChildrenItems(Guid templateId, Guid parentId)
+		{
+			return _destMasterDb.Items.Where(item => item.TemplateID == templateId && item.Name != "__Standard Values" && item.ParentID == parentId).ToList();
+		}
+
+		/// <summary>
+		/// Get list of fields of a Sitecore item from the source master database
+		/// </summary>
+		private List<SCField> GetItemFields(Guid itemId)
+		{
+			// fields from item template
+			var fields = _destMasterDb.SharedFields.Where(field => field.ItemId == itemId)
+				.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Shared, Language = null, Version = null, FieldId = field.FieldId })
+				.Union(_destMasterDb.UnversionedFields.Where(field => field.ItemId == itemId)
+					.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Unversioned, Language = field.Language, Version = null, FieldId = field.FieldId }))
+				.Union(_destMasterDb.VersionedFields.Where(field => field.ItemId == itemId)
+					.Select(field => new SCField() { Id = field.Id, Value = field.Value, Created = field.Created, Updated = field.Updated, ItemId = field.ItemId, Type = FieldType.Versioned, Language = field.Language, Version = field.Version, FieldId = field.FieldId }));
+
+			return fields.ToList();
 		}
 	}
 }

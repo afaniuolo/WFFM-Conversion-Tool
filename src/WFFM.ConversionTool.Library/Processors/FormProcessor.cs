@@ -25,16 +25,19 @@ namespace WFFM.ConversionTool.Library.Processors
 	{
 		private ILogger logger;
 		private ISourceMasterRepository _sourceMasterRepository;
+		private IDestMasterRepository _destMasterRepository;
 		private AppSettings _appSettings;
 
 		private readonly string FormTemplateName = "form";
 		private readonly string PageTemplateName = "page";
+		private readonly string SectionTemplateName = "section";
 
 		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory) 
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			logger = iLogger;
 			_sourceMasterRepository = sourceMasterRepository;
+			_destMasterRepository = destMasterRepository;
 			_appSettings = appSettings;
 		}
 
@@ -52,15 +55,36 @@ namespace WFFM.ConversionTool.Library.Processors
 			if (destPageTemplateId == null)
 				return;
 
+			var sourceSectionTemplateId = _appSettings.metadataFiles.FirstOrDefault(m => m.templateName.ToLower() == SectionTemplateName)
+				?.sourceTemplateId;
+
+			if (sourceSectionTemplateId == null)
+				return;
+
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 			foreach (var form in forms)
 			{
 				// Convert and Migrate Form items
 				ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
-				// Create Page items for each form (only once)
-				if (!_sourceMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
+				
+				var pageId = Guid.Empty;
+				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
 				{
-					WriteNewItem((Guid) destPageTemplateId, form);
+					// Create Page items for each form (only once)
+					pageId = WriteNewItem((Guid) destPageTemplateId, form);
+				}
+				else
+				{
+					// Get Page Item Id
+					var pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid) destPageTemplateId, form.ID).FirstOrDefault();
+					pageId = pageItem?.ID ?? form.ID;
+				}
+
+				// Convert and Migrate Section items
+				var sections = _sourceMasterRepository.GetSitecoreChildrenItems((Guid) sourceSectionTemplateId, form.ID);
+				foreach (var section in sections)
+				{
+					ConvertAndWriteItem(section, pageId);
 				}
 
 				// Migrate Data

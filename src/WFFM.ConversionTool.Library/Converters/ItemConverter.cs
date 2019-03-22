@@ -91,10 +91,12 @@ namespace WFFM.ConversionTool.Library.Converters
 			{
 				SCField destField = null;
 
+				var fieldValue = GetValue(newField.value, newField.valueType);
+
 				switch (newField.fieldType)
 				{
 					case FieldType.Shared:
-						destField = _fieldFactory.CreateSharedField(newField.fieldId, itemId, newField.value);
+						destField = _fieldFactory.CreateSharedField(newField.fieldId, itemId, fieldValue);
 						if (destField != null)
 						{
 							destFields.Add(destField);
@@ -103,7 +105,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					case FieldType.Versioned:
 						foreach (var langVersion in langVersions)
 						{
-							destField = _fieldFactory.CreateVersionedField(newField.fieldId, itemId, newField.value, langVersion.Item2, langVersion.Item1);
+							destField = _fieldFactory.CreateVersionedField(newField.fieldId, itemId, fieldValue, langVersion.Item2, langVersion.Item1);
 							if (destField != null)
 							{
 								destFields.Add(destField);
@@ -113,7 +115,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					case FieldType.Unversioned:
 						foreach (var language in languages)
 						{
-							destField = _fieldFactory.CreateUnversionedField(newField.fieldId, itemId, newField.value, language);
+							destField = _fieldFactory.CreateUnversionedField(newField.fieldId, itemId, fieldValue, language);
 							if (destField != null)
 							{
 								destFields.Add(destField);
@@ -126,6 +128,33 @@ namespace WFFM.ConversionTool.Library.Converters
 			}
 			
 			return destFields;
+		}
+
+		private string GetValue(string value, string valueType)
+		{
+			return value ?? GenerateValue(valueType);
+		}
+
+		private string GenerateValue(string valueType)
+		{
+			var value = string.Empty;
+			switch (valueType.ToLower())
+			{
+				case "system.datetime":
+					value = DateTime.UtcNow.ToString("yyyyMMddThhmmssZ");
+					break;
+				case "system.guid":
+					value = Guid.NewGuid().ToString();
+					break;
+				case "system.string":
+					value = Guid.NewGuid().ToString("N").ToUpper();
+					break;
+				default:
+					value = string.Empty;
+					break;
+			}
+
+			return value;
 		}
 	}
 }

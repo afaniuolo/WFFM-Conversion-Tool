@@ -33,11 +33,13 @@ namespace WFFM.ConversionTool.Library.Processors
 			_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
 		}
 
-		public virtual void WriteNewItem(Guid destTemplateId, SCItem parentItem)
+		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem)
 		{
 			var destItem = _itemFactory.Create(destTemplateId, parentItem);
 
 			_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
+
+			return destItem.ID;
 		}
 	}
 }

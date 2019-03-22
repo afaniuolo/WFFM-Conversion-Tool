@@ -1,6 +1,8 @@
 ﻿{
     "sourceTemplateId": "CF47DBAE-6E22-465A-B9B5-3EB6BCF9ECBF",
-    "templateName": "Form Section",
+    "sourceTemplateName": "Form Section", 
+    "destTemplateId": "8CDDB194-F456-4A75-89B7-346F8F39F95C",
+    "destTemplateName": "Section",
     "fields": {
         "existingFields": [
             {
@@ -36,17 +38,22 @@
             {
                 "fieldType": "shared",
                 "fieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563",
-                "value": "{3A4DF9C0-7C82-4415-90C3-25440257756D}"
+                "value": "{447AA745-6D29-4B65-A5A3-8173AA8AF548}"
             },
             {
                 "fieldType": "shared",
-                "fieldId": "FCE03B41-4CBB-4F7F-920F-FF04F12FA896",
-                "value": "jquery-2.1.3.min.js|jquery.validate.min.js|jquery.validate.unobtrusive.min.js|jquery.unobtrusive-ajax.min.js|form.validate.js|form.tracking.js|form.conditions.js"
+                "fieldId": "71C6DE8E-4718-4977-B83E-B49552EE14B0",
+                "value": "\"{\"fieldConditions\":[]}\""
             },
             {
                 "fieldType": "shared",
-                "fieldId": "9EB86F19-2E5D-48DB-9795-0EE4868EFF11", // TO BE REVIEWED
-                "value": "1"
+                "fieldId": "7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA",
+                "value": ""
+            },
+            {
+                "fieldType": "shared",
+                "fieldId": "84ECE662-5034-40CB-9C60-744DB64BB294",
+                "valueType": "System.String" // Random Guid to String
             }
         ]
     }
