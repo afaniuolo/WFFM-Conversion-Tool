@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Factories
 {
 	public interface IFieldFactory
 	{
-		SCField CreateSharedField(Guid fieldId, Guid itemID, string value);
-		SCField CreateUnversionedField(Guid fieldId, Guid itemID, string value, string language);
-		SCField CreateVersionedField(Guid fieldId, Guid itemID, string value, int version, string language);
+		List<SCField> CreateFields(MetadataTemplate.MetadataFields.MetadataNewField metadataNewField, Guid itemId, IEnumerable<Tuple<string, int>> langVersions, IEnumerable<string> languages);
 	}
 }
