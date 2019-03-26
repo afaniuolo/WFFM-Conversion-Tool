@@ -19,10 +19,10 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		{
 			public List<MetadataExistingField> existingFields { get; set; }
 			public List<MetadataNewField> newFields { get; set; }
+			public List<MetadataConvertedField> convertedFields { get; set; }
 
 			public class MetadataExistingField
 			{
-				public string fieldConverter { get; set; }
 				public Guid fieldId { get; set; }
 			}
 
@@ -32,6 +32,13 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 				public Guid fieldId { get; set; }
 				public string value { get; set; }
 				public string valueType { get; set; }
+			}
+
+			public class MetadataConvertedField
+			{
+				public string fieldConverter { get; set; }
+				public Guid sourceFieldId { get; set; }
+				public Guid destFieldId { get; set; }
 			}
 		}
 	}

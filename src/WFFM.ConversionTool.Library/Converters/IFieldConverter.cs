@@ -10,6 +10,6 @@ namespace WFFM.ConversionTool.Library.Converters
 {
 	public interface IFieldConverter
 	{
-		SCField Convert(SCField scField);
+		SCField Convert(SCField scField, Guid destFieldId);
 	}
 }

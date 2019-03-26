@@ -58,8 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\BaseFieldConverter.cs" />
     <Compile Include="Converters\ConverterInstantiator.cs" />
-    <Compile Include="Converters\FieldConverters\BooleanExistenceConverter.cs" />
+    <Compile Include="Converters\FieldConverters\TrackingConverter.cs" />
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
@@ -104,6 +105,7 @@
     <None Include="Metadata\AppSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Metadata\Input.json" />
     <None Include="Metadata\Form.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

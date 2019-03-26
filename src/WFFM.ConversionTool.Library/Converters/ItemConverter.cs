@@ -58,32 +58,48 @@ namespace WFFM.ConversionTool.Library.Converters
 			IEnumerable<Tuple<string,int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string,int>(f.Language, (int)f.Version)).Distinct();
 			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
-			var filteredSourceFields = fields.Where(f =>
-				_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId));
-
-			foreach (var filteredSourceField in filteredSourceFields)
+			if (_itemMetadataTemplate.fields.existingFields != null)
 			{
-				SCField destField = null;
-				IFieldConverter converter;
-				var existingField =
-					_itemMetadataTemplate.fields.existingFields.FirstOrDefault(mf => mf.fieldId == filteredSourceField.FieldId);
+				var filteredExistingFields = fields.Where(f =>
+					_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId));
 
-				if (existingField == null)
-					continue;
-
-				if(!string.IsNullOrEmpty(existingField.fieldConverter))
+				foreach (var filteredExistingField in filteredExistingFields)
 				{
-					converter = ConverterInstantiator.CreateInstance(_appSettings.converters.FirstOrDefault(c => c.name == existingField.fieldConverter)?.converterType);
-					destField = converter?.Convert(filteredSourceField);
+					var existingField =
+						_itemMetadataTemplate.fields.existingFields.FirstOrDefault(mf => mf.fieldId == filteredExistingField.FieldId);
+
+					if (existingField != null)
+					{
+						destFields.Add(filteredExistingField);
+					}
 				}
-				else
-				{
-					destField = filteredSourceField;
-				}
+			}
 
-				if (destField != null && destField.FieldId != Guid.Empty)
+			if (_itemMetadataTemplate.fields.convertedFields != null)
+			{
+				var filteredConvertedFields = fields.Where(f =>
+					_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId));
+
+				foreach (var filteredConvertedField in filteredConvertedFields)
 				{
-					destFields.Add(destField);
+					var convertedField =
+						_itemMetadataTemplate.fields.convertedFields.FirstOrDefault(mf =>
+							mf.sourceFieldId == filteredConvertedField.FieldId);
+
+					if (convertedField != null)
+					{
+						if (!string.IsNullOrEmpty(convertedField.fieldConverter))
+						{
+							IFieldConverter converter = ConverterInstantiator.CreateInstance(_appSettings.converters
+								.FirstOrDefault(c => c.name == convertedField.fieldConverter)?.converterType);
+							SCField destField = converter?.Convert(filteredConvertedField, convertedField.destFieldId);
+
+							if (destField != null && destField.FieldId != Guid.Empty)
+							{
+								destFields.Add(destField);
+							}
+						}
+					}
 				}
 			}
 
