@@ -56,7 +56,7 @@
             {
                 "fieldType": "shared",
                 "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294",
-                "valueType": "System.String" // Random Guid to String
+                "valueType": "System.Guid.ToString" // Random Guid to String
             }
         ]
     }

@@ -6,25 +6,28 @@
     "fields": {
         "existingFields": [
             {
-                "fieldId": "5DD74568-4D4B-44C1-B513-0AF5F4CDA34F"
+                "fieldId": "5DD74568-4D4B-44C1-B513-0AF5F4CDA34F" // __Created by
             },
             {
-                "fieldId": "BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A"
+                "fieldId": "BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A" // __Updated by
             },
             {
-                "fieldId": "8CDC337E-A112-42FB-BBB4-4143751E123F"
+                "fieldId": "8CDC337E-A112-42FB-BBB4-4143751E123F" // __Revision
             },
             {
-                "fieldId": "BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E"
+                "fieldId": "BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E" // __Sortorder
             },
             {
-                "fieldId": "25BED78C-4957-4165-998A-CA1B52F67497"
+                "fieldId": "25BED78C-4957-4165-998A-CA1B52F67497" // __Created
             },
             {
-                "fieldId": "52807595-0F8F-4B20-8D2A-CB71D28C6103"
+                "fieldId": "52807595-0F8F-4B20-8D2A-CB71D28C6103" // __Owner
             },
             {
-                "fieldId": "D9CF14B1-FA16-4BA6-9288-E8A174D4D522"
+                "fieldId": "D9CF14B1-FA16-4BA6-9288-E8A174D4D522" // __Updated
+            },
+            {
+                "fieldId": "B5E02AD9-D56F-4C41-A065-A133DB87BDEB" // __Display name
             }
         ],
         "newFields": [
@@ -46,7 +49,7 @@
             {
                 "fieldType": "shared",
                 "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294",
-                "valueType": "System.String" // Random Guid to String
+                "valueType": "System.Guid.ToString" // Random Guid to String
             }
         ]
     }

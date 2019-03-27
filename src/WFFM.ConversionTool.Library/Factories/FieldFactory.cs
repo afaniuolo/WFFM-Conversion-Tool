@@ -101,7 +101,7 @@ namespace WFFM.ConversionTool.Library.Factories
 				case "system.guid":
 					value = Guid.NewGuid().ToString();
 					break;
-				case "system.string":
+				case "system.guid.tostring":
 					value = Guid.NewGuid().ToString("N").ToUpper();
 					break;
 				default:
