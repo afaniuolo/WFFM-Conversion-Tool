@@ -18,6 +18,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 			_sourceMasterDb = sourceMasterDb;
 		}
 
+		public SCItem GetSitecoreItem(Guid itemId)
+		{
+			return GetSourceItemAndFields(_sourceMasterDb.Items.FirstOrDefault(item => item.ID == itemId));
+		}
+
 		public List<SCItem> GetSitecoreItems(Guid templateId)
 		{
 			var items = GetItems(templateId);

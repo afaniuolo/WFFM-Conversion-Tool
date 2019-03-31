@@ -10,10 +10,9 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 {
 	public class TrackingConverter : BaseFieldConverter
 	{
-		public override SCField Convert(SCField scField, Guid destFieldId)
+		public override string ConvertValue(string sourceValue)
 		{
-			var convertedValue = scField.Value.Replace(" ","").Contains("<tracking></tracking>") ? string.Empty : "1";
-			return ConvertField(scField, destFieldId, convertedValue);
+			return sourceValue.Replace(" ","").Contains("<tracking></tracking>") ? string.Empty : "1";
 		}
 	}
 }

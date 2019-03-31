@@ -75,9 +75,9 @@ namespace WFFM.ConversionTool.Library.Factories
 			{
 				Id = Guid.NewGuid(),
 				FieldId = fieldId,
-				Created = DateTime.Now,
+				Created = DateTime.UtcNow,
 				ItemId = itemID,
-				Updated = DateTime.Now,
+				Updated = DateTime.UtcNow,
 				Type = fieldType,
 				Value = value,
 				Version = version,

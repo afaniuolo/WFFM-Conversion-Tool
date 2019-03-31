@@ -10,12 +10,10 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 	public class AppSettings
 	{
 		public Dictionary<string, Guid> itemReferences { get; set; }
-
 		public List<Converter> converters { get; set; }
-
 		public string metadataFolderRelativePath { get; set; }
-
 		public List<MetadataFile> metadataFiles { get; set; }
+		public List<InputTypeMapping> inputTypesMapping { get; set; }
 
 		public class Converter
 		{
@@ -29,6 +27,12 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			public Guid destTemplateId { get; set; }
 			public string templateName { get; set; }
 			public string metadataFileName { get; set; }
+		}
+
+		public class InputTypeMapping
+		{
+			public Guid sourceFieldLinkId { get; set; }
+			public Guid? destFieldTypeId { get; set; }
 		}
 	}
 }

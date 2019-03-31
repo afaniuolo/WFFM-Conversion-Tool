@@ -50,7 +50,7 @@
             },
             {
                 "fieldType": "shared",
-                "destFieldId": "7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA",
+                "destFieldId": "7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA", // Css Class
                 "value": ""
             },
             {

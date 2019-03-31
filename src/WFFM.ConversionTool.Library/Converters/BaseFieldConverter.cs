@@ -3,18 +3,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
 	public abstract class BaseFieldConverter : IFieldConverter
 	{
-		public virtual SCField Convert(SCField scField, Guid destFieldId)
+		public virtual string ConvertValue(string sourceValue)
 		{
-			return ConvertField(scField, destFieldId, scField.Value);
+			return sourceValue;
 		}
 
-		public virtual SCField ConvertField(SCField scField, Guid destFieldId, string convertedValue)
+		public SCField ConvertField(SCField scField, Guid destFieldId)
+		{
+			var convertedValue = ConvertValue(scField.Value);
+			if (convertedValue == null) return null;
+			return CreateField(scField, destFieldId, convertedValue);
+		}
+
+		public SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue)
+		{
+			var convertedValue = ConvertValue(scField.Value);
+			if (convertedValue == null) return null;
+			return CreateFieldFromElement(scField, destFieldId, convertedValue);
+		}
+
+		private SCField CreateFieldFromElement(SCField scField, Guid destFieldId, string convertedValue)
+		{
+			return new SCField()
+			{
+				Created = DateTime.UtcNow,
+				Updated = DateTime.UtcNow,
+				ItemId = scField.ItemId,
+				Language = scField.Language,
+				Version = scField.Version,
+				Type = scField.Type,
+				Value = convertedValue,
+				FieldId = destFieldId,
+				Id = Guid.NewGuid()
+			};
+		}
+
+		private SCField CreateField(SCField scField, Guid destFieldId, string convertedValue)
 		{
 			return new SCField()
 			{

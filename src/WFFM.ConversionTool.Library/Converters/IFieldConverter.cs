@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
 	public interface IFieldConverter
 	{
-		SCField Convert(SCField scField, Guid destFieldId);
+		string ConvertValue(string sourceValue);
+		SCField ConvertField(SCField scField, Guid destFieldId);
+		SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue);
 	}
 }

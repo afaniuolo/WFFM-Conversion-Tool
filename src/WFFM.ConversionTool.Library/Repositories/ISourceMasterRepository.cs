@@ -10,6 +10,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 {
 	public interface ISourceMasterRepository
 	{
+		SCItem GetSitecoreItem(Guid itemId);
 		List<SCItem> GetSitecoreItems(Guid templateId);
 		bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem);
 

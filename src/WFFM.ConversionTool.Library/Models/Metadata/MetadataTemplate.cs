@@ -38,7 +38,15 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			{
 				public string fieldConverter { get; set; }
 				public Guid sourceFieldId { get; set; }
-				public Guid destFieldId { get; set; }
+				public Guid? destFieldId { get; set; }
+				public List<ValueXmlElementMapping> destFields { get; set; }
+
+				public class ValueXmlElementMapping
+				{
+					public string sourceElementName { get; set; }
+					public Guid? destFieldId { get; set; }
+					public string fieldConverter { get; set; }
+				}
 			}
 		}
 	}

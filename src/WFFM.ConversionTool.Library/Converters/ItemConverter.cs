@@ -21,6 +21,8 @@ namespace WFFM.ConversionTool.Library.Converters
 		private AppSettings _appSettings;
 		private IMetadataReader _metadataReader;
 
+		private readonly string _baseFieldConverterType = "WFFM.ConversionTool.Library.Converters.BaseFieldConverter, WFFM.ConversionTool.Library";
+
 		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataReader metadataReader)
 		{
 			_fieldFactory = fieldFactory;
@@ -55,7 +57,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			var itemId = fields.First().ItemId;
 
-			IEnumerable<Tuple<string,int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string,int>(f.Language, (int)f.Version)).Distinct();
+			IEnumerable<Tuple<string, int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
 			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
 			if (_itemMetadataTemplate.fields.existingFields != null)
@@ -90,13 +92,33 @@ namespace WFFM.ConversionTool.Library.Converters
 					{
 						if (!string.IsNullOrEmpty(convertedField.fieldConverter))
 						{
-							IFieldConverter converter = ConverterInstantiator.CreateInstance(_appSettings.converters
-								.FirstOrDefault(c => c.name == convertedField.fieldConverter)?.converterType);
-							SCField destField = converter?.Convert(filteredConvertedField, convertedField.destFieldId);
-
-							if (destField != null && destField.FieldId != Guid.Empty)
+							if (convertedField.destFields != null && convertedField.destFields.Any())
 							{
-								destFields.Add(destField);
+								var valueElements = GetXmlElementNames(filteredConvertedField.Value);
+								var filteredValueElements =
+									convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId != null);
+
+								foreach (var valueXmlElementMapping in filteredValueElements)
+								{
+									IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
+
+									SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
+
+									if (destField != null && destField.FieldId != Guid.Empty)
+									{
+										destFields.Add(destField);
+									}
+								}
+							}
+							else
+							{
+								IFieldConverter converter = InitConverter(convertedField.fieldConverter);
+								SCField destField = converter?.ConvertField(filteredConvertedField, (Guid)convertedField.destFieldId);
+
+								if (destField != null && destField.FieldId != Guid.Empty)
+								{
+									destFields.Add(destField);
+								}
 							}
 						}
 					}
@@ -107,10 +129,58 @@ namespace WFFM.ConversionTool.Library.Converters
 			{
 				destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
 			}
-			
+
 			return destFields;
 		}
 
-		
+		private IFieldConverter InitConverter(string converterName)
+		{
+			var converterType = _baseFieldConverterType;
+			if (converterName != null)
+			{
+				var metaConverter = _appSettings.converters.FirstOrDefault(c => c.name == converterName)?.converterType;
+				if (!string.IsNullOrEmpty(metaConverter))
+				{
+					converterType = metaConverter;
+				}
+			}
+			return ConverterInstantiator.CreateInstance(converterType);
+		}
+
+		private List<string> GetXmlElementNames(string fieldValue)
+		{
+			List<string> elementNames = new List<string>();
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.LoadXml(fieldValue);
+
+			foreach (XmlNode childNode in xmlDocument.ChildNodes)
+			{
+				elementNames.Add(childNode.Name.ToLower());
+			}
+
+			return elementNames;
+		}
+
+		private string GetXmlElementValue(string fieldValue, string elementName)
+		{
+			string elementValue = string.Empty;
+			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
+			{
+				XmlDocument xmlDocument = new XmlDocument();
+				xmlDocument.LoadXml(fieldValue);
+
+				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
+
+				if (elementsByTagName.Count > 0)
+				{
+					var element = elementsByTagName.Item(0);
+					return element?.Value;
+				}
+			}
+			return string.Empty;
+
+
+		}
 	}
+
 }
