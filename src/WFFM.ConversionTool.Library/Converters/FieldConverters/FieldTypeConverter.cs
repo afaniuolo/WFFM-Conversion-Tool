@@ -15,7 +15,7 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 			var container = IoC.Initialize();
 			var appSettings = container.GetInstance<AppSettings>();
 
-			var fieldTypeMapping = appSettings.inputTypesMapping.Where(m => m.destFieldTypeId != null).FirstOrDefault(f => f.sourceFieldLinkId.ToString() == sourceValue);
+			var fieldTypeMapping = appSettings.inputTypesMapping.Where(m => m.destFieldTypeId != null).FirstOrDefault(f => string.Equals(f.sourceFieldLinkId.ToString("B"),sourceValue, StringComparison.InvariantCultureIgnoreCase));
 			return fieldTypeMapping?.destFieldTypeId.ToString();
 		}
 	}

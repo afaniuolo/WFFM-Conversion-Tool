@@ -13,7 +13,15 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string sourceTemplateName { get; set; }
 		public Guid destTemplateId { get; set; }
 		public string destTemplateName { get; set; }
+		public List<DestTemplateMapping> destTemplateMappings { get; set; }
 		public MetadataFields fields { get; set; }
+		public Guid sourceMappingFieldId { get; set; }
+
+		public class DestTemplateMapping
+		{
+			public Guid sourceMappingFieldValue { get; set; }
+			public Guid? destTemplateId { get; set; }
+		}
 
 		public class MetadataFields
 		{
@@ -29,7 +37,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			public class MetadataNewField
 			{
 				public FieldType fieldType { get; set; }
-				public Guid fieldId { get; set; }
+				public Guid destFieldId { get; set; }
 				public string value { get; set; }
 				public string valueType { get; set; }
 			}
@@ -50,7 +58,4 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			}
 		}
 	}
-
-	
-
 }

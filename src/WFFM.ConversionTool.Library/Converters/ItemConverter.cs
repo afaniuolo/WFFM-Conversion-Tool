@@ -46,9 +46,33 @@ namespace WFFM.ConversionTool.Library.Converters
 				ParentID = destParentId,
 				Created = sourceItem.Created,
 				Updated = sourceItem.Updated,
-				TemplateID = _itemMetadataTemplate.destTemplateId,
+				TemplateID = MapDestTemplateId(sourceItem.Fields),
 				Fields = ConvertFields(sourceItem.Fields)
 			};
+		}
+
+		private Guid MapDestTemplateId(List<SCField> scFields)
+		{
+			var destTemplateId = Guid.Empty;
+			var sourceMappingFieldId = _itemMetadataTemplate.sourceMappingFieldId;
+			var destTemplateMappings = _itemMetadataTemplate.destTemplateMappings;
+
+			if (sourceMappingFieldId != Guid.Empty && destTemplateMappings.Any())
+			{
+				var sourceMappingFieldValue = scFields.FirstOrDefault(f => f.FieldId == sourceMappingFieldId)?.Value;
+				var destTemplateMapping = destTemplateMappings.FirstOrDefault(m => string.Equals(m.sourceMappingFieldValue.ToString("B"),
+					sourceMappingFieldValue, StringComparison.InvariantCultureIgnoreCase));
+				if (destTemplateMapping != null)
+				{
+					return destTemplateMapping.destTemplateId ?? _itemMetadataTemplate.destTemplateId; // Default to base Input item template if no mapping exists
+				}
+			}
+			else
+			{
+				destTemplateId = _itemMetadataTemplate.destTemplateId;
+			}
+
+			return destTemplateId;
 		}
 
 		private List<SCField> ConvertFields(List<SCField> fields)

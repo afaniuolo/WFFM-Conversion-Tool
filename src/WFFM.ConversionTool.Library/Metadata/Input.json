@@ -3,6 +3,81 @@
     "sourceTemplateName": "Field",
     "destTemplateId": "0908030B-4564-42EA-A6FA-C7A5A2D921A8",
     "destTemplateName": "Input",
+    "sourceMappingFieldId": "35C76A0B-B630-458C-AECC-1D62C50D24FC", // Field Link
+    "destTemplateMappings": [
+        {
+            "sourceMappingFieldValue": "{6353E864-D3AE-4FF9-88DD-60B0F779A44A}", // Single-Line Text
+            "destTemplateId": "{0908030B-4564-42EA-A6FA-C7A5A2D921A8}"
+        },
+        {
+            "sourceMappingFieldValue": "{42DB4C51-5A19-4BD3-9632-CB488DD63849}", // Multiple-Line Text
+            "destTemplateId": "{D8386D04-C1E3-4CD3-9227-9E9F86EF3C88}"
+        },
+        {
+            "sourceMappingFieldValue": "{1F09D460-200C-4C94-9673-488667FF75D1}", // Password
+            "destTemplateId": "{05D71800-56BE-4A53-AFAB-3819DA817A4A}"
+        },
+        {
+            "sourceMappingFieldValue": "{84ABDA34-F9B1-4D3A-A69B-E28F39697069}", // Email
+            "destTemplateId": "{886ADEC1-ABF8-40E1-9926-D9189C4E8E1B}"
+        },
+        {
+            "sourceMappingFieldValue": "{F3A4D32A-0DD1-4613-8B0F-AC4C40E5D583}", // Telephone
+            "destTemplateId": "{0908030B-4564-42EA-A6FA-C7A5A2D921A8}"
+        },
+        {
+            "sourceMappingFieldValue": "{5A45591E-2FDC-444F-AB2C-AD814788928F}", // SMS-MMS Telephone
+            "destTemplateId": null
+        },
+        {
+            "sourceMappingFieldValue": "{002E5FD5-8B12-4913-BA52-BCC5FEAD2785}", // Number
+            "destTemplateId": "{E8D5A5A3-6430-4701-BAAD-1DB1947616CC}"
+        },
+        {
+            "sourceMappingFieldValue": "{95DD3FCF-2E03-4064-9968-614D1452F20B}", // Date
+            "destTemplateId": "{5AC7621E-9F18-4569-BCEC-F5BF8BA1F4D7}"
+        },
+        {
+            "sourceMappingFieldValue": "{09BF916E-79FB-4AE3-B799-659E63C75EA5}", // Date Picker
+            "destTemplateId": "{5AC7621E-9F18-4569-BCEC-F5BF8BA1F4D7}" // Mapped to Date field because Data Picker field doesn't exist
+        },
+        {
+            "sourceMappingFieldValue": "{E079EE36-8620-4D3C-B9BF-010D7A58311F}", // Checkbox
+            "destTemplateId": "{2F07293C-077F-456C-B715-FDB791ACB367}"
+        },
+        {
+            "sourceMappingFieldValue": "{827BDF4A-D886-4B36-9D32-C443EBCA1806}", // File Upload
+            "destTemplateId": null
+        },
+        {
+            "sourceMappingFieldValue": "{C6D97C39-23B5-4B7E-AFC7-9F41795533C6}", // Drop List
+            "destTemplateId": "{9121D435-48B8-4649-9D13-03D680474FAD}" // Dropdown List
+        },
+        {
+            "sourceMappingFieldValue": "{CDD533E2-918A-4BE3-A12F-83A8580363F7}", // List Box
+            "destTemplateId": "{81FE389A-FDC7-4ECA-A5A9-4BE3ACA0C69A}"
+        },
+        {
+            "sourceMappingFieldValue": "{0FAE4DE2-5C37-45A6-B474-9E3AB95FF452}", // Radio List
+            "destTemplateId": "{5B672865-55D2-413E-B699-FDFC7E732CCF}" // Radio Button List
+        },
+        {
+            "sourceMappingFieldValue": "{E994EAE0-EDB0-4D89-B545-FEBEF07DD7CD}", // Checkbox List
+            "destTemplateId": "{5B672865-55D2-413E-B699-FDFC7E732CCF}"
+        },
+        {
+            "sourceMappingFieldValue": "{7FB270BE-FEFC-49C3-8CB4-947878C099E5}", // Captcha
+            "destTemplateId": null
+        },
+        {
+            "sourceMappingFieldValue": "{1AD5CA6E-8A92-49F0-889C-D082F2849FBD}", // Password-Confirmation
+            "destTemplateId": "{52FEC879-7D8D-46D3-BBB2-131293957709}"
+        },
+        {
+            "sourceMappingFieldValue": "{CBB8A16B-A726-4445-99E8-4D835AE1F735}", // Credit Card
+            "destTemplateId": null
+        }
+    ],
     "fields": {
         "existingFields": [
             {
@@ -38,13 +113,13 @@
             },
             {
                 "fieldType": "shared",
-                "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294",
+                "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294", // Field Key
                 "valueType": "System.Guid.ToString" // Random Guid to String
             },
             {
                 "fieldType": "shared",
                 "destFieldId": "D99833EA-238A-4505-90EF-C69BF3EBA946",
-                "valueType": "1"
+                "value": "1"
             }
         ],
         "convertedFields": [
@@ -107,7 +182,7 @@
                         "sourceElementName": "Text",
                         "destFieldId": "B775BCA9-2605-4D60-B367-A0C354BE2504", // Default Value
                         "fieldConverter": null,
-                        "defaultValue": null 
+                        "defaultValue": null
                     },
                     {
                         "sourceElementName": "Information",

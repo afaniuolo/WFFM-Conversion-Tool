@@ -21,7 +21,7 @@ namespace WFFM.ConversionTool.Library.Factories
 			switch (metadataNewField.fieldType)
 			{
 				case FieldType.Shared:
-					destField = CreateSharedField(metadataNewField.fieldId, itemId, fieldValue);
+					destField = CreateSharedField(metadataNewField.destFieldId, itemId, fieldValue);
 					if (destField != null)
 					{
 						destFields.Add(destField);
@@ -30,7 +30,7 @@ namespace WFFM.ConversionTool.Library.Factories
 				case FieldType.Versioned:
 					foreach (var langVersion in langVersions)
 					{
-						destField = CreateVersionedField(metadataNewField.fieldId, itemId, fieldValue, langVersion.Item2, langVersion.Item1);
+						destField = CreateVersionedField(metadataNewField.destFieldId, itemId, fieldValue, langVersion.Item2, langVersion.Item1);
 						if (destField != null)
 						{
 							destFields.Add(destField);
@@ -40,7 +40,7 @@ namespace WFFM.ConversionTool.Library.Factories
 				case FieldType.Unversioned:
 					foreach (var language in languages)
 					{
-						destField = CreateUnversionedField(metadataNewField.fieldId, itemId, fieldValue, language);
+						destField = CreateUnversionedField(metadataNewField.destFieldId, itemId, fieldValue, language);
 						if (destField != null)
 						{
 							destFields.Add(destField);
