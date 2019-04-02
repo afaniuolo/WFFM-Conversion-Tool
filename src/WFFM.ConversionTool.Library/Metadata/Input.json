@@ -139,9 +139,9 @@
                 "destFieldId": "8A43AF61-0812-4B37-A343-96CDE3F12BB1" // Required
             },
             {
-                "fieldConverter": "FieldTypeConverter",
+                "fieldConverter": null,
                 "sourceFieldId": "35C76A0B-B630-458C-AECC-1D62C50D24FC", // Field Link
-                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563" // Field Type
+                "destFieldId": null // Conversion not needed - Field Type value set by standard values of dest template
             },
             {
                 "fieldConverter": null,
@@ -154,8 +154,8 @@
                     },
                     {
                         "sourceElementName": "PredefinedValidator",
-                        "destFieldId": "10E5829A-1943-4597-B9EE-406CE3D13E13", // Validations
-                        "fieldConverter": "ValidatorConverter" // TODO: Create ValidatorConverter
+                        "destFieldId": null, // Conversion not needed - Validations value set by standard values of dest template
+                        "fieldConverter": null
                     },
                     {
                         "sourceElementName": "RegexPattern",
