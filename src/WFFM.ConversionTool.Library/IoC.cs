@@ -12,7 +12,7 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
-using WFFM.ConversionTool.Library.Readers;
+using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library
@@ -36,7 +36,7 @@ namespace WFFM.ConversionTool.Library
 
 			// App Settings
 			container.RegisterSingleton<AppSettings>(createAppSettings);
-			container.Register<IMetadataReader, MetadataReader>();
+			container.Register<IMetadataProvider, MetadataProvider>();
 
 			container.Register<IDestMasterRepository, DestMasterRepository>();
 			container.Register<ISourceMasterRepository, SourceMasterRepository>();
@@ -84,7 +84,7 @@ namespace WFFM.ConversionTool.Library
 		private static AppSettings createAppSettings()
 		{
 			//Read json file
-			var appSettingsFile = System.IO.File.ReadAllText("Metadata/AppSettings.json"); // TODO: Add null checks
+			var appSettingsFile = System.IO.File.ReadAllText("AppSettings.json"); // TODO: Add null checks
 			// Deserialize Json to Object
 			return JsonConvert.DeserializeObject<AppSettings>(appSettingsFile);
 		}

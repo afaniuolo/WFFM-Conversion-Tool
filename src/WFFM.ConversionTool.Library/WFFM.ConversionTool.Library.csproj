@@ -74,8 +74,8 @@
     <Compile Include="Factories\IFieldFactory.cs" />
     <Compile Include="Factories\IItemFactory.cs" />
     <Compile Include="Factories\ItemFactory.cs" />
-    <Compile Include="Readers\IMetadataReader.cs" />
-    <Compile Include="Readers\MetadataReader.cs" />
+    <Compile Include="Providers\IMetadataProvider.cs" />
+    <Compile Include="Providers\MetadataProvider.cs" />
     <Compile Include="IoC.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log4NetAdapter.cs" />
@@ -102,13 +102,67 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Metadata\AppSettings.json">
+    <None Include="AppSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Metadata\Input.json">
+    <None Include="Metadata\BaseTemplate.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\CheckboxList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\DatePicker.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\RadioButtonList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\ListBox.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\DropdownList.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Date.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Checkbox.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\List.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Number.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\PasswordConfirmation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Telephone.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\SingleLineText.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Email.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Folder.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Field.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Input.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Metadata\Form.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\Password.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Metadata\Fields\MultipleLineText.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Metadata\Page.json">

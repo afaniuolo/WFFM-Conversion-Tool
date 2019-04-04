@@ -13,15 +13,10 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string sourceTemplateName { get; set; }
 		public Guid destTemplateId { get; set; }
 		public string destTemplateName { get; set; }
-		public List<DestTemplateMapping> destTemplateMappings { get; set; }
+		public string baseTemplateMetadataFileName { get; set; }
 		public MetadataFields fields { get; set; }
 		public Guid sourceMappingFieldId { get; set; }
-
-		public class DestTemplateMapping
-		{
-			public Guid sourceMappingFieldValue { get; set; }
-			public Guid? destTemplateId { get; set; }
-		}
+		public string sourceMappingFieldValue { get; set; }
 
 		public class MetadataFields
 		{

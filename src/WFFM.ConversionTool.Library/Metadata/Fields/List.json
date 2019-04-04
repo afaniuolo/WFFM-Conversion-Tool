@@ -1,0 +1,23 @@
+﻿{
+    "destTemplateId": "5B672865-55D2-413E-B699-FDFC7E732CCF",
+    "destTemplateName": "List",
+    "baseTemplateMetadataFileName": "Field.json",
+    "fields": {
+        "convertedFields": [
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "destFields": [
+
+                ]
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "destFields": [
+
+                ]
+            }
+        ]
+    }
+}

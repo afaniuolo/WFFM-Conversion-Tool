@@ -10,7 +10,7 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
-using WFFM.ConversionTool.Library.Readers;
+using WFFM.ConversionTool.Library.Providers;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
@@ -19,26 +19,36 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IFieldFactory _fieldFactory;
 		private MetadataTemplate _itemMetadataTemplate;
 		private AppSettings _appSettings;
-		private IMetadataReader _metadataReader;
+		private IMetadataProvider _metadataProvider;
+		private IItemFactory _itemFactory;
 
 		private readonly string _baseFieldConverterType = "WFFM.ConversionTool.Library.Converters.BaseFieldConverter, WFFM.ConversionTool.Library";
 
-		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataReader metadataReader)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
-			_metadataReader = metadataReader;
+			_metadataProvider = metadataProvider;
+			_itemFactory = itemFactory;
 		}
 
-		public SCItem Convert(SCItem scItem, Guid destParentId)
+		public List<SCItem> Convert(SCItem scItem, Guid destParentId)
 		{
-			_itemMetadataTemplate = _metadataReader.GetItemMetadata(scItem.TemplateID);
-			return ConvertItemAndFields(scItem, destParentId);
+			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(scItem.TemplateID);
+			if (_itemMetadataTemplate.sourceMappingFieldId != null)
+			{
+				_itemMetadataTemplate = _metadataProvider.GetItemMetadataBySourceMappingFieldValue(scItem.Fields
+					.FirstOrDefault(f => f.FieldId == _itemMetadataTemplate.sourceMappingFieldId)?.Value);
+			}
+
+			List<SCItem> destItems = ConvertItemAndFields(scItem, destParentId);
+			return destItems;
 		}
 
-		private SCItem ConvertItemAndFields(SCItem sourceItem, Guid destParentId)
+		private List<SCItem> ConvertItemAndFields(SCItem sourceItem, Guid destParentId)
 		{
-			return new SCItem()
+			List<SCItem> destItems = new List<SCItem>();
+			var destItem = new SCItem()
 			{
 				ID = sourceItem.ID,
 				Name = sourceItem.Name,
@@ -46,33 +56,11 @@ namespace WFFM.ConversionTool.Library.Converters
 				ParentID = destParentId,
 				Created = sourceItem.Created,
 				Updated = sourceItem.Updated,
-				TemplateID = MapDestTemplateId(sourceItem.Fields),
+				TemplateID = _itemMetadataTemplate.destTemplateId,
 				Fields = ConvertFields(sourceItem.Fields)
 			};
-		}
-
-		private Guid MapDestTemplateId(List<SCField> scFields)
-		{
-			var destTemplateId = Guid.Empty;
-			var sourceMappingFieldId = _itemMetadataTemplate.sourceMappingFieldId;
-			var destTemplateMappings = _itemMetadataTemplate.destTemplateMappings;
-
-			if (sourceMappingFieldId != Guid.Empty && destTemplateMappings.Any())
-			{
-				var sourceMappingFieldValue = scFields.FirstOrDefault(f => f.FieldId == sourceMappingFieldId)?.Value;
-				var destTemplateMapping = destTemplateMappings.FirstOrDefault(m => string.Equals(m.sourceMappingFieldValue.ToString("B"),
-					sourceMappingFieldValue, StringComparison.InvariantCultureIgnoreCase));
-				if (destTemplateMapping != null)
-				{
-					return destTemplateMapping.destTemplateId ?? _itemMetadataTemplate.destTemplateId; // Default to base Input item template if no mapping exists
-				}
-			}
-			else
-			{
-				destTemplateId = _itemMetadataTemplate.destTemplateId;
-			}
-
-			return destTemplateId;
+			destItems.Add(destItem);
+			return destItems;
 		}
 
 		private List<SCField> ConvertFields(List<SCField> fields)

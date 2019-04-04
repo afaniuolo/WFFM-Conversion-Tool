@@ -5,25 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
-using WFFM.ConversionTool.Library.Readers;
+using WFFM.ConversionTool.Library.Providers;
 
 namespace WFFM.ConversionTool.Library.Factories
 {
 	public class ItemFactory : IItemFactory
 	{
 		private MetadataTemplate _itemMetadataTemplate;
-		private IMetadataReader _metadataReader;
+		private IMetadataProvider _metadataProvider;
 		private IFieldFactory _fieldFactory;
 
-		public ItemFactory(IMetadataReader metadataReader, IFieldFactory fieldFactory)
+		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory)
 		{
-			_metadataReader = metadataReader;
+			_metadataProvider = metadataProvider;
 			_fieldFactory = fieldFactory;
 		}
 
 		public SCItem Create(Guid destTemplateId, SCItem parentItem)
 		{
-			_itemMetadataTemplate = _metadataReader.GetItemMetadata(destTemplateId);
+			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(destTemplateId);
 			return CreateItem(destTemplateId, parentItem);
 		}
 

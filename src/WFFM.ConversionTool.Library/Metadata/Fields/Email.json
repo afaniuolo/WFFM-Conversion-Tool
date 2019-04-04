@@ -1,0 +1,31 @@
+﻿{
+    "sourceMappingFieldValue": "{84ABDA34-F9B1-4D3A-A69B-E28F39697069}", // Email
+    "destTemplateId": "886ADEC1-ABF8-40E1-9926-D9189C4E8E1B",
+    "destTemplateName": "Email",
+    "baseTemplateMetadataFileName": "Input.json",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "shared",
+                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563", // Field Type
+                "value": "{04C39CAC-8976-4910-BE0D-879ED3368429}"
+            }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "destFields": [
+
+                ]
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "destFields": [
+
+                ]
+            }
+        ]
+    }
+}

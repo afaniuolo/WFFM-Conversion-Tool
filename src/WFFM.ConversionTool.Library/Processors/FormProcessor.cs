@@ -16,7 +16,7 @@ using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
-using WFFM.ConversionTool.Library.Readers;
+using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Processors
@@ -27,13 +27,14 @@ namespace WFFM.ConversionTool.Library.Processors
 		private ISourceMasterRepository _sourceMasterRepository;
 		private IDestMasterRepository _destMasterRepository;
 		private AppSettings _appSettings;
+		private IMetadataProvider _metadataProvider;
 
 		private readonly string FormTemplateName = "form";
 		private readonly string PageTemplateName = "page";
 		private readonly string SectionTemplateName = "section";
-		private readonly string InputTemplateName = "input";
+		private readonly string InputTemplateName = "field";
 
-		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings,
+		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
 			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
@@ -41,32 +42,27 @@ namespace WFFM.ConversionTool.Library.Processors
 			_sourceMasterRepository = sourceMasterRepository;
 			_destMasterRepository = destMasterRepository;
 			_appSettings = appSettings;
+			_metadataProvider = metadataProvider;
 		}
 
 		public void ConvertForms()
 		{
-			var sourceFormTemplateId =
-				_appSettings.metadataFiles.FirstOrDefault(m => m.templateName.ToLower() == FormTemplateName)?.sourceTemplateId;
+			var sourceFormTemplateId = _metadataProvider.GetItemMetadataByTemplateName(FormTemplateName)?.sourceTemplateId;
 
 			if (sourceFormTemplateId == null)
 				return;
 
-			var destPageTemplateId = _appSettings.metadataFiles.FirstOrDefault(m => m.templateName.ToLower() == PageTemplateName)
-				?.destTemplateId;
+			var destPageTemplateId = _metadataProvider.GetItemMetadataByTemplateName(PageTemplateName)?.destTemplateId;
 
 			if (destPageTemplateId == null)
 				return;
 
-			var sourceSectionTemplateId = _appSettings.metadataFiles
-				.FirstOrDefault(m => m.templateName.ToLower() == SectionTemplateName)
-				?.sourceTemplateId;
+			var sourceSectionTemplateId = _metadataProvider.GetItemMetadataByTemplateName(SectionTemplateName)?.sourceTemplateId;
 
 			if (sourceSectionTemplateId == null)
 				return;
 
-			var sourceFieldTemplateId = _appSettings.metadataFiles
-				.FirstOrDefault(m => m.templateName.ToLower() == InputTemplateName)
-				?.sourceTemplateId;
+			var sourceFieldTemplateId = _metadataProvider.GetItemMetadataByTemplateName(InputTemplateName)?.sourceTemplateId;
 
 			if (sourceFieldTemplateId == null)
 				return;

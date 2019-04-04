@@ -10,6 +10,6 @@ namespace WFFM.ConversionTool.Library.Converters
 {
 	public interface IItemConverter
 	{
-		SCItem Convert(SCItem scItem, Guid destParentId);
+		List<SCItem> Convert(SCItem scItem, Guid destParentId);
 	}
 }

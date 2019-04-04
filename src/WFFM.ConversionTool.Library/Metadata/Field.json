@@ -1,0 +1,96 @@
+﻿{
+    "sourceTemplateId": "C9E1BF85-800A-4247-A3A3-C3F5DFBFD6AA",
+    "sourceTemplateName": "Field",
+    "destTemplateId": "0908030B-4564-42EA-A6FA-C7A5A2D921A8",
+    "destTemplateName": "Input",
+    "baseTemplateMetadataFileName": "BaseTemplate.json",
+    "sourceMappingFieldId": "35C76A0B-B630-458C-AECC-1D62C50D24FC", // Field Link
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "shared",
+                "destFieldId": "71C6DE8E-4718-4977-B83E-B49552EE14B0", // Conditions
+                "value": "\"{\"fieldConditions\":[]}\""
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294", // Field Key
+                "valueType": "System.Guid.ToString" // Random Guid to String
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "D99833EA-238A-4505-90EF-C69BF3EBA946",
+                "value": "1"
+            }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "158836B1-DF1A-4B6D-93C1-75E27207F822", // Save
+                "destFieldId": "90C4F94C-EC2C-4EE4-B4C8-F3E29CBE630E" // Allow Save
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "821724F3-30BB-4152-A770-88BC43AC175A", // Title
+                "destFieldId": "71FFD7B2-8B09-4F7B-8A66-1E4CEF653E8D" // Title
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "ACD3122B-F975-433E-9802-35BC5F8FE2B4", // Required
+                "destFieldId": "8A43AF61-0812-4B37-A343-96CDE3F12BB1" // Required
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "35C76A0B-B630-458C-AECC-1D62C50D24FC", // Field Link
+                "destFieldId": null // Conversion not needed - Field Type value set by standard values of dest template
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "destFields": [
+                    {
+                        "sourceElementName": "CssClass",
+                        "destFieldId": "7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA", // Css Class
+                        "fieldConverter": null
+                    },
+                    {
+                        "sourceElementName": "PredefinedValidator",
+                        "destFieldId": null, // Conversion not needed - Validations value set by standard values of dest template
+                        "fieldConverter": null
+                    },
+                    {
+                        "sourceElementName": "RegexPattern",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    }
+                ]
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "destFields": [
+                    {
+                        "sourceElementName": "PredefinedValidatorTextMessage",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    },
+                    {
+                        "sourceElementName": "DynamicStringLengthAttribute",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    },
+                    {
+                        "sourceElementName": "DynamicRequiredAttribute",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    },
+                    {
+                        "sourceElementName": "MultiRegularExpressionAttribute",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    }
+                ]
+            }
+        ]
+    }
+}

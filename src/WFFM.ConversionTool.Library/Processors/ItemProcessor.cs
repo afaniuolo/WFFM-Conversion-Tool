@@ -27,10 +27,13 @@ namespace WFFM.ConversionTool.Library.Processors
 		public virtual void ConvertAndWriteItem(SCItem sourceItem, Guid parentId)
 		{
 			// Convert
-			var destItem = _itemConverter.Convert(sourceItem, parentId);
+			var destItems = _itemConverter.Convert(sourceItem, parentId);
 
 			// Write to dest
-			_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
+			foreach (var destItem in destItems)
+			{
+				_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
+			}
 		}
 
 		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem)

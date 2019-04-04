@@ -1,0 +1,31 @@
+﻿{
+    "sourceMappingFieldValue": "{E079EE36-8620-4D3C-B9BF-010D7A58311F}", // Checkbox
+    "destTemplateId": "2F07293C-077F-456C-B715-FDB791ACB367",
+    "destTemplateName": "Checkbox",
+    "baseTemplateMetadataFileName": "Input.json",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "shared",
+                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563", // Field Type
+                "value": "{4DA85E8A-3B48-4BC6-9565-8C1F5F36DD1B}"
+            }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "destFields": [
+
+                ]
+            },
+            {
+                "fieldConverter": null,
+                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "destFields": [
+
+                ]
+            }
+        ]
+    }
+}

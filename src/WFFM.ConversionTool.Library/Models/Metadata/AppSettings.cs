@@ -12,20 +12,11 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public Dictionary<string, Guid> itemReferences { get; set; }
 		public List<Converter> converters { get; set; }
 		public string metadataFolderRelativePath { get; set; }
-		public List<MetadataFile> metadataFiles { get; set; }
 
 		public class Converter
 		{
 			public string name { get; set; }
 			public string converterType { get; set; }
-		}
-
-		public class MetadataFile
-		{
-			public Guid sourceTemplateId { get; set; }
-			public Guid destTemplateId { get; set; }
-			public string templateName { get; set; }
-			public string metadataFileName { get; set; }
 		}
 	}
 }
