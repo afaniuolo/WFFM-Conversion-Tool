@@ -1,29 +1,29 @@
 ﻿{
-    "sourceTemplateId": "CF47DBAE-6E22-465A-B9B5-3EB6BCF9ECBF",
+    "sourceTemplateId": "{CF47DBAE-6E22-465A-B9B5-3EB6BCF9ECBF}",
     "sourceTemplateName": "Form Section",
-    "destTemplateId": "8CDDB194-F456-4A75-89B7-346F8F39F95C",
+    "destTemplateId": "{8CDDB194-F456-4A75-89B7-346F8F39F95C}",
     "destTemplateName": "Section",
     "baseTemplateMetadataFileName": "BaseTemplate.json",
     "fields": {
         "newFields": [
             {
                 "fieldType": "shared",
-                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563",
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}",
                 "value": "{447AA745-6D29-4B65-A5A3-8173AA8AF548}"
             },
             {
                 "fieldType": "shared",
-                "destFieldId": "71C6DE8E-4718-4977-B83E-B49552EE14B0",
+                "destFieldId": "{71C6DE8E-4718-4977-B83E-B49552EE14B0}",
                 "value": "\"{\"fieldConditions\":[]}\""
             },
             {
                 "fieldType": "shared",
-                "destFieldId": "7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA",
+                "destFieldId": "{7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA}",
                 "value": ""
             },
             {
                 "fieldType": "shared",
-                "destFieldId": "84ECE662-5034-40CB-9C60-744DB64BB294",
+                "destFieldId": "{84ECE662-5034-40CB-9C60-744DB64BB294}",
                 "valueType": "System.Guid.ToString" // Random Guid to String
             }
         ]

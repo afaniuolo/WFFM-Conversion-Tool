@@ -1,27 +1,27 @@
 ﻿{
     "sourceMappingFieldValue": "{E994EAE0-EDB0-4D89-B545-FEBEF07DD7CD}", // Checkbox List
-    "destTemplateId": "5B672865-55D2-413E-B699-FDFC7E732CCF",
+    "destTemplateId": "{5B672865-55D2-413E-B699-FDFC7E732CCF}",
     "destTemplateName": "CheckboxList",
     "baseTemplateMetadataFileName": "List.json",
     "fields": {
         "newFields": [
             {
                 "fieldType": "shared",
-                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563", // Field Type
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
                 "value": "{D86A361A-D4FF-46B2-9E97-A37FC5B1FE1A}"
             }
         ],
         "convertedFields": [
             {
                 "fieldConverter": null,
-                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
 
                 ]
             },
             {
                 "fieldConverter": null,
-                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
 
                 ]

@@ -1,38 +1,38 @@
 ﻿{
-    "destTemplateId": "0908030B-4564-42EA-A6FA-C7A5A2D921A8",
+    "destTemplateId": "{0908030B-4564-42EA-A6FA-C7A5A2D921A8}",
     "destTemplateName": "Input",
     "baseTemplateMetadataFileName": "Field.json",
     "fields": {
         "convertedFields": [
             {
                 "fieldConverter": null,
-                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
                     {
                         "sourceElementName": "MinLength",
-                        "destFieldId": "9F7DA002-7B86-436B-8DDA-7EFE5837B88E", // Min Length
+                        "destFieldId": "{9F7DA002-7B86-436B-8DDA-7EFE5837B88E}", // Min Length
                         "fieldConverter": null
                     },
                     {
                         "sourceElementName": "MaxLength",
-                        "destFieldId": "71061C01-A495-4BF3-A52C-D378346BFAE2", // Max Length
+                        "destFieldId": "{71061C01-A495-4BF3-A52C-D378346BFAE2}", // Max Length
                         "fieldConverter": null
                     }
                 ]
             },
             {
                 "fieldConverter": null,
-                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
                     {
                         "sourceElementName": "Text",
-                        "destFieldId": "B775BCA9-2605-4D60-B367-A0C354BE2504", // Default Value
+                        "destFieldId": "{B775BCA9-2605-4D60-B367-A0C354BE2504}", // Default Value
                         "fieldConverter": null,
                         "defaultValue": null
                     },
                     {
                         "sourceElementName": "Information",
-                        "destFieldId": "A6972F08-CBB5-4830-A8C9-8A0AE34650D1", // Placeholder Text
+                        "destFieldId": "{A6972F08-CBB5-4830-A8C9-8A0AE34650D1}", // Placeholder Text
                         "fieldConverter": null
                     }
                 ]

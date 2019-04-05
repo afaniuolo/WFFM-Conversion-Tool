@@ -1,27 +1,27 @@
 ﻿{
     "sourceMappingFieldValue": "{42DB4C51-5A19-4BD3-9632-CB488DD63849}", // Multiple-Line Text
-    "destTemplateId": "D8386D04-C1E3-4CD3-9227-9E9F86EF3C88",
+    "destTemplateId": "{D8386D04-C1E3-4CD3-9227-9E9F86EF3C88}",
     "destTemplateName": "MultipleLineText",
     "baseTemplateMetadataFileName": "Input.json",
     "fields": {
         "newFields": [
             {
                 "fieldType": "shared",
-                "destFieldId": "589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563", // Field Type
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
                 "value": "{A296A1C1-0DA0-4493-A92E-B8191F43AEC6}"
             }
         ],
         "convertedFields": [
             {
                 "fieldConverter": null,
-                "sourceFieldId": "358E7AA0-E3E6-4EF6-92DF-EC1301737B50", // Parameters
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
 
                 ]
             },
             {
                 "fieldConverter": null,
-                "sourceFieldId": "26CDC7C2-5307-4591-A7F9-5C034A05630A", // Localized Parameters
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
 
                 ]
