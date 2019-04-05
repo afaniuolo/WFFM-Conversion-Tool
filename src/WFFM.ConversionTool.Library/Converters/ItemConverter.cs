@@ -35,10 +35,14 @@ namespace WFFM.ConversionTool.Library.Converters
 		public List<SCItem> Convert(SCItem scItem, Guid destParentId)
 		{
 			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(scItem.TemplateID);
-			if (_itemMetadataTemplate.sourceMappingFieldId != null)
+			if (_itemMetadataTemplate.sourceMappingFieldId != null && _itemMetadataTemplate.sourceMappingFieldId != Guid.Empty)
 			{
-				_itemMetadataTemplate = _metadataProvider.GetItemMetadataBySourceMappingFieldValue(scItem.Fields
+				var mappedMetadataTemplate = _metadataProvider.GetItemMetadataBySourceMappingFieldValue(scItem.Fields
 					.FirstOrDefault(f => f.FieldId == _itemMetadataTemplate.sourceMappingFieldId)?.Value);
+				if (mappedMetadataTemplate != null)
+				{
+					_itemMetadataTemplate = mappedMetadataTemplate;
+				}
 			}
 
 			List<SCItem> destItems = ConvertItemAndFields(scItem, destParentId);

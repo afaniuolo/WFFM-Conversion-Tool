@@ -55,10 +55,16 @@ namespace WFFM.ConversionTool.Library.Providers
 			MetadataTemplate metadataTemplate = JsonConvert.DeserializeObject<MetadataTemplate>(itemMeta);
 
 			if (string.IsNullOrEmpty(metadataTemplate.baseTemplateMetadataFileName)) return metadataTemplate;
-			var baseTemplateMetadataFilePath = _metadataFiles.FirstOrDefault(f => f.IndexOf(metadataTemplate.baseTemplateMetadataFileName, StringComparison.InvariantCultureIgnoreCase) > -1);
+			var baseTemplateMetadataFilePath = _metadataFiles.FirstOrDefault(f => GetFileName(f).Equals(metadataTemplate.baseTemplateMetadataFileName, StringComparison.InvariantCultureIgnoreCase));
 			var fullMetadataTemplate = MergeBaseMetadataTemplate(metadataTemplate, baseTemplateMetadataFilePath);
 
 			return fullMetadataTemplate;
+		}
+
+		private string GetFileName(string filePath)
+		{
+			var filename = filePath.Split('\\').Last();
+			return filename;
 		}
 
 		private MetadataTemplate MergeBaseMetadataTemplate(MetadataTemplate metadataTemplate, string baseTemplateMetadataFilePath)
@@ -71,7 +77,7 @@ namespace WFFM.ConversionTool.Library.Providers
 
 			if (baseTemplateMeta.baseTemplateMetadataFileName != null)
 			{
-				var filePath = _metadataFiles.FirstOrDefault(f => f.IndexOf(metadataTemplate.baseTemplateMetadataFileName, StringComparison.InvariantCultureIgnoreCase) > -1);
+				var filePath = _metadataFiles.FirstOrDefault(f => f.IndexOf(baseTemplateMeta.baseTemplateMetadataFileName, StringComparison.InvariantCultureIgnoreCase) > -1);
 				baseTemplateMeta = MergeBaseMetadataTemplate(baseTemplateMeta, filePath);
 			}
 
@@ -109,6 +115,10 @@ namespace WFFM.ConversionTool.Library.Providers
 					metadataTemplate.fields.existingFields = baseTemplateMeta.fields.existingFields;
 				}
 			}
+
+			metadataTemplate.fields.convertedFields = metadataTemplate.fields.convertedFields != null ?  metadataTemplate.fields.convertedFields.Distinct().ToList() : metadataTemplate.fields.convertedFields;
+			metadataTemplate.fields.existingFields = metadataTemplate.fields.existingFields != null ? metadataTemplate.fields.existingFields.Distinct().ToList() : metadataTemplate.fields.existingFields;
+			metadataTemplate.fields.newFields = metadataTemplate.fields.newFields != null ? metadataTemplate.fields.newFields.Distinct().ToList() : metadataTemplate.fields.newFields;
 
 			return metadataTemplate;
 		}
