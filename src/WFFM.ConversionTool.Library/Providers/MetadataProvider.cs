@@ -86,7 +86,13 @@ namespace WFFM.ConversionTool.Library.Providers
 			{
 				if (metadataTemplate.fields.newFields != null)
 				{
-					metadataTemplate.fields.newFields.AddRange(baseTemplateMeta.fields.newFields);
+					foreach (var newField in baseTemplateMeta.fields.newFields)
+					{
+						if (metadataTemplate.fields.newFields.All(f => f.destFieldId != newField.destFieldId))
+						{
+							metadataTemplate.fields.newFields.Add(newField);
+						}
+					}
 				}
 				else
 				{
@@ -97,7 +103,32 @@ namespace WFFM.ConversionTool.Library.Providers
 			{
 				if (metadataTemplate.fields.convertedFields != null)
 				{
-					metadataTemplate.fields.convertedFields.AddRange(baseTemplateMeta.fields.convertedFields);
+					foreach (var convertedField in baseTemplateMeta.fields.convertedFields)
+					{
+						// Check if metadataTemplate contains it already
+						var metaConvertedField = metadataTemplate.fields.convertedFields.FirstOrDefault(cf => cf.sourceFieldId == convertedField.sourceFieldId);
+						if (metaConvertedField != null)
+						{
+							if (metaConvertedField.destFields != null && metaConvertedField.destFields.Any())
+							{
+								foreach (var convertedFieldDestField in convertedField.destFields)
+								{
+									if (metaConvertedField.destFields.All(df => !string.Equals(df.sourceElementName, convertedFieldDestField.sourceElementName, StringComparison.InvariantCultureIgnoreCase)))
+									{
+										metaConvertedField.destFields.Add(convertedFieldDestField);
+									}
+								}
+							}
+							else if (metaConvertedField.destFieldId == null)
+							{
+								metaConvertedField.destFields = convertedField.destFields;
+							}
+						}
+						else
+						{
+							metadataTemplate.fields.convertedFields.Add(convertedField);
+						}
+					}
 				}
 				else
 				{
@@ -108,7 +139,13 @@ namespace WFFM.ConversionTool.Library.Providers
 			{
 				if (metadataTemplate.fields.existingFields != null)
 				{
-					metadataTemplate.fields.existingFields.AddRange(baseTemplateMeta.fields.existingFields);
+					foreach (var newField in baseTemplateMeta.fields.existingFields)
+					{
+						if (metadataTemplate.fields.existingFields.All(f => f.fieldId != newField.fieldId))
+						{
+							metadataTemplate.fields.existingFields.Add(newField);
+						}
+					}
 				}
 				else
 				{
