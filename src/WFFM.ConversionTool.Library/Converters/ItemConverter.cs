@@ -76,6 +76,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			IEnumerable<Tuple<string, int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
 			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
+			// Migrate existing fields
 			if (_itemMetadataTemplate.fields.existingFields != null)
 			{
 				var filteredExistingFields = fields.Where(f =>
@@ -93,8 +94,10 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 
+			// Convert fields
 			if (_itemMetadataTemplate.fields.convertedFields != null)
 			{
+				// Select only fields that are mapped
 				var filteredConvertedFields = fields.Where(f =>
 					_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId));
 
@@ -106,6 +109,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 					if (convertedField != null)
 					{
+						// Process fields that have multiple dest fields
 						if (convertedField.destFields != null && convertedField.destFields.Any())
 						{
 							var valueElements = GetXmlElementNames(filteredConvertedField.Value);
@@ -124,6 +128,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								}
 							}
 						}
+						// Process fields that have a single dest field
 						else if (convertedField.destFieldId != null)
 						{
 							IFieldConverter converter = InitConverter(convertedField.fieldConverter);
@@ -138,6 +143,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 
+			// Create new fields
 			foreach (var newField in _itemMetadataTemplate.fields.newFields)
 			{
 				destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
@@ -164,13 +170,7 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			List<string> elementNames = new List<string>();
 			XmlDocument xmlDocument = new XmlDocument();
-
-			// Add parent xml element to value
-			fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
-			// Escape special chars in text value
-			fieldValue = fieldValue.Replace("&", "&amp;");
-
-			xmlDocument.LoadXml(fieldValue);
+			xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
 
 			foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
 			{
@@ -182,17 +182,10 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		private string GetXmlElementValue(string fieldValue, string elementName)
 		{
-			string elementValue = string.Empty;
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
-
-				// Add parent xml element to value
-				fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
-				// Escape special chars in text value
-				fieldValue = fieldValue.Replace("&", "&amp;");
-
-				xmlDocument.LoadXml(fieldValue);
+				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
 
 				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
 
@@ -203,8 +196,16 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 			return string.Empty;
+		}
 
+		private string AddParentNodeAndEncodeElementValue(string fieldValue)
+		{
+			// Add parent xml element to value
+			fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
+			// Escape special chars in text value
+			fieldValue = fieldValue.Replace("&", "&amp;");
 
+			return fieldValue;
 		}
 	}
 

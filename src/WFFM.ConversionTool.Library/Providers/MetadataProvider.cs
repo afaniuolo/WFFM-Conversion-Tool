@@ -75,38 +75,48 @@ namespace WFFM.ConversionTool.Library.Providers
 
 			if (baseTemplateMeta == null) return metadataTemplate;
 
-			if (baseTemplateMeta.baseTemplateMetadataFileName != null)
+			// Iterate merging if baseTemplate filename is not null
+			if (!string.IsNullOrEmpty(baseTemplateMeta.baseTemplateMetadataFileName))
 			{
 				var filePath = _metadataFiles.FirstOrDefault(f => f.IndexOf(baseTemplateMeta.baseTemplateMetadataFileName, StringComparison.InvariantCultureIgnoreCase) > -1);
 				baseTemplateMeta = MergeBaseMetadataTemplate(baseTemplateMeta, filePath);
 			}
 
+			// Merge Fields
+			metadataTemplate.fields = MergeFields(baseTemplateMeta.fields, metadataTemplate.fields);
+
+			return metadataTemplate;
+		}
+
+		private MetadataTemplate.MetadataFields MergeFields(MetadataTemplate.MetadataFields baseFields,
+			MetadataTemplate.MetadataFields metaFields)
+		{
 			// Add base fields
-			if (baseTemplateMeta.fields.newFields != null)
+			if (baseFields.newFields != null)
 			{
-				if (metadataTemplate.fields.newFields != null)
+				if (metaFields.newFields != null)
 				{
-					foreach (var newField in baseTemplateMeta.fields.newFields)
+					foreach (var newField in baseFields.newFields)
 					{
-						if (metadataTemplate.fields.newFields.All(f => f.destFieldId != newField.destFieldId))
+						if (metaFields.newFields.All(f => f.destFieldId != newField.destFieldId))
 						{
-							metadataTemplate.fields.newFields.Add(newField);
+							metaFields.newFields.Add(newField);
 						}
 					}
 				}
 				else
 				{
-					metadataTemplate.fields.newFields = baseTemplateMeta.fields.newFields;
+					metaFields.newFields = baseFields.newFields;
 				}
 			}
-			if (baseTemplateMeta.fields.convertedFields != null)
+			if (baseFields.convertedFields != null)
 			{
-				if (metadataTemplate.fields.convertedFields != null)
+				if (metaFields.convertedFields != null)
 				{
-					foreach (var convertedField in baseTemplateMeta.fields.convertedFields)
+					foreach (var convertedField in baseFields.convertedFields)
 					{
 						// Check if metadataTemplate contains it already
-						var metaConvertedField = metadataTemplate.fields.convertedFields.FirstOrDefault(cf => cf.sourceFieldId == convertedField.sourceFieldId);
+						var metaConvertedField = metaFields.convertedFields.FirstOrDefault(cf => cf.sourceFieldId == convertedField.sourceFieldId);
 						if (metaConvertedField != null)
 						{
 							if (metaConvertedField.destFields != null && metaConvertedField.destFields.Any())
@@ -126,38 +136,34 @@ namespace WFFM.ConversionTool.Library.Providers
 						}
 						else
 						{
-							metadataTemplate.fields.convertedFields.Add(convertedField);
+							metaFields.convertedFields.Add(convertedField);
 						}
 					}
 				}
 				else
 				{
-					metadataTemplate.fields.convertedFields = baseTemplateMeta.fields.convertedFields;
+					metaFields.convertedFields = baseFields.convertedFields;
 				}
 			}
-			if (baseTemplateMeta.fields.existingFields != null)
+			if (baseFields.existingFields != null)
 			{
-				if (metadataTemplate.fields.existingFields != null)
+				if (metaFields.existingFields != null)
 				{
-					foreach (var newField in baseTemplateMeta.fields.existingFields)
+					foreach (var newField in baseFields.existingFields)
 					{
-						if (metadataTemplate.fields.existingFields.All(f => f.fieldId != newField.fieldId))
+						if (metaFields.existingFields.All(f => f.fieldId != newField.fieldId))
 						{
-							metadataTemplate.fields.existingFields.Add(newField);
+							metaFields.existingFields.Add(newField);
 						}
 					}
 				}
 				else
 				{
-					metadataTemplate.fields.existingFields = baseTemplateMeta.fields.existingFields;
+					metaFields.existingFields = baseFields.existingFields;
 				}
 			}
 
-			metadataTemplate.fields.convertedFields = metadataTemplate.fields.convertedFields != null ?  metadataTemplate.fields.convertedFields.Distinct().ToList() : metadataTemplate.fields.convertedFields;
-			metadataTemplate.fields.existingFields = metadataTemplate.fields.existingFields != null ? metadataTemplate.fields.existingFields.Distinct().ToList() : metadataTemplate.fields.existingFields;
-			metadataTemplate.fields.newFields = metadataTemplate.fields.newFields != null ? metadataTemplate.fields.newFields.Distinct().ToList() : metadataTemplate.fields.newFields;
-
-			return metadataTemplate;
+			return metaFields;
 		}
 	}
 }
