@@ -106,35 +106,32 @@ namespace WFFM.ConversionTool.Library.Converters
 
 					if (convertedField != null)
 					{
-						if (!string.IsNullOrEmpty(convertedField.fieldConverter))
+						if (convertedField.destFields != null && convertedField.destFields.Any())
 						{
-							if (convertedField.destFields != null && convertedField.destFields.Any())
+							var valueElements = GetXmlElementNames(filteredConvertedField.Value);
+							var filteredValueElements =
+								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId != null);
+
+							foreach (var valueXmlElementMapping in filteredValueElements)
 							{
-								var valueElements = GetXmlElementNames(filteredConvertedField.Value);
-								var filteredValueElements =
-									convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId != null);
+								IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
 
-								foreach (var valueXmlElementMapping in filteredValueElements)
-								{
-									IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
-
-									SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
-
-									if (destField != null && destField.FieldId != Guid.Empty)
-									{
-										destFields.Add(destField);
-									}
-								}
-							}
-							else
-							{
-								IFieldConverter converter = InitConverter(convertedField.fieldConverter);
-								SCField destField = converter?.ConvertField(filteredConvertedField, (Guid)convertedField.destFieldId);
+								SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
 
 								if (destField != null && destField.FieldId != Guid.Empty)
 								{
 									destFields.Add(destField);
 								}
+							}
+						}
+						else if (convertedField.destFieldId != null)
+						{
+							IFieldConverter converter = InitConverter(convertedField.fieldConverter);
+							SCField destField = converter?.ConvertField(filteredConvertedField, (Guid)convertedField.destFieldId);
+
+							if (destField != null && destField.FieldId != Guid.Empty)
+							{
+								destFields.Add(destField);
 							}
 						}
 					}
@@ -167,9 +164,15 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			List<string> elementNames = new List<string>();
 			XmlDocument xmlDocument = new XmlDocument();
+
+			// Add parent xml element to value
+			fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
+			// Escape special chars in text value
+			fieldValue = fieldValue.Replace("&", "&amp;");
+
 			xmlDocument.LoadXml(fieldValue);
 
-			foreach (XmlNode childNode in xmlDocument.ChildNodes)
+			foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
 			{
 				elementNames.Add(childNode.Name.ToLower());
 			}
@@ -183,6 +186,12 @@ namespace WFFM.ConversionTool.Library.Converters
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
+
+				// Add parent xml element to value
+				fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
+				// Escape special chars in text value
+				fieldValue = fieldValue.Replace("&", "&amp;");
+
 				xmlDocument.LoadXml(fieldValue);
 
 				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
@@ -190,7 +199,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				if (elementsByTagName.Count > 0)
 				{
 					var element = elementsByTagName.Item(0);
-					return element?.Value;
+					return element?.InnerXml;
 				}
 			}
 			return string.Empty;

@@ -8,7 +8,7 @@ using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
-	public abstract class BaseFieldConverter : IFieldConverter
+	public class BaseFieldConverter : IFieldConverter
 	{
 		public virtual string ConvertValue(string sourceValue)
 		{
@@ -24,7 +24,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		public SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue)
 		{
-			var convertedValue = ConvertValue(scField.Value);
+			var convertedValue = ConvertValue(elementValue);
 			if (convertedValue == null) return null;
 			return CreateFieldFromElement(scField, destFieldId, convertedValue);
 		}
