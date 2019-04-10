@@ -27,8 +27,7 @@
                     {
                         "sourceElementName": "Text",
                         "destFieldId": "{B775BCA9-2605-4D60-B367-A0C354BE2504}", // Default Value
-                        "fieldConverter": null,
-                        "defaultValue": null
+                        "fieldConverter": null
                     },
                     {
                         "sourceElementName": "Information",
