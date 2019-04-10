@@ -2,7 +2,7 @@
     "sourceMappingFieldValue": "{09BF916E-79FB-4AE3-B799-659E63C75EA5}", // Date Picker
     "destTemplateId": "{5AC7621E-9F18-4569-BCEC-F5BF8BA1F4D7}",
     "destTemplateName": "Date",
-    "baseTemplateMetadataFileName": "Input.json",
+    "baseTemplateMetadataFileName": "Date.json",
     "fields": {
         "newFields": [
             {

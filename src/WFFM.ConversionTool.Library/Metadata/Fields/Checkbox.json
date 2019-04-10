@@ -2,7 +2,7 @@
     "sourceMappingFieldValue": "{E079EE36-8620-4D3C-B9BF-010D7A58311F}", // Checkbox
     "destTemplateId": "{2F07293C-077F-456C-B715-FDB791ACB367}",
     "destTemplateName": "Checkbox",
-    "baseTemplateMetadataFileName": "Input.json",
+    "baseTemplateMetadataFileName": "Field.json",
     "fields": {
         "newFields": [
             {
@@ -16,7 +16,11 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-
+                    {
+                        "sourceElementName": "Checked",
+                        "destFieldId": "{3C05A626-A3B1-4CBC-BF67-198537A13E20}", // Default Value
+                        "fieldConverter": "CheckedConverter"
+                    }
                 ]
             },
             {

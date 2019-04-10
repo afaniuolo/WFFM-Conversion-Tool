@@ -2,7 +2,7 @@
     "sourceMappingFieldValue": "{95DD3FCF-2E03-4064-9968-614D1452F20B}", // Date
     "destTemplateId": "{5AC7621E-9F18-4569-BCEC-F5BF8BA1F4D7}",
     "destTemplateName": "Date",
-    "baseTemplateMetadataFileName": "Input.json",
+    "baseTemplateMetadataFileName": "Field.json",
     "fields": {
         "newFields": [
             {
@@ -16,7 +16,26 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-
+                    {
+                        "sourceElementName": "StartDate",
+                        "destFieldId": "{CC82B5D9-B130-435C-8992-74E798966527}", // Min
+                        "fieldConverter": "DateConverter"
+                    },
+                    {
+                        "sourceElementName": "EndDate",
+                        "destFieldId": "{E47830D7-EB85-46FF-AA95-5A2914D12E9A}", // Max
+                        "fieldConverter": "DateConverter"
+                    },
+                    {
+                        "sourceElementName": "SelectedDate",
+                        "destFieldId": "{6D66CA46-0489-4129-BA2C-CDE3E935DB7C}", // Default Value
+                        "fieldConverter": "DateConverter"
+                    },
+                    {
+                        "sourceElementName": "DateFormat",
+                        "destFieldId": null,
+                        "fieldConverter": null
+                    }
                 ]
             },
             {
