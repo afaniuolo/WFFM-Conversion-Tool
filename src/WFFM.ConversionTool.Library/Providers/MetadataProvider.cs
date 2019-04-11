@@ -85,7 +85,40 @@ namespace WFFM.ConversionTool.Library.Providers
 			// Merge Fields
 			metadataTemplate.fields = MergeFields(baseTemplateMeta.fields, metadataTemplate.fields);
 
+			// Merge Descendant Items
+			metadataTemplate.descendantItems =
+				MergeDescendantItems(baseTemplateMeta.descendantItems, metadataTemplate.descendantItems);
+
 			return metadataTemplate;
+		}
+
+		private List<MetadataTemplate.DescendantItem> MergeDescendantItems(
+			List<MetadataTemplate.DescendantItem> baseDescendantItems, List<MetadataTemplate.DescendantItem> metaDescendantItems)
+		{
+			if (baseDescendantItems != null)
+			{
+				if (metaDescendantItems != null)
+				{
+					foreach (var baseDescendantItem in baseDescendantItems)
+					{
+						if (!metaDescendantItems.Any(f =>
+							string.Equals(f.itemName, baseDescendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)
+							&& string.Equals(f.destTemplateName, baseDescendantItem.destTemplateName,
+								StringComparison.InvariantCultureIgnoreCase)
+							&& string.Equals(f.parentItemName, baseDescendantItem.parentItemName)
+							&& f.isParentChild == baseDescendantItem.isParentChild))
+						{
+							metaDescendantItems.Add(baseDescendantItem);
+						}
+					}
+				}
+				else
+				{
+					return baseDescendantItems;
+				}
+			}
+
+			return metaDescendantItems;
 		}
 
 		private MetadataTemplate.MetadataFields MergeFields(MetadataTemplate.MetadataFields baseFields,

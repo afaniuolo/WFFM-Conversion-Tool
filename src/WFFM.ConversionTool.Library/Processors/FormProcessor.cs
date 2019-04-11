@@ -77,7 +77,7 @@ namespace WFFM.ConversionTool.Library.Processors
 				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
 				{
 					// Create Page items for each form (only once)
-					pageId = WriteNewItem((Guid) destPageTemplateId, form);
+					pageId = WriteNewItem((Guid) destPageTemplateId, form, "Page");
 				}
 				else
 				{

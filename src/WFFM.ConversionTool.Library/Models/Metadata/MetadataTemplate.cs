@@ -17,6 +17,15 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public MetadataFields fields { get; set; }
 		public Guid sourceMappingFieldId { get; set; }
 		public string sourceMappingFieldValue { get; set; }
+		public List<DescendantItem> descendantItems { get; set; }
+
+		public class DescendantItem
+		{
+			public string itemName { get; set; }
+			public string destTemplateName { get; set; }
+			public bool isParentChild { get; set; }
+			public string parentItemName { get; set; }
+		}
 
 		public class MetadataFields
 		{

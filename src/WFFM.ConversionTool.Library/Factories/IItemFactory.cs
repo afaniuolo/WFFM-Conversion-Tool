@@ -9,6 +9,6 @@ namespace WFFM.ConversionTool.Library.Factories
 {
 	public interface IItemFactory
 	{
-		SCItem Create(Guid destTemplateId, SCItem parentItem);
+		SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName);
 	}
 }

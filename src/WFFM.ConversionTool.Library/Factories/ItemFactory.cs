@@ -21,20 +21,20 @@ namespace WFFM.ConversionTool.Library.Factories
 			_fieldFactory = fieldFactory;
 		}
 
-		public SCItem Create(Guid destTemplateId, SCItem parentItem)
+		public SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName)
 		{
 			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(destTemplateId);
-			return CreateItem(destTemplateId, parentItem);
+			return CreateItem(parentItem, itemName);
 		}
 
-		private SCItem CreateItem(Guid destTemplateId, SCItem parentItem)
+		private SCItem CreateItem(SCItem parentItem, string itemName)
 		{
 			var itemId = Guid.NewGuid();
 
 			return new SCItem()
 			{
 				ID = itemId,
-				Name = "Page",
+				Name = itemName,
 				MasterID = Guid.Empty,
 				ParentID = parentItem.ID,
 				Created = DateTime.Now,

@@ -36,9 +36,9 @@ namespace WFFM.ConversionTool.Library.Processors
 			}
 		}
 
-		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem)
+		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem, string itemName)
 		{
-			var destItem = _itemFactory.Create(destTemplateId, parentItem);
+			var destItem = _itemFactory.Create(destTemplateId, parentItem, itemName);
 
 			_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
 

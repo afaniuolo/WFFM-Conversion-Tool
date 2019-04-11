@@ -43,5 +43,17 @@
                 ]
             }
         ]
-    }
+    },
+    "descendantItems": [
+        {
+            "itemName": "Settings",
+            "destTemplateName": "Folder",
+            "isParentChild": true
+        },
+        {
+            "itemName": "Datasource",
+            "destTemplateName": "Folder",
+            "parentItemName": "Settings"
+        }
+    ] 
 }
