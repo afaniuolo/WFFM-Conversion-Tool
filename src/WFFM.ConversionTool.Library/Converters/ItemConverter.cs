@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Factories;
+using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
@@ -21,15 +23,17 @@ namespace WFFM.ConversionTool.Library.Converters
 		private AppSettings _appSettings;
 		private IMetadataProvider _metadataProvider;
 		private IItemFactory _itemFactory;
+		private IDestMasterRepository _destMasterRepository;
 
 		private readonly string _baseFieldConverterType = "WFFM.ConversionTool.Library.Converters.BaseFieldConverter, WFFM.ConversionTool.Library";
 
-		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
 			_metadataProvider = metadataProvider;
 			_itemFactory = itemFactory;
+			_destMasterRepository = destMasterRepository;
 		}
 
 		public List<SCItem> Convert(SCItem scItem, Guid destParentId)
@@ -61,9 +65,11 @@ namespace WFFM.ConversionTool.Library.Converters
 				Created = sourceItem.Created,
 				Updated = sourceItem.Updated,
 				TemplateID = _itemMetadataTemplate.destTemplateId,
-				Fields = ConvertFields(sourceItem.Fields)
+				Fields = sourceItem.Fields
 			};
-			destItems.Add(destItem);
+
+			var convertedItems = ConvertFields(destItem);
+			destItems.AddRange(convertedItems);
 
 			// Create descendant items
 			if (_itemMetadataTemplate.descendantItems != null)
@@ -73,7 +79,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					if (descendantItem.isParentChild)
 					{
 						var destDescItem = CreateDescendantItem(descendantItem, destItem);
-						destItems.Add(destDescItem);
+						if (destDescItem != null) destItems.Add(destDescItem);
 					}
 					else
 					{
@@ -82,7 +88,7 @@ namespace WFFM.ConversionTool.Library.Converters
 						if (destParentItem != null)
 						{
 							var destDescItem = CreateDescendantItem(descendantItem, destParentItem);
-							destItems.Add(destDescItem);
+							if (destDescItem != null) destItems.Add(destDescItem);
 						}
 					}
 				}
@@ -95,22 +101,32 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			var _descendantItemMetadataTemplate =
 				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
+			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
+				destParentItem.ID);
+			if (children != null && children.Any(i =>
+					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
+			{
+				return null;
+			}
 			return _itemFactory.Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 
-		private List<SCField> ConvertFields(List<SCField> fields)
+		private List<SCItem> ConvertFields(SCItem destItem)
 		{
 			var destFields = new List<SCField>();
+			var destItems = new List<SCItem>();
 
-			var itemId = fields.First().ItemId;
+			var sourceFields = destItem.Fields;
 
-			IEnumerable<Tuple<string, int>> langVersions = fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
-			var languages = fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
+			var itemId = sourceFields.First().ItemId;
+
+			IEnumerable<Tuple<string, int>> langVersions = sourceFields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
+			var languages = sourceFields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
 			// Migrate existing fields
 			if (_itemMetadataTemplate.fields.existingFields != null)
 			{
-				var filteredExistingFields = fields.Where(f =>
+				var filteredExistingFields = sourceFields.Where(f =>
 					_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId));
 
 				foreach (var filteredExistingField in filteredExistingFields)
@@ -129,7 +145,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			if (_itemMetadataTemplate.fields.convertedFields != null)
 			{
 				// Select only fields that are mapped
-				var filteredConvertedFields = fields.Where(f =>
+				var filteredConvertedFields = sourceFields.Where(f =>
 					_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId));
 
 				foreach (var filteredConvertedField in filteredConvertedFields)
@@ -143,7 +159,7 @@ namespace WFFM.ConversionTool.Library.Converters
 						// Process fields that have multiple dest fields
 						if (convertedField.destFields != null && convertedField.destFields.Any())
 						{
-							var valueElements = GetXmlElementNames(filteredConvertedField.Value);
+							var valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
 							var filteredValueElements =
 								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId != null);
 
@@ -151,11 +167,38 @@ namespace WFFM.ConversionTool.Library.Converters
 							{
 								IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
 
-								SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
+								SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
 
 								if (destField != null && destField.FieldId != Guid.Empty)
 								{
 									destFields.Add(destField);
+								}
+							}
+
+							var filteredValueElementsToMany = convertedField.destFields.Where(f =>
+								valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId == null);
+
+							foreach (var valueXmlElementMapping in filteredValueElementsToMany)
+							{
+								// Special case for List Datasource fields
+								if (string.Equals(valueXmlElementMapping.sourceElementName, "Items",
+									StringComparison.InvariantCultureIgnoreCase))
+								{
+									IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
+
+									List<SCField> convertedFields = converter?.ConvertValueElementToFields(filteredConvertedField,
+										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
+									if (convertedFields != null && convertedFields.Any())
+									{
+										destFields.AddRange(convertedFields);
+									}
+
+									List<SCItem> convertedItems = converter?.ConvertValueElementToItems(filteredConvertedField,
+										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
+									if (convertedItems != null && convertedItems.Any())
+									{
+										destItems.AddRange(convertedItems);
+									}
 								}
 							}
 						}
@@ -180,7 +223,10 @@ namespace WFFM.ConversionTool.Library.Converters
 				destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
 			}
 
-			return destFields;
+			destItem.Fields = destFields;
+			destItems.Add(destItem);
+
+			return destItems;
 		}
 
 		private IFieldConverter InitConverter(string converterName)
@@ -197,47 +243,9 @@ namespace WFFM.ConversionTool.Library.Converters
 			return ConverterInstantiator.CreateInstance(converterType);
 		}
 
-		private List<string> GetXmlElementNames(string fieldValue)
-		{
-			List<string> elementNames = new List<string>();
-			XmlDocument xmlDocument = new XmlDocument();
-			xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
 
-			foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
-			{
-				elementNames.Add(childNode.Name.ToLower());
-			}
 
-			return elementNames;
-		}
 
-		private string GetXmlElementValue(string fieldValue, string elementName)
-		{
-			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
-			{
-				XmlDocument xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-
-				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
-
-				if (elementsByTagName.Count > 0)
-				{
-					var element = elementsByTagName.Item(0);
-					return element?.InnerXml;
-				}
-			}
-			return string.Empty;
-		}
-
-		private string AddParentNodeAndEncodeElementValue(string fieldValue)
-		{
-			// Add parent xml element to value
-			fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
-			// Escape special chars in text value
-			fieldValue = fieldValue.Replace("&", "&amp;");
-
-			return fieldValue;
-		}
 	}
 
 }

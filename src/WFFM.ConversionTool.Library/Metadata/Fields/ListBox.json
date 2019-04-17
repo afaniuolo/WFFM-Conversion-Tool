@@ -16,7 +16,16 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-
+                    {
+                        "sourceElementName": "SelectionMode",
+                        "destFieldId": "{F1299F31-B054-40AF-B5FB-6F16692CCBDF}", // Multiple Selection
+                        "fieldConverter": "SelectionModeConverter"
+                    },
+                    {
+                        "sourceElementName": "Rows",
+                        "destFieldId": "{3F67BE6A-F3F0-41C5-B379-C6AF29685666}", // Rows
+                        "fieldConverter": null
+                    }
                 ]
             },
             {

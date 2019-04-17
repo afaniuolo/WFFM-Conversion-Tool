@@ -8,38 +8,23 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-                    {
-                        "sourceElementName": "",
-                        "destFieldId": "{5BE76442-950F-4C1F-A797-BEBD71101ABB}", // Datasource
-                        "fieldConverter": null
-                    },
-                    {
-                        "sourceElementName": "",
-                        "destFieldId": "{54424E06-0E7A-47A7-8CB2-7383D700472F}", // Is Dynamic
-                        "fieldConverter": null
-                    },
-                    {
-                        "sourceElementName": "",
-                        "destFieldId": "{492361E0-72D8-4847-82BA-EBFC235CF57B}", // Display Field Name
-                        "fieldConverter": null
-                    },
-                    {
-                        "sourceElementName": "",
-                        "destFieldId": "{78778432-6327-4CEA-A28B-E190E3541D28}", // Value Field Name
-                        "fieldConverter": null
-                    },
-                    {
-                        "sourceElementName": "",
-                        "destFieldId": "{21ED172D-97E2-4AC4-8EAF-0A8860B891F4}", // Default Selection
-                        "fieldConverter": null
-                    }
+                    
                 ]
             },
             {
                 "fieldConverter": null,
                 "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
-
+                    {
+                        "sourceElementName": "Items",
+                        "destFieldId": null,
+                        "fieldConverter": "DatasourceConverter"
+                    },
+                    {
+                        "sourceElementName": "SelectedValue",
+                        "destFieldId": "{21ED172D-97E2-4AC4-8EAF-0A8860B891F4}", // Default Selection
+                        "fieldConverter": null
+                    }
                 ]
             }
         ]

@@ -60,6 +60,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return scItems;
 		}
 
+		public SCItem GetSitecoreChildrenItem(Guid templateId, string itemName)
+		{
+			throw new NotImplementedException();
+		}
+
 		private void AddOrUpdateItem(SCItem scItem)
 		{
 			var dbItem = new Item()

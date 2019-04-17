@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 {
-	public class CheckedConverter : BaseFieldConverter
+	public class SelectionModeConverter : BaseFieldConverter
 	{
 		public override string ConvertValue(string sourceValue)
 		{
-			return sourceValue.ToLower() == "yes" ? "1" : "";
+			return sourceValue.ToLower() == "multiple" ? "1" : "";
 		}
 	}
 }

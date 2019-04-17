@@ -19,7 +19,7 @@
                     {
                         "sourceElementName": "Checked",
                         "destFieldId": "{3C05A626-A3B1-4CBC-BF67-198537A13E20}", // Default Value
-                        "fieldConverter": "CheckedConverter"
+                        "fieldConverter": "YesNoConverter"
                     }
                 ]
             },

@@ -29,7 +29,17 @@ namespace WFFM.ConversionTool.Library.Converters
 			return CreateFieldFromElement(scField, destFieldId, convertedValue);
 		}
 
-		private SCField CreateFieldFromElement(SCField scField, Guid destFieldId, string convertedValue)
+		public virtual List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue)
+		{
+			return new List<SCItem>();
+		}
+
+		public virtual List<SCField> ConvertValueElementToFields(SCField scField, string elementValue)
+		{
+			return new List<SCField>();
+		}
+
+		public SCField CreateFieldFromElement(SCField scField, Guid destFieldId, string convertedValue)
 		{
 			return new SCField()
 			{
@@ -45,7 +55,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			};
 		}
 
-		private SCField CreateField(SCField scField, Guid destFieldId, string convertedValue)
+		public SCField CreateField(SCField scField, Guid destFieldId, string convertedValue)
 		{
 			return new SCField()
 			{

@@ -16,7 +16,11 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-
+                    {
+                        "sourceElementName": "EmptyChoice",
+                        "destFieldId": "{6BF5048D-FBBD-4839-9F18-4412D4E11834}", // Show Empty Value
+                        "fieldConverter": "YesNoConverter"
+                    }
                 ]
             },
             {
