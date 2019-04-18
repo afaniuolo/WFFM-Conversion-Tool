@@ -117,7 +117,8 @@ namespace WFFM.ConversionTool.Library.Converters
 			if (children != null && children.Any(i =>
 					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
 			{
-				return null;
+				return children.FirstOrDefault(i =>
+					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
 			}
 			return _itemFactory.Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
