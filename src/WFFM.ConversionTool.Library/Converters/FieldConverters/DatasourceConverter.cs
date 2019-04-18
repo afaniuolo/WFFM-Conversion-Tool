@@ -5,27 +5,50 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 {
 	public class DatasourceConverter : BaseFieldConverter
 	{
-		public override List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue)
+		private IItemFactory _itemFactory;
+
+		public DatasourceConverter(IItemFactory itemFactory)
 		{
+			_itemFactory = itemFactory;
+		}
+
+		public override List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue, MetadataTemplate metadataTemplate, SCItem sourceItem)
+		{
+			List<SCItem> convertedItems = new List<SCItem>();
+
 			var decodedElementValue = Uri.UnescapeDataString(elementValue).Replace("+", " ");
 
-			var itemElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "item");
-			if (itemElements != null && itemElements.Count > 0)
+			var queryElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "query");
+			if (queryElements != null && queryElements.Count > 0)
 			{
-				foreach (XmlNode itemElement in itemElements)
+				foreach (XmlNode queryElement in queryElements)
 				{
-					// Create items
-				}
+					if (queryElement.Attributes != null && queryElement.Attributes["t"] != null)
+					{
+						var queryType = queryElement.Attributes["t"].Value;
+						if (string.Equals(queryType, "default", StringComparison.InvariantCultureIgnoreCase))
+						{
+							var value = XmlHelper.GetXmlElementValue(queryElement.InnerXml, "value");
+							if (!string.IsNullOrEmpty(value))
+							{
+								SCItem convertedItem = _itemFactory.Create(metadataTemplate.destTemplateId, sourceItem, value);
+								convertedItems.Add(convertedItem);							
+							}
+						}
+					}
+				}				
 			}
 
-			return new List<SCItem>();
+			return convertedItems;
 		}
 
 		public override List<SCField> ConvertValueElementToFields(SCField scField, string elementValue)

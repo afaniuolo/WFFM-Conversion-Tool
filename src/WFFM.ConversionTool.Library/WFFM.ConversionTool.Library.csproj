@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BaseFieldConverter.cs" />
-    <Compile Include="Converters\ConverterInstantiator.cs" />
     <Compile Include="Converters\FieldConverters\DatasourceConverter.cs" />
     <Compile Include="Converters\FieldConverters\DateConverter.cs" />
     <Compile Include="Converters\FieldConverters\SelectionModeConverter.cs" />
@@ -114,7 +113,9 @@
     <None Include="Metadata\BaseTemplate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Metadata\ExtendedListItem.json" />
+    <None Include="Metadata\ExtendedListItem.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Metadata\Fields\CheckboxList.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -172,7 +173,6 @@
     <None Include="Metadata\Fields\MultipleLineText.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Metadata\ListItem.json" />
     <None Include="Metadata\Page.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

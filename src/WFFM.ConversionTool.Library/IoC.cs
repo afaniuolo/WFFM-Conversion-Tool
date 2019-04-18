@@ -19,10 +19,10 @@ namespace WFFM.ConversionTool.Library
 {
 	public static class IoC
 	{
+		private static Container container = new Container();
+
 		public static Container Initialize()
 		{
-			Container container = new Container();
-
 			container.RegisterConditional(typeof(ILogger),
 				c => typeof(Log4NetAdapter<>).MakeGenericType(c.Consumer.ImplementationType),
 				Lifestyle.Singleton,
@@ -48,9 +48,39 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<FormProcessor>();
 
+			// Configuration to registere unregistered converter types
+			container.ResolveUnregisteredType += (sender, e) =>
+			{
+				if (e.UnregisteredServiceType.IsGenericType &&
+				    e.UnregisteredServiceType.GetGenericTypeDefinition() == typeof(BaseFieldConverter))
+				{
+					object baseConverter = container.GetInstance(typeof(BaseFieldConverter));
+
+					// Register the instance as singleton.
+					e.Register(() => baseConverter);
+				}
+			};
+
 			container.Verify();
 
 			return container;
+		}
+
+		public static IFieldConverter CreateInstance(string converterType)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(converterType))
+					return null;
+
+				var type = Type.GetType(converterType);
+				return (IFieldConverter)container.GetInstance(type);
+			}
+			catch (Exception ex)
+			{
+				// TODO: Add Logging
+				return null;
+			}
 		}
 
 		private static Database.WFFM.WFFM CreateNewSourceContext()

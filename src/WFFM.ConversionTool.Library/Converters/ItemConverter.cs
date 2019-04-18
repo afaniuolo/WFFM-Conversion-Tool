@@ -56,6 +56,8 @@ namespace WFFM.ConversionTool.Library.Converters
 		private List<SCItem> ConvertItemAndFields(SCItem sourceItem, Guid destParentId)
 		{
 			List<SCItem> destItems = new List<SCItem>();
+			List<SCItem> convertedItems = new List<SCItem>();
+
 			var destItem = new SCItem()
 			{
 				ID = sourceItem.ID,
@@ -67,9 +69,6 @@ namespace WFFM.ConversionTool.Library.Converters
 				TemplateID = _itemMetadataTemplate.destTemplateId,
 				Fields = sourceItem.Fields
 			};
-
-			var convertedItems = ConvertFields(destItem);
-			destItems.AddRange(convertedItems);
 
 			// Create descendant items
 			if (_itemMetadataTemplate.descendantItems != null)
@@ -94,6 +93,18 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 
+			if (destItems.Any())
+			{
+				var lastDescendantItem = destItems.FirstOrDefault(item => !destItems.Select(i => i.ParentID).Contains(item.ID));
+				convertedItems = ConvertFields(destItem, lastDescendantItem);
+			}
+			else
+			{
+				convertedItems = ConvertFields(destItem, null);
+			}
+
+			destItems.AddRange(convertedItems);
+
 			return destItems;
 		}
 
@@ -111,7 +122,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			return _itemFactory.Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 
-		private List<SCItem> ConvertFields(SCItem destItem)
+		private List<SCItem> ConvertFields(SCItem destItem, SCItem lastDescendantItem)
 		{
 			var destFields = new List<SCField>();
 			var destItems = new List<SCItem>();
@@ -194,7 +205,8 @@ namespace WFFM.ConversionTool.Library.Converters
 									}
 
 									List<SCItem> convertedItems = converter?.ConvertValueElementToItems(filteredConvertedField,
-										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
+										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName), 
+										_metadataProvider.GetItemMetadataByTemplateName("ExtendedListItem"), lastDescendantItem ?? destItem);
 									if (convertedItems != null && convertedItems.Any())
 									{
 										destItems.AddRange(convertedItems);
@@ -240,7 +252,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					converterType = metaConverter;
 				}
 			}
-			return ConverterInstantiator.CreateInstance(converterType);
+			return IoC.CreateInstance(converterType);
 		}
 
 

@@ -29,7 +29,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			return CreateFieldFromElement(scField, destFieldId, convertedValue);
 		}
 
-		public virtual List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue)
+		public virtual List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue, MetadataTemplate metadataTemplate, SCItem sourceItem)
 		{
 			return new List<SCItem>();
 		}

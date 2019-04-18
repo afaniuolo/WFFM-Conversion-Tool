@@ -14,7 +14,7 @@ namespace WFFM.ConversionTool.Library.Converters
 		string ConvertValue(string sourceValue);
 		SCField ConvertField(SCField scField, Guid destFieldId);
 		SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue);
-		List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue);
+		List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue, MetadataTemplate metadataTemplate, SCItem sourceItem);
 		List<SCField> ConvertValueElementToFields(SCField scField, string elementValue);
 	}
 }
