@@ -43,6 +43,27 @@ namespace WFFM.ConversionTool.Library.Repositories
 			}
 		}
 
+		public void DeleteSitecoreItem(SCItem scItem)
+		{
+			DeleteItem(scItem);
+
+			foreach (SCField scField in scItem.Fields)
+			{
+				switch (scField.Type)
+				{
+					case FieldType.Shared:
+						DeleteSharedField(scField);
+						break;
+					case FieldType.Unversioned:
+						DeleteUnversionedField(scField);
+						break;
+					case FieldType.Versioned:
+						DeleteVersionedField(scField);
+						break;
+				}
+			}
+		}
+
 		public bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem)
 		{
 			return _destMasterDb.Items.Any(item => item.TemplateID == templateId && item.ParentID == scItem.ID);
@@ -58,11 +79,6 @@ namespace WFFM.ConversionTool.Library.Repositories
 			}
 
 			return scItems;
-		}
-
-		public SCItem GetSitecoreChildrenItem(Guid templateId, string itemName)
-		{
-			throw new NotImplementedException();
 		}
 
 		private void AddOrUpdateItem(SCItem scItem)
@@ -130,6 +146,46 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Version = scField.Version ?? 1
 			});
 			_destMasterDb.SaveChanges();
+		}
+
+		private void DeleteItem(SCItem scItem)
+		{
+			var dbItem = _destMasterDb.Items.FirstOrDefault(i => i.ID == scItem.ID);
+			if (dbItem != null)
+			{
+				_destMasterDb.Items.Remove(dbItem);
+				_destMasterDb.SaveChanges();
+			}
+		}
+
+		private void DeleteSharedField(SCField scField)
+		{
+			var dbField = _destMasterDb.SharedFields.FirstOrDefault(i => i.Id == scField.Id);
+			if (dbField != null)
+			{
+				_destMasterDb.SharedFields.Remove(dbField);
+				_destMasterDb.SaveChanges();
+			}
+		}
+
+		private void DeleteUnversionedField(SCField scField)
+		{
+			var dbField = _destMasterDb.UnversionedFields.FirstOrDefault(i => i.Id == scField.Id);
+			if (dbField != null)
+			{
+				_destMasterDb.UnversionedFields.Remove(dbField);
+				_destMasterDb.SaveChanges();
+			}
+		}
+
+		private void DeleteVersionedField(SCField scField)
+		{
+			var dbField = _destMasterDb.VersionedFields.FirstOrDefault(i => i.Id == scField.Id);
+			if (dbField != null)
+			{
+				_destMasterDb.VersionedFields.Remove(dbField);
+				_destMasterDb.SaveChanges();
+			}
 		}
 
 		private SCItem GetSourceItemAndFields(Item sourceItem)

@@ -21,9 +21,17 @@ namespace WFFM.ConversionTool.Library.Factories
 			_fieldFactory = fieldFactory;
 		}
 
-		public SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName)
+		public SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate = null)
 		{
-			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(destTemplateId);
+			if (metadataTemplate != null)
+			{
+				_itemMetadataTemplate = metadataTemplate;
+			}
+			else
+			{
+				_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(destTemplateId);
+			}
+
 			return CreateItem(parentItem, itemName);
 		}
 

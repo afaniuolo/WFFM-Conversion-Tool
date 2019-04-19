@@ -205,9 +205,23 @@ namespace WFFM.ConversionTool.Library.Converters
 										destFields.AddRange(convertedFields);
 									}
 
+									// Delete existing list items
+									var listItemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateName("ExtendedListItem");
+									if (lastDescendantItem != null)
+									{
+										var listItems =
+											_destMasterRepository.GetSitecoreChildrenItems(listItemMetadataTemplate.destTemplateId,
+												lastDescendantItem.ID);
+
+										foreach (SCItem listItem in listItems)
+										{
+											_destMasterRepository.DeleteSitecoreItem(listItem);
+										}
+									}
+
 									List<SCItem> convertedItems = converter?.ConvertValueElementToItems(filteredConvertedField,
-										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName), 
-										_metadataProvider.GetItemMetadataByTemplateName("ExtendedListItem"), lastDescendantItem ?? destItem);
+										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName),
+										listItemMetadataTemplate, lastDescendantItem ?? destItem);
 									if (convertedItems != null && convertedItems.Any())
 									{
 										destItems.AddRange(convertedItems);

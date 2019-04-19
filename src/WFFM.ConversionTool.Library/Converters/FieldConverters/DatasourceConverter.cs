@@ -40,7 +40,10 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 							var value = XmlHelper.GetXmlElementValue(queryElement.InnerXml, "value");
 							if (!string.IsNullOrEmpty(value))
 							{
-								SCItem convertedItem = _itemFactory.Create(metadataTemplate.destTemplateId, sourceItem, value);
+								// Set item value
+								metadataTemplate.fields.newFields
+									.First(field => field.destFieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}")).value = value;
+								SCItem convertedItem = _itemFactory.Create(metadataTemplate.destTemplateId, sourceItem, value, metadataTemplate);
 								convertedItems.Add(convertedItem);							
 							}
 						}
