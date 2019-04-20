@@ -12,6 +12,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public Dictionary<string, Guid> itemReferences { get; set; }
 		public List<Converter> converters { get; set; }
 		public string metadataFolderRelativePath { get; set; }
+		public string invalidItemNameChars { get; set; }
 
 		public class Converter
 		{

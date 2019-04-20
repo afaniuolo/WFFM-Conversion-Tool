@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
@@ -14,11 +16,13 @@ namespace WFFM.ConversionTool.Library.Factories
 		private MetadataTemplate _itemMetadataTemplate;
 		private IMetadataProvider _metadataProvider;
 		private IFieldFactory _fieldFactory;
+		private AppSettings _appSettings;
 
-		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory)
+		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory, AppSettings appSettings)
 		{
 			_metadataProvider = metadataProvider;
 			_fieldFactory = fieldFactory;
+			_appSettings = appSettings;
 		}
 
 		public SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate = null)
@@ -31,6 +35,8 @@ namespace WFFM.ConversionTool.Library.Factories
 			{
 				_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(destTemplateId);
 			}
+
+			itemName = RemoveInvalidChars(itemName);
 
 			return CreateItem(parentItem, itemName);
 		}
@@ -65,6 +71,18 @@ namespace WFFM.ConversionTool.Library.Factories
 			}
 
 			return destFields;
+		}
+
+		private string RemoveInvalidChars(string itemName)
+		{
+			string invalidItemNameChars = _appSettings.invalidItemNameChars;
+			if (string.IsNullOrEmpty(invalidItemNameChars)) return itemName;
+
+			var invalidItemNameCharsDecoded = Uri.UnescapeDataString(invalidItemNameChars);
+			var invalidItemNameCharsEscaped = invalidItemNameCharsDecoded.Replace("[", @"\[").Replace("]", @"\]");
+			var replaceRegex = string.Format("[" + invalidItemNameCharsEscaped + "]");
+
+			return Regex.Replace(itemName, replaceRegex, "");
 		}
 	}
 }
