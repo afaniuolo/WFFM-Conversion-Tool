@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
@@ -78,7 +79,7 @@ namespace WFFM.ConversionTool.Library.Factories
 			string invalidItemNameChars = _appSettings.invalidItemNameChars;
 			if (string.IsNullOrEmpty(invalidItemNameChars)) return itemName;
 
-			var invalidItemNameCharsDecoded = Uri.UnescapeDataString(invalidItemNameChars);
+			var invalidItemNameCharsDecoded = HttpUtility.HtmlDecode(invalidItemNameChars);
 			var invalidItemNameCharsEscaped = invalidItemNameCharsDecoded.Replace("[", @"\[").Replace("]", @"\]");
 			var replaceRegex = string.Format("[" + invalidItemNameCharsEscaped + "]");
 
