@@ -22,7 +22,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			return CreateField(scField, destFieldId, convertedValue);
 		}
 
-		public SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue)
+		public virtual SCField ConvertValueElement(SCField scField, Guid destFieldId, string elementValue, List<SCItem> destItems = null)
 		{
 			var convertedValue = ConvertValue(elementValue);
 			if (convertedValue == null) return null;

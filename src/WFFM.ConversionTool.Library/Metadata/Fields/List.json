@@ -23,7 +23,7 @@
                     {
                         "sourceElementName": "SelectedValue",
                         "destFieldId": "{21ED172D-97E2-4AC4-8EAF-0A8860B891F4}", // Default Selection
-                        "fieldConverter": null
+                        "fieldConverter": "SelectedValueConverter"
                     }
                 ]
             }
