@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Factories;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Repositories;
 
@@ -36,9 +37,9 @@ namespace WFFM.ConversionTool.Library.Processors
 			}
 		}
 
-		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem, string itemName)
+		public virtual Guid WriteNewItem(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate = null)
 		{
-			var destItem = _itemFactory.Create(destTemplateId, parentItem, itemName);
+			var destItem = _itemFactory.Create(destTemplateId, parentItem, itemName, metadataTemplate);
 
 			_destMasterRepository.AddOrUpdateSitecoreItem(destItem);
 

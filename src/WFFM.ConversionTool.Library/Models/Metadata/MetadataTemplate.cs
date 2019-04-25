@@ -42,8 +42,9 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			{
 				public FieldType fieldType { get; set; }
 				public Guid destFieldId { get; set; }
-				public string value { get; set; }
 				public string valueType { get; set; }
+				public string value { get; set; }
+				public Dictionary<Tuple<string, int>, string> values { get; set; }
 			}
 
 			public class MetadataConvertedField

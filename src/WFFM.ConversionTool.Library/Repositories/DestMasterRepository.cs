@@ -81,6 +81,13 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return scItems;
 		}
 
+		public SCItem GetSitecoreItem(Guid itemId)
+		{
+			var item = _destMasterDb.Items.FirstOrDefault(i => i.ID == itemId);
+			if (item == null) return null;
+			return GetSourceItemAndFields(item);
+		}
+
 		private void AddOrUpdateItem(SCItem scItem)
 		{
 			var dbItem = new Item()

@@ -1,0 +1,80 @@
+﻿{
+    "destTemplateId": "{94A46D66-B1B8-405D-AAE4-7B5A9CD61C5E}",
+    "destTemplateName": "Button",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{8CDC337E-A112-42FB-BBB4-4143751E123F}",
+                "valueType": "System.Guid"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{25BED78C-4957-4165-998A-CA1B52F67497}",
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{52807595-0F8F-4B20-8D2A-CB71D28C6103}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{D9CF14B1-FA16-4BA6-9288-E8A174D4D522}",
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
+                "value": "{7CE25CAB-EF3A-4F73-AB13-D33BDC1E4EE2}"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{71C6DE8E-4718-4977-B83E-B49552EE14B0}", // Conditions
+                "value": "\"{\"fieldConditions\":[]}\""
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA}", // Css Class
+                "value": ""
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{84ECE662-5034-40CB-9C60-744DB64BB294}", // Field Key
+                "valueType": "System.Guid.ToString" // Random Guid to String
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{71FFD7B2-8B09-4F7B-8A66-1E4CEF653E8D}", // Title
+                "value": "Submit"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{D842AF43-E220-48D7-9714-6EB2381D2B0C}", // Navigation Step
+                "value": "0"
+            },
+            {
+                "fieldType": "unversioned",
+                "destFieldId": "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}", // __Display name
+                "value": "Submit"
+            }
+        ]
+    },
+    "descendantItems": [
+        {
+            "itemName": "SubmitActions",
+            "destTemplateName": "Folder",
+            "isParentChild": true
+        }
+    ]
+}

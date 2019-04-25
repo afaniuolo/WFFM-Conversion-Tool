@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Models;
@@ -30,6 +31,10 @@ namespace WFFM.ConversionTool.Library.Factories
 				case FieldType.Versioned:
 					foreach (var langVersion in langVersions)
 					{
+						if (metadataNewField.values != null)
+						{
+							fieldValue = metadataNewField.values[langVersion] ?? fieldValue;
+						}
 						destField = CreateVersionedField(metadataNewField.destFieldId, itemId, fieldValue, langVersion.Item2, langVersion.Item1);
 						if (destField != null)
 						{
@@ -40,6 +45,11 @@ namespace WFFM.ConversionTool.Library.Factories
 				case FieldType.Unversioned:
 					foreach (var language in languages)
 					{
+						var langVersion = new Tuple<string,int>(language, 1);
+						if (metadataNewField.values != null)
+						{
+							fieldValue = metadataNewField.values[langVersion] ?? fieldValue;
+						}
 						destField = CreateUnversionedField(metadataNewField.destFieldId, itemId, fieldValue, language);
 						if (destField != null)
 						{

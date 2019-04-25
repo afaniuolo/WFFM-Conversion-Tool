@@ -1,0 +1,63 @@
+﻿{
+    "destTemplateId": "{FC18F915-EAC6-460A-8777-6E1376A9EA09}",
+    "destTemplateName": "Text",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}", // __Updated by
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}", // __Created by
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{8CDC337E-A112-42FB-BBB4-4143751E123F}", // __Revision
+                "valueType": "System.Guid"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{25BED78C-4957-4165-998A-CA1B52F67497}", // __Created
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{52807595-0F8F-4B20-8D2A-CB71D28C6103}", // __Owner
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{D9CF14B1-FA16-4BA6-9288-E8A174D4D522}", // __Updated
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "unversioned",
+                "destFieldId": "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}", // __Display name
+                "valueType": "System.String"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{9666782B-21BB-40CE-B38F-8F6C53FA5070}", // Text
+                "valueType": "System.String"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{C6CAA979-C3AC-4FFC-861E-2961F5FC3C48}", // Html Tag
+                "valueType": "System.Guid"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{71C6DE8E-4718-4977-B83E-B49552EE14B0}", // Conditions
+                "value": "\"{\"fieldConditions\":[]}\""
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{84ECE662-5034-40CB-9C60-744DB64BB294}", // Field Key
+                "valueType": "System.Guid.ToString" // Random Guid to String
+            }
+        ]
+    }
+}

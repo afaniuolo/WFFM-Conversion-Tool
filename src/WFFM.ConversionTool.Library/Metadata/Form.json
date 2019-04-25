@@ -27,6 +27,16 @@
                 "fieldConverter": "TrackingConverter",
                 "sourceFieldId": "{B0A67B2A-8B07-4E0B-8809-69F751709806}",
                 "destFieldId": "{D99833EA-238A-4505-90EF-C69BF3EBA946}"
+            },
+            {
+                "fieldConverter": "ButtonConverter",
+                "sourceFieldId": "{B71296B6-32B9-4703-A8CB-FB7437271103}", // Submit - Name
+                "destFieldId": null
+            },
+            {
+                "fieldConverter": "SaveDataConverter",
+                "sourceFieldId": "{5B891B54-4FCE-489E-A7E6-841D92E9859A}", // Submit - Save Form Data To Storage
+                "destFieldId": null
             }
         ] 
     }

@@ -33,6 +33,7 @@ namespace WFFM.ConversionTool.Library.Processors
 		private readonly string PageTemplateName = "page";
 		private readonly string SectionTemplateName = "section";
 		private readonly string InputTemplateName = "field";
+		private readonly string ButtonTemplateName = "button";
 
 		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
 			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
@@ -67,6 +68,12 @@ namespace WFFM.ConversionTool.Library.Processors
 			if (sourceFieldTemplateId == null)
 				return;
 
+			var destButtonTemplateId = _metadataProvider.GetItemMetadataByTemplateName(ButtonTemplateName)?.destTemplateId;
+
+			if (destButtonTemplateId == null)
+				return;
+
+
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid) sourceFormTemplateId);
 			foreach (var form in forms)
 			{
@@ -74,6 +81,7 @@ namespace WFFM.ConversionTool.Library.Processors
 				ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
 
 				var pageId = Guid.Empty;
+				var pageItem = new SCItem();
 				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
 				{
 					// Create Page items for each form (only once)
@@ -82,7 +90,7 @@ namespace WFFM.ConversionTool.Library.Processors
 				else
 				{
 					// Get Page Item Id
-					var pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid) destPageTemplateId, form.ID).FirstOrDefault();
+					pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid) destPageTemplateId, form.ID).FirstOrDefault();
 					pageId = pageItem?.ID ?? form.ID;
 				}
 
@@ -108,9 +116,54 @@ namespace WFFM.ConversionTool.Library.Processors
 					ConvertAndWriteItem(formField, destParentId);
 				}
 
+				// Create Submit Button
+				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destButtonTemplateId, pageItem))
+				{
+					ConvertSubmitFields(form, pageId);
+				}
+
+				// Convert Submit Mode
+
+				// Convert Other Save Actions
+
 				// Migrate Data
 
 			}
+		}
+
+		private void ConvertSubmitFields(SCItem form, Guid parentId)
+		{
+			var submitNameField =
+				form.Fields.FirstOrDefault(f => f.FieldId == new Guid("{B71296B6-32B9-4703-A8CB-FB7437271103}")); // Submit - Name field
+			var submitName = submitNameField != null ? submitNameField.Value : "Submit";
+			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
+			var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
+
+			var fieldValues = GetFieldValues(form, new Guid("{B71296B6-32B9-4703-A8CB-FB7437271103}"), "Submit");
+
+			// Set button title
+			buttonMetadata.fields.newFields
+				.First(field => field.destFieldId == new Guid("{71FFD7B2-8B09-4F7B-8A66-1E4CEF653E8D}")).values = fieldValues;
+			// Set display name
+			buttonMetadata.fields.newFields
+				.First(field => field.destFieldId == new Guid("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}")).values = fieldValues;
+
+			var submitItemId = WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
+		}
+
+		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue)
+		{
+			var values = new Dictionary<Tuple<string, int>, string>();
+			IEnumerable<Tuple<string, int>> langVersions = sourceItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
+			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
+			foreach (var langVersion in langVersions)
+			{
+				var value = sourceItem.Fields.FirstOrDefault(f =>
+					f.FieldId == sourceFieldId && f.Language == langVersion.Item1 && f.Version == langVersion.Item2)?.Value;
+				values.Add(langVersion, value ?? defaultValue);
+			}
+
+			return values;
 		}
 	}
 }
