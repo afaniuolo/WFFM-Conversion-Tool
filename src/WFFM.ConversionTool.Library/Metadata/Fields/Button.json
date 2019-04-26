@@ -35,13 +35,18 @@
             },
             {
                 "fieldType": "shared",
+                "destFieldId": "{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}", // __Sort Order
+                "value": "5000"
+            },
+            {
+                "fieldType": "shared",
                 "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
                 "value": "{7CE25CAB-EF3A-4F73-AB13-D33BDC1E4EE2}"
             },
             {
                 "fieldType": "shared",
                 "destFieldId": "{71C6DE8E-4718-4977-B83E-B49552EE14B0}", // Conditions
-                "value": "\"{\"fieldConditions\":[]}\""
+                "value": "{\"fieldConditions\":[]}"
             },
             {
                 "fieldType": "shared",
