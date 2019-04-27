@@ -149,7 +149,7 @@ namespace WFFM.ConversionTool.Library.Processors
 					{
 						var destTemplateId = _metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName)
 							.destTemplateId;
-						var parentItemChildren = _destMasterRepository.GetSitecoreChildrenItems(destTemplateId, parentItem.ID);
+						var parentItemChildren = _destMasterRepository.GetSitecoreDescendantsItems(destTemplateId, parentItem.ID);
 						var destParentItem = parentItemChildren.FirstOrDefault(d =>
 							string.Equals(d.Name, descendantItem.parentItemName, StringComparison.InvariantCultureIgnoreCase));
 						if (destParentItem != null)
