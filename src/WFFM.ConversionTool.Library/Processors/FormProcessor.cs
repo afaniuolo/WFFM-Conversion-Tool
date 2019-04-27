@@ -117,12 +117,48 @@ namespace WFFM.ConversionTool.Library.Processors
 				}
 
 				// Create Submit Button
+				Guid buttonItemId;
+				SCItem buttonItem;
+				var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
 				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destButtonTemplateId, pageItem))
-				{
-					var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
-					var buttonItemId = ConvertSubmitFields(form, pageId);
-					var buttonItem = _destMasterRepository.GetSitecoreItem(buttonItemId);
+				{					
+					buttonItemId = ConvertSubmitFields(form, pageId);
+					buttonItem = _destMasterRepository.GetSitecoreItem(buttonItemId);
 					CreateDescendantItems(buttonItem, buttonMetadata);
+				}			
+				else
+				{
+					buttonItem = _destMasterRepository.GetSitecoreDescendantsItems(buttonMetadata.destTemplateId, pageItem.ID).FirstOrDefault();
+				}
+
+				var submitActionsFolder =
+					_destMasterRepository.GetSitecoreChildrenItems(_metadataProvider.GetItemMetadataByTemplateName("Folder").destTemplateId,
+						buttonItem.ID).FirstOrDefault();
+
+				// Save Data Action
+				var submitActionDefMetadata = _metadataProvider.GetItemMetadataByTemplateName("SubmitActionDefinition");
+				var saveFormDataToStorage =
+					form.Fields.FirstOrDefault(field => field.FieldId == new Guid("{5B891B54-4FCE-489E-A7E6-841D92E9859A}")); // Save Form Data To Storage field
+				var saveDataItem = _destMasterRepository
+					.GetSitecoreChildrenItems(submitActionDefMetadata.destTemplateId, submitActionsFolder.ID)
+					.FirstOrDefault(item => string.Equals(item.Name, "Save Data", StringComparison.InvariantCultureIgnoreCase));
+				if (saveDataItem == null)
+				{
+					if (saveFormDataToStorage == null || saveFormDataToStorage.Value == "1")
+					{
+						// Create Save Data submit action					
+						// Set Submit Action field
+						submitActionDefMetadata.fields.newFields
+								.First(field => field.destFieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).value =
+							"{0C61EAB3-A61E-47B8-AE0B-B6EBA0D6EB1B}";
+						WriteNewItem(submitActionDefMetadata.destTemplateId, submitActionsFolder, "Save Data", submitActionDefMetadata);
+					}
+				}
+				else
+				{
+					saveDataItem.Fields.First(field => field.FieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).Value =
+						"{0C61EAB3-A61E-47B8-AE0B-B6EBA0D6EB1B}";
+					_destMasterRepository.AddOrUpdateSitecoreItem(saveDataItem);
 				}
 
 				// Convert Submit Mode

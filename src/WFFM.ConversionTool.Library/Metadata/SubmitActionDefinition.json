@@ -1,0 +1,48 @@
+﻿{
+    "destTemplateId": "{05FE45D4-B9C7-40DE-B767-7C5ABE7119F9}",
+    "destTemplateName": "SubmitActionDefinition",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{8CDC337E-A112-42FB-BBB4-4143751E123F}",
+                "valueType": "System.Guid"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{25BED78C-4957-4165-998A-CA1B52F67497}",
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{52807595-0F8F-4B20-8D2A-CB71D28C6103}",
+                "value": "sitecore\\Admin"
+            },
+            {
+                "fieldType": "versioned",
+                "destFieldId": "{D9CF14B1-FA16-4BA6-9288-E8A174D4D522}",
+                "valueType": "System.DateTime"
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{ABC57B6D-5542-4AB9-A889-106225A032E6}", // Submit Action
+                "value": ""
+            },
+            {
+                "fieldType": "shared",
+                "destFieldId": "{5C796924-3F06-4D1F-8510-8AD9A4244477}", // Parameters
+                "value": ""
+            }
+        ]
+    }
+}
