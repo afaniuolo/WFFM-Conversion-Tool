@@ -306,7 +306,69 @@ namespace WFFM.ConversionTool.Library.Processors
 				}
 
 				// Convert Other Save Actions
+				var formSaveActions = form.Fields
+					.FirstOrDefault(field => field.FieldId == new Guid("{A7F779B9-5FCF-45CC-866B-7C973F5C4FAC}"))?.Value;
+				if (!string.IsNullOrEmpty(formSaveActions))
+				{
+					var saveActionElements = XmlHelper.GetXmlElementNodeList(XmlHelper.GetXmlElementNode(formSaveActions, "g").InnerXml, "li");
+					Dictionary<string, string> saveActionItems = new Dictionary<string, string>();
+					if (saveActionElements != null)
+					{
+						foreach (XmlNode saveActionElement in saveActionElements)
+						{
+							saveActionItems.Add(saveActionElement.Attributes["id"].Value,
+								XmlHelper.GetXmlElementValue(saveActionElement.Value, "parameters"));
+						}
 
+						foreach (var saveActionItem in saveActionItems)
+						{
+							if (saveActionItem.Key == "{AD26FE98-EED1-45C8-95AE-F2714EE33C62}") // Register a Campaign
+							{
+								var trackingCampaign = XmlHelper.GetXmlElementNodeList(tracking, "campaign");
+								var trackingCampaignId = trackingCampaign.Count > 0 ? trackingCampaign[0].Attributes["id"]?.Value : null;
+								if (trackingCampaignId != null)
+								{
+									// Create Trigger Campaign Activity Save Action
+									var triggerCampaignActivitySubmitAction =
+										_metadataProvider.GetItemMetadataByTemplateName("SubmitActionDefinition");
+									var triggerCampaignActivityItem = _destMasterRepository
+										.GetSitecoreChildrenItems(triggerCampaignActivitySubmitAction.destTemplateId, submitActionsFolder.ID)
+										.FirstOrDefault(item =>
+											string.Equals(item.Name, "Trigger Campaign Activity", StringComparison.InvariantCultureIgnoreCase));
+									if (triggerCampaignActivityItem == null)
+									{
+										// Set Submit Action field
+										triggerCampaignActivitySubmitAction.fields.newFields
+												.First(field => field.destFieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).value =
+											"{4A937D74-7986-4E19-9D8E-EC14675B17F0}";
+										// Set Parameters field
+										triggerCampaignActivitySubmitAction.fields.newFields
+												.First(field => field.destFieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).value =
+											string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId);
+
+										WriteNewItem(triggerCampaignActivitySubmitAction.destTemplateId, submitActionsFolder,
+											"Trigger Campaign Activity",
+											triggerCampaignActivitySubmitAction);
+
+									}
+									else
+									{
+										// Set Submit Action field
+										triggerCampaignActivityItem.Fields
+												.First(field => field.FieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).Value =
+											"{4A937D74-7986-4E19-9D8E-EC14675B17F0}";
+										// Set Parameters field
+										triggerCampaignActivityItem.Fields
+												.First(field => field.FieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).Value =
+											string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId);
+
+										_destMasterRepository.AddOrUpdateSitecoreItem(triggerCampaignActivityItem);
+									}
+								}
+							}
+						}
+					}
+				}
 
 				// Migrate Data
 

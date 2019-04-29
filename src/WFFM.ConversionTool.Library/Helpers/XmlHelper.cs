@@ -78,10 +78,13 @@ namespace WFFM.ConversionTool.Library.Helpers
 
 		private static string AddParentNodeAndEncodeElementValue(string fieldValue)
 		{
-			// Add parent xml element to value
-			fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
-			// Escape special chars in text value
-			fieldValue = fieldValue.Replace("&", "&amp;");
+			if (!fieldValue.StartsWith("<?xml", StringComparison.InvariantCultureIgnoreCase))
+			{
+				// Add parent xml element to value
+				fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
+				// Escape special chars in text value
+				fieldValue = fieldValue.Replace("&", "&amp;");
+			}
 
 			return fieldValue;
 		}
