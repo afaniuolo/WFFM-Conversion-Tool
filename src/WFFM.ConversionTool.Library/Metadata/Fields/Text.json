@@ -46,7 +46,7 @@
             {
                 "fieldType": "shared",
                 "destFieldId": "{C6CAA979-C3AC-4FFC-861E-2961F5FC3C48}", // Html Tag
-                "valueType": "System.Guid"
+                "value": "p"
             },
             {
                 "fieldType": "shared",

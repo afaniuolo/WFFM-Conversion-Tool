@@ -6,12 +6,14 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Factories;
+using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
@@ -74,7 +76,7 @@ namespace WFFM.ConversionTool.Library.Processors
 				return;
 
 
-			var forms = _sourceMasterRepository.GetSitecoreItems((Guid) sourceFormTemplateId);
+			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 			foreach (var form in forms)
 			{
 				// Convert and Migrate Form items
@@ -82,20 +84,20 @@ namespace WFFM.ConversionTool.Library.Processors
 
 				var pageId = Guid.Empty;
 				var pageItem = new SCItem();
-				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destPageTemplateId, form))
+				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid)destPageTemplateId, form))
 				{
 					// Create Page items for each form (only once)
-					pageId = WriteNewItem((Guid) destPageTemplateId, form, "Page");
+					pageId = WriteNewItem((Guid)destPageTemplateId, form, "Page");
 				}
 				else
 				{
 					// Get Page Item Id
-					pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid) destPageTemplateId, form.ID).FirstOrDefault();
+					pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid)destPageTemplateId, form.ID).FirstOrDefault(item => string.Equals(item.Name, "Page", StringComparison.InvariantCultureIgnoreCase));
 					pageId = pageItem?.ID ?? form.ID;
 				}
 
 				// Convert and Migrate Section items
-				var sections = _sourceMasterRepository.GetSitecoreChildrenItems((Guid) sourceSectionTemplateId, form.ID);
+				var sections = _sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceSectionTemplateId, form.ID);
 				foreach (var section in sections)
 				{
 					ConvertAndWriteItem(section, pageId);
@@ -103,10 +105,10 @@ namespace WFFM.ConversionTool.Library.Processors
 
 				// Convert and Migrate Form Field items
 				List<SCItem> formFields = new List<SCItem>();
-				formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid) sourceFieldTemplateId, form.ID));
+				formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, form.ID));
 				foreach (var section in sections)
 				{
-					formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid) sourceFieldTemplateId, section.ID));
+					formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, section.ID));
 				}
 
 				foreach (var formField in formFields)
@@ -120,12 +122,12 @@ namespace WFFM.ConversionTool.Library.Processors
 				Guid buttonItemId;
 				SCItem buttonItem;
 				var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
-				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid) destButtonTemplateId, pageItem))
-				{					
+				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid)destButtonTemplateId, pageItem))
+				{
 					buttonItemId = ConvertSubmitFields(form, pageId);
 					buttonItem = _destMasterRepository.GetSitecoreItem(buttonItemId);
 					CreateDescendantItems(buttonItem, buttonMetadata);
-				}			
+				}
 				else
 				{
 					buttonItem = _destMasterRepository.GetSitecoreDescendantsItems(buttonMetadata.destTemplateId, pageItem.ID).FirstOrDefault();
@@ -151,17 +153,111 @@ namespace WFFM.ConversionTool.Library.Processors
 						submitActionDefMetadata.fields.newFields
 								.First(field => field.destFieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).value =
 							"{0C61EAB3-A61E-47B8-AE0B-B6EBA0D6EB1B}";
+						// Set __Sort order field
+						submitActionDefMetadata.fields.newFields
+							.First(field => field.destFieldId == new Guid("{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}")).value = "0";
 						WriteNewItem(submitActionDefMetadata.destTemplateId, submitActionsFolder, "Save Data", submitActionDefMetadata);
 					}
 				}
 				else
 				{
+					// Set Submit Action field
 					saveDataItem.Fields.First(field => field.FieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).Value =
 						"{0C61EAB3-A61E-47B8-AE0B-B6EBA0D6EB1B}";
+					// Set __Sort order field
+					submitActionDefMetadata.fields.newFields
+						.First(field => field.destFieldId == new Guid("{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}")).value = "0";
 					_destMasterRepository.AddOrUpdateSitecoreItem(saveDataItem);
 				}
 
 				// Convert Submit Mode
+				var submitMode = form.Fields.FirstOrDefault(field => field.FieldId == new Guid("{D755DE87-9C62-4EB3-83DC-2293784A3A3F}")); // Submit Mode field
+				if (submitMode != null && submitMode.Value == "{F4D50806-6B89-4F2D-89FE-F77FC0A07D48}") // Redirect Mode
+				{
+					var successPage = form.Fields.FirstOrDefault(field => field.FieldId == new Guid("{9C4C1994-5140-49D3-BAD7-DB997816F816}")); // Success Page field
+					if (successPage != null && !string.IsNullOrEmpty(successPage.Value))
+					{
+						var successPageLink = XmlHelper.GetXmlElementNode(successPage.Value, "link");
+						if (successPageLink != null)
+						{
+							var successPageId = successPageLink.Attributes["id"]?.Value;
+							if (successPageId != null)
+							{
+								// Redirect To Page Action
+								var redirectToPageSubmitAction = _metadataProvider.GetItemMetadataByTemplateName("SubmitActionDefinition");
+								var redirectToPageItem = _destMasterRepository
+									.GetSitecoreChildrenItems(redirectToPageSubmitAction.destTemplateId, submitActionsFolder.ID)
+									.FirstOrDefault(item => string.Equals(item.Name, "Redirect to Page", StringComparison.InvariantCultureIgnoreCase));
+								if (redirectToPageItem == null)
+								{
+									// Set Submit Action field
+									redirectToPageSubmitAction.fields.newFields
+											.First(field => field.destFieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).value =
+										"{3F3E2093-9DEA-4199-86CA-44FC69EF624D}";
+									// Set Parameters field
+									redirectToPageSubmitAction.fields.newFields
+											.First(field => field.destFieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).value =
+										string.Format("{{\"referenceId\":\"{0}\"}}", successPageId);
+									// Set __Sort order field
+									redirectToPageSubmitAction.fields.newFields
+										.First(field => field.destFieldId == new Guid("{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}")).value = "5000";
+
+									WriteNewItem(redirectToPageSubmitAction.destTemplateId, submitActionsFolder, "Redirect to Page",
+										redirectToPageSubmitAction);
+
+								}
+								else
+								{
+									// Set Submit Action field
+									redirectToPageItem.Fields.First(field => field.FieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).Value =
+										"{3F3E2093-9DEA-4199-86CA-44FC69EF624D}";
+									// Set Parameters field
+									redirectToPageItem.Fields.First(field => field.FieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).Value =
+										string.Format("{{\"referenceId\":\"{0}\"}}", successPageId);
+									// Set __Sort order field
+									redirectToPageItem.Fields.First(field => field.FieldId == new Guid("{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}")).Value = "5000";
+
+									_destMasterRepository.AddOrUpdateSitecoreItem(redirectToPageItem);
+								}
+							}
+						}
+					}
+				}
+				else if (submitMode == null || submitMode.Value == "{3B8369A0-CC1A-4E9A-A3DB-7B086379C53B}") // Show Message Mode
+				{
+					// Create success page
+					SCItem successPageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid)destPageTemplateId, form.ID).FirstOrDefault(item => string.Equals(item.Name, "Success Page", StringComparison.InvariantCultureIgnoreCase));
+					Guid successPageId;
+					if (successPageItem == null)
+					{
+						successPageId = WriteNewItem((Guid)destPageTemplateId, form, "Success Page");
+						successPageItem = _destMasterRepository.GetSitecoreItem(successPageId);
+					}
+					else
+					{
+						successPageId = successPageItem.ID;
+					}
+
+					// Create Text item with message stored in Success Message field
+					Guid textItemId;
+					SCItem textItem;
+					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
+					if (!_destMasterRepository.ItemHasChildrenOfTemplate(textMetadata.destTemplateId, successPageItem))
+					{
+						textItemId = ConvertTextField(form, successPageId);
+					}
+					else
+					{
+						var fieldValues = GetFieldValues(form, new Guid("{4E2DC894-59A2-49BB-A49C-562F611169A2}"),
+							"Thank you for filling in the form.");
+
+						// Set text field
+						textMetadata.fields.newFields.First(field => field.destFieldId == new Guid("{9666782B-21BB-40CE-B38F-8F6C53FA5070}")).values = fieldValues;
+						textItemId = WriteNewItem(textMetadata.destTemplateId, successPageItem, "Success Message", textMetadata);
+					}
+					// Configure Navigation field in Submit button to go to next page
+					buttonItem.Fields.First(field => field.FieldId == new Guid("{D842AF43-E220-48D7-9714-6EB2381D2B0C}")).Value = "1";
+				}
 
 				// Convert Other Save Actions
 
@@ -204,7 +300,7 @@ namespace WFFM.ConversionTool.Library.Processors
 			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
 				destParentItem.ID);
 			if (children != null && children.Any(i =>
-				    string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
+					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
 			{
 				var child = children.FirstOrDefault(i =>
 					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
@@ -216,9 +312,6 @@ namespace WFFM.ConversionTool.Library.Processors
 
 		private Guid ConvertSubmitFields(SCItem form, Guid parentId)
 		{
-			var submitNameField =
-				form.Fields.FirstOrDefault(f => f.FieldId == new Guid("{B71296B6-32B9-4703-A8CB-FB7437271103}")); // Submit - Name field
-			var submitName = submitNameField != null ? submitNameField.Value : "Submit";
 			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
 			var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
 
@@ -232,6 +325,20 @@ namespace WFFM.ConversionTool.Library.Processors
 				.First(field => field.destFieldId == new Guid("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}")).values = fieldValues;
 
 			return WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
+		}
+
+		private Guid ConvertTextField(SCItem form, Guid parentId)
+		{
+			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
+			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
+
+			var fieldValues = GetFieldValues(form, new Guid("{4E2DC894-59A2-49BB-A49C-562F611169A2}"),
+				"Thank you for filling in the form.");
+
+			// Set text field
+			textMetadata.fields.newFields.First(field => field.destFieldId == new Guid("{9666782B-21BB-40CE-B38F-8F6C53FA5070}")).values = fieldValues;
+
+			return WriteNewItem(textMetadata.destTemplateId, parentItem, "Success Message", textMetadata);
 		}
 
 		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue)
