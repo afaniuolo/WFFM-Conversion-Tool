@@ -25,7 +25,7 @@
         "convertedFields": [
             {
                 "fieldConverter": "TrackingConverter",
-                "sourceFieldId": "{B0A67B2A-8B07-4E0B-8809-69F751709806}",
+                "sourceFieldId": "{B0A67B2A-8B07-4E0B-8809-69F751709806}", // Tracking
                 "destFieldId": "{D99833EA-238A-4505-90EF-C69BF3EBA946}"
             },
             {

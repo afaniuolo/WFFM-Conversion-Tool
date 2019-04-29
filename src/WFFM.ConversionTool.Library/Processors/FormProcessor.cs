@@ -259,7 +259,54 @@ namespace WFFM.ConversionTool.Library.Processors
 					buttonItem.Fields.First(field => field.FieldId == new Guid("{D842AF43-E220-48D7-9714-6EB2381D2B0C}")).Value = "1";
 				}
 
+				// Trigger Goal
+				var tracking = form.Fields.First(field => field.FieldId == new Guid("{B0A67B2A-8B07-4E0B-8809-69F751709806}"))?.Value;
+				var trackingEvents = XmlHelper.GetXmlElementNodeList(tracking, "event");
+				if (trackingEvents.Count > 0)
+				{
+					var trackingGoalEvent = trackingEvents[trackingEvents.Count - 1];
+					if (trackingGoalEvent != null)
+					{
+						var goalId = trackingGoalEvent.Attributes["id"]?.Value;
+						if (!string.IsNullOrEmpty(goalId))
+						{
+							// Create Trigger Goal Save Action
+							var triggerGoalSubmitAction = _metadataProvider.GetItemMetadataByTemplateName("SubmitActionDefinition");
+							var triggerGoalItem = _destMasterRepository
+								.GetSitecoreChildrenItems(triggerGoalSubmitAction.destTemplateId, submitActionsFolder.ID)
+								.FirstOrDefault(item => string.Equals(item.Name, "Trigger Goal", StringComparison.InvariantCultureIgnoreCase));
+							if (triggerGoalItem == null)
+							{
+								// Set Submit Action field
+								triggerGoalSubmitAction.fields.newFields
+										.First(field => field.destFieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).value =
+									"{106587B9-1B9C-4DDB-AE96-BAC8416C21B5}";
+								// Set Parameters field
+								triggerGoalSubmitAction.fields.newFields
+										.First(field => field.destFieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).value =
+									string.Format("{{\"referenceId\":\"{0}\"}}", goalId);
+								
+								WriteNewItem(triggerGoalSubmitAction.destTemplateId, submitActionsFolder, "Trigger Goal",
+									triggerGoalSubmitAction);
+
+							}
+							else
+							{
+								// Set Submit Action field
+								triggerGoalItem.Fields.First(field => field.FieldId == new Guid("{ABC57B6D-5542-4AB9-A889-106225A032E6}")).Value =
+									"{106587B9-1B9C-4DDB-AE96-BAC8416C21B5}";
+								// Set Parameters field
+								triggerGoalItem.Fields.First(field => field.FieldId == new Guid("{5C796924-3F06-4D1F-8510-8AD9A4244477}")).Value =
+									string.Format("{{\"referenceId\":\"{0}\"}}", goalId);
+								
+								_destMasterRepository.AddOrUpdateSitecoreItem(triggerGoalItem);
+							}
+						}
+					}
+				}
+
 				// Convert Other Save Actions
+
 
 				// Migrate Data
 
