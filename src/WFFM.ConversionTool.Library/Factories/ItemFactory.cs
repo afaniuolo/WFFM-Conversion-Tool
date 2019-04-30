@@ -19,9 +19,9 @@ namespace WFFM.ConversionTool.Library.Factories
 		private IMetadataProvider _metadataProvider;
 		private IFieldFactory _fieldFactory;
 		private AppSettings _appSettings;
-		private DestMasterRepository _destMasterRepository;
+		private IDestMasterRepository _destMasterRepository;
 
-		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory, AppSettings appSettings, DestMasterRepository destMasterRepository)
+		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory, AppSettings appSettings, IDestMasterRepository destMasterRepository)
 		{
 			_metadataProvider = metadataProvider;
 			_fieldFactory = fieldFactory;
@@ -45,12 +45,12 @@ namespace WFFM.ConversionTool.Library.Factories
 			return CreateItem(parentItem, itemName);
 		}
 
-		public List<SCItem> CreateDescendantItems(MetadataTemplate _metadataTemplate, SCItem parentItem)
+		public List<SCItem> CreateDescendantItems(MetadataTemplate metadataTemplate, SCItem parentItem)
 		{
 			var destItems = new List<SCItem>();
-			if (_itemMetadataTemplate.descendantItems != null)
+			if (metadataTemplate.descendantItems != null)
 			{
-				foreach (var descendantItem in _itemMetadataTemplate.descendantItems)
+				foreach (var descendantItem in metadataTemplate.descendantItems)
 				{
 					if (descendantItem.isParentChild)
 					{
@@ -119,9 +119,9 @@ namespace WFFM.ConversionTool.Library.Factories
 
 		private SCItem CreateDescendantItem(MetadataTemplate.DescendantItem descendantItem, SCItem destParentItem)
 		{
-			var _descendantItemMetadataTemplate =
+			var descendantItemMetadataTemplate =
 				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
-			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
+			var children = _destMasterRepository.GetSitecoreChildrenItems(descendantItemMetadataTemplate.destTemplateId,
 				destParentItem.ID);
 			if (children != null && children.Any(i =>
 				    string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
@@ -129,7 +129,7 @@ namespace WFFM.ConversionTool.Library.Factories
 				return children.FirstOrDefault(i =>
 					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
 			}
-			return Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
+			return Create(descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 	}
 }
