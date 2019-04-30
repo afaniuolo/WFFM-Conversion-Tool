@@ -117,19 +117,14 @@ namespace WFFM.ConversionTool.Library.Converters
 
 				// Create Text item with message stored in Success Message field
 				var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-				if (!_destMasterRepository.ItemHasChildrenOfTemplate(textMetadata.destTemplateId, successPageItem))
+				var successMessageItem = _destMasterRepository.GetSitecoreChildrenItems(textMetadata.destTemplateId, successPageId)
+					.FirstOrDefault(item => string.Equals(item.Name, "Success Message", StringComparison.InvariantCultureIgnoreCase));
+				if (successMessageItem != null)
 				{
-					ConvertTextField(form, successPageId);
+					_destMasterRepository.DeleteSitecoreItem(successMessageItem);
 				}
-				else
-				{
-					var fieldValues = GetFieldValues(form, new Guid("{4E2DC894-59A2-49BB-A49C-562F611169A2}"),
-						"Thank you for filling in the form.");
+				ConvertTextField(form, successPageId);
 
-					// Set text field
-					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid("{9666782B-21BB-40CE-B38F-8F6C53FA5070}")).values = fieldValues;
-					WriteNewItem(textMetadata.destTemplateId, successPageItem, "Success Message", textMetadata);
-				}
 				// Configure Navigation field in Submit button to go to next page
 				buttonItem.Fields.First(field => field.FieldId == new Guid("{D842AF43-E220-48D7-9714-6EB2381D2B0C}")).Value = "1";
 			}
