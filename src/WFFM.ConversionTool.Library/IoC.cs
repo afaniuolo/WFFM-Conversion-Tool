@@ -47,6 +47,7 @@ namespace WFFM.ConversionTool.Library
 			container.Register<IItemFactory, ItemFactory>();
 
 			container.Register<FormProcessor>();
+			container.Register<SubmitConverter>();
 
 			// Configuration to registere unregistered converter types
 			container.ResolveUnregisteredType += (sender, e) =>

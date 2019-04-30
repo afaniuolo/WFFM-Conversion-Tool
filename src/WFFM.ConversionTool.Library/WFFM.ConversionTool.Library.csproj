@@ -69,6 +69,7 @@
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
+    <Compile Include="Converters\SubmitConverter.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />
