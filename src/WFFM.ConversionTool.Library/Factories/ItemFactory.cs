@@ -9,6 +9,7 @@ using System.Web.UI;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Factories
 {
@@ -18,12 +19,14 @@ namespace WFFM.ConversionTool.Library.Factories
 		private IMetadataProvider _metadataProvider;
 		private IFieldFactory _fieldFactory;
 		private AppSettings _appSettings;
+		private DestMasterRepository _destMasterRepository;
 
-		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory, AppSettings appSettings)
+		public ItemFactory(IMetadataProvider metadataProvider, IFieldFactory fieldFactory, AppSettings appSettings, DestMasterRepository destMasterRepository)
 		{
 			_metadataProvider = metadataProvider;
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
+			_destMasterRepository = destMasterRepository;
 		}
 
 		public SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate = null)
@@ -40,6 +43,34 @@ namespace WFFM.ConversionTool.Library.Factories
 			itemName = RemoveInvalidChars(itemName);
 
 			return CreateItem(parentItem, itemName);
+		}
+
+		public List<SCItem> CreateDescendantItems(MetadataTemplate _metadataTemplate, SCItem parentItem)
+		{
+			var destItems = new List<SCItem>();
+			if (_itemMetadataTemplate.descendantItems != null)
+			{
+				foreach (var descendantItem in _itemMetadataTemplate.descendantItems)
+				{
+					if (descendantItem.isParentChild)
+					{
+						var destDescItem = CreateDescendantItem(descendantItem, parentItem);
+						if (destDescItem != null) destItems.Add(destDescItem);
+					}
+					else
+					{
+						var destParentItem = destItems.FirstOrDefault(d =>
+							string.Equals(d.Name, descendantItem.parentItemName, StringComparison.InvariantCultureIgnoreCase));
+						if (destParentItem != null)
+						{
+							var destDescItem = CreateDescendantItem(descendantItem, destParentItem);
+							if (destDescItem != null) destItems.Add(destDescItem);
+						}
+					}
+				}
+			}
+
+			return destItems;
 		}
 
 		private SCItem CreateItem(SCItem parentItem, string itemName)
@@ -84,6 +115,21 @@ namespace WFFM.ConversionTool.Library.Factories
 			var replaceRegex = string.Format("[" + invalidItemNameCharsEscaped + "]");
 
 			return Regex.Replace(itemName, replaceRegex, "");
+		}
+
+		private SCItem CreateDescendantItem(MetadataTemplate.DescendantItem descendantItem, SCItem destParentItem)
+		{
+			var _descendantItemMetadataTemplate =
+				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
+			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
+				destParentItem.ID);
+			if (children != null && children.Any(i =>
+				    string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
+			{
+				return children.FirstOrDefault(i =>
+					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
+			}
+			return Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 	}
 }

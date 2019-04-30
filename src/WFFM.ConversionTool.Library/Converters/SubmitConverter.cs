@@ -57,7 +57,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			{
 				var buttonItemId = ConvertSubmitFields(form, pageItem.ID);
 				buttonItem = _destMasterRepository.GetSitecoreItem(buttonItemId);
-				CreateDescendantItems(buttonItem, buttonMetadata);
+				WriteDescendentItems(buttonMetadata, buttonItem);
 			}
 			else
 			{
@@ -208,50 +208,6 @@ namespace WFFM.ConversionTool.Library.Converters
 			textMetadata.fields.newFields.First(field => field.destFieldId == new Guid("{9666782B-21BB-40CE-B38F-8F6C53FA5070}")).values = fieldValues;
 
 			return WriteNewItem(textMetadata.destTemplateId, parentItem, "Success Message", textMetadata);
-		}
-
-		private void CreateDescendantItems(SCItem parentItem, MetadataTemplate metadataTemplate)
-		{
-			// Create descendant items
-			if (metadataTemplate.descendantItems != null)
-			{
-				foreach (var descendantItem in metadataTemplate.descendantItems)
-				{
-					if (descendantItem.isParentChild)
-					{
-						CreateDescendantItem(descendantItem, parentItem);
-					}
-					else
-					{
-						var destTemplateId = _metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName)
-							.destTemplateId;
-						var parentItemChildren = _destMasterRepository.GetSitecoreDescendantsItems(destTemplateId, parentItem.ID);
-						var destParentItem = parentItemChildren.FirstOrDefault(d =>
-							string.Equals(d.Name, descendantItem.parentItemName, StringComparison.InvariantCultureIgnoreCase));
-						if (destParentItem != null)
-						{
-							CreateDescendantItem(descendantItem, destParentItem);
-						}
-					}
-				}
-			}
-		}
-
-		private Guid CreateDescendantItem(MetadataTemplate.DescendantItem descendantItem, SCItem destParentItem)
-		{
-			var _descendantItemMetadataTemplate =
-				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
-			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
-				destParentItem.ID);
-			if (children != null && children.Any(i =>
-					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
-			{
-				var child = children.FirstOrDefault(i =>
-					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
-
-				return child != null ? child.ID : Guid.Empty;
-			}
-			return WriteNewItem(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 
 		private Guid ConvertSubmitFields(SCItem form, Guid parentId)

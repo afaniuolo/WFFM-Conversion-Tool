@@ -11,5 +11,6 @@ namespace WFFM.ConversionTool.Library.Factories
 	public interface IItemFactory
 	{
 		SCItem Create(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate = null);
+		List<SCItem> CreateDescendantItems(MetadataTemplate _metadataTemplate, SCItem destItem);
 	}
 }

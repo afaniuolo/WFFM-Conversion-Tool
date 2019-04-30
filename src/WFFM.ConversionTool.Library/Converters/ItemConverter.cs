@@ -71,27 +71,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			};
 
 			// Create descendant items
-			if (_itemMetadataTemplate.descendantItems != null)
-			{
-				foreach (var descendantItem in _itemMetadataTemplate.descendantItems)
-				{
-					if (descendantItem.isParentChild)
-					{
-						var destDescItem = CreateDescendantItem(descendantItem, destItem);
-						if (destDescItem != null) destItems.Add(destDescItem);
-					}
-					else
-					{
-						var destParentItem = destItems.FirstOrDefault(d =>
-							string.Equals(d.Name, descendantItem.parentItemName, StringComparison.InvariantCultureIgnoreCase));
-						if (destParentItem != null)
-						{
-							var destDescItem = CreateDescendantItem(descendantItem, destParentItem);
-							if (destDescItem != null) destItems.Add(destDescItem);
-						}
-					}
-				}
-			}
+			destItems.AddRange(_itemFactory.CreateDescendantItems(_itemMetadataTemplate, destItem));
 
 			if (destItems.Any())
 			{
@@ -106,21 +86,6 @@ namespace WFFM.ConversionTool.Library.Converters
 			destItems.AddRange(convertedItems);
 
 			return destItems;
-		}
-
-		private SCItem CreateDescendantItem(MetadataTemplate.DescendantItem descendantItem, SCItem destParentItem)
-		{
-			var _descendantItemMetadataTemplate =
-				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
-			var children = _destMasterRepository.GetSitecoreChildrenItems(_descendantItemMetadataTemplate.destTemplateId,
-				destParentItem.ID);
-			if (children != null && children.Any(i =>
-					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase)))
-			{
-				return children.FirstOrDefault(i =>
-					string.Equals(i.Name, descendantItem.itemName, StringComparison.InvariantCultureIgnoreCase));
-			}
-			return _itemFactory.Create(_descendantItemMetadataTemplate.destTemplateId, destParentItem, descendantItem.itemName);
 		}
 
 		private List<SCItem> ConvertFields(SCItem destItem, SCItem lastDescendantItem)
