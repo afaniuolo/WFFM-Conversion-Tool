@@ -39,6 +39,11 @@
                 "valueType": "System.String"
             },
             {
+                "fieldType": "shared",
+                "destFieldId": "{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}", // __Sort Order
+                "value": "100"
+            },
+            {
                 "fieldType": "versioned",
                 "destFieldId": "{9666782B-21BB-40CE-B38F-8F6C53FA5070}", // Text
                 "valueType": "System.String"

@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\AppearanceConverter.cs" />
     <Compile Include="Converters\BaseFieldConverter.cs" />
     <Compile Include="Converters\FieldConverters\DatasourceConverter.cs" />
     <Compile Include="Converters\FieldConverters\DateConverter.cs" />

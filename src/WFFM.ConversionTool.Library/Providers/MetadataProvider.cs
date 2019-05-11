@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Models.Metadata;
 
@@ -27,18 +28,21 @@ namespace WFFM.ConversionTool.Library.Providers
 
 		public MetadataTemplate GetItemMetadataByTemplateId(Guid templateId)
 		{
-			return _metadataTemplates.FirstOrDefault(m => m.sourceTemplateId == templateId || m.destTemplateId == templateId);
+			var newMetadataTemplates = DeepCopy(_metadataTemplates);
+			return newMetadataTemplates.FirstOrDefault(m => m.sourceTemplateId == templateId || m.destTemplateId == templateId);
 		}
 
 		public MetadataTemplate GetItemMetadataByTemplateName(string templateName)
 		{
-			return _metadataTemplates.FirstOrDefault(m => string.Equals(m.sourceTemplateName, templateName, StringComparison.InvariantCultureIgnoreCase) 
-			                                              || string.Equals(m.destTemplateName, templateName, StringComparison.InvariantCultureIgnoreCase));
+			var newMetadataTemplates = DeepCopy(_metadataTemplates);
+			return newMetadataTemplates.FirstOrDefault(m => string.Equals(m.sourceTemplateName, templateName, StringComparison.InvariantCultureIgnoreCase)
+			                                                      || string.Equals(m.destTemplateName, templateName, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		public MetadataTemplate GetItemMetadataBySourceMappingFieldValue(string mappingValue)
 		{
-			return _metadataTemplates.FirstOrDefault(m => string.Equals(m.sourceMappingFieldValue, mappingValue, StringComparison.InvariantCultureIgnoreCase));
+			var newMetadataTemplates = DeepCopy(_metadataTemplates);
+			return newMetadataTemplates.FirstOrDefault(m => string.Equals(m.sourceMappingFieldValue, mappingValue, StringComparison.InvariantCultureIgnoreCase));
 		}
 		
 		private string[] GetMetadataFileList()
@@ -197,6 +201,17 @@ namespace WFFM.ConversionTool.Library.Providers
 			}
 
 			return metaFields;
+		}
+
+		public T DeepCopy<T>(T item)
+		{
+			BinaryFormatter formatter = new BinaryFormatter();
+			MemoryStream stream = new MemoryStream();
+			formatter.Serialize(stream, item);
+			stream.Seek(0, SeekOrigin.Begin);
+			T result = (T)formatter.Deserialize(stream);
+			stream.Close();
+			return result;
 		}
 	}
 }

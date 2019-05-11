@@ -7,6 +7,7 @@ using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Models.Metadata
 {
+	[Serializable]
 	public class MetadataTemplate
 	{
 		public Guid sourceTemplateId { get; set; }
@@ -19,6 +20,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string sourceMappingFieldValue { get; set; }
 		public List<DescendantItem> descendantItems { get; set; }
 
+		[Serializable]
 		public class DescendantItem
 		{
 			public string itemName { get; set; }
@@ -27,17 +29,20 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 			public string parentItemName { get; set; }
 		}
 
+		[Serializable]
 		public class MetadataFields
 		{
 			public List<MetadataExistingField> existingFields { get; set; }
 			public List<MetadataNewField> newFields { get; set; }
 			public List<MetadataConvertedField> convertedFields { get; set; }
 
+			[Serializable]
 			public class MetadataExistingField
 			{
 				public Guid fieldId { get; set; }
 			}
 
+			[Serializable]
 			public class MetadataNewField
 			{
 				public FieldType fieldType { get; set; }
@@ -47,6 +52,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 				public Dictionary<Tuple<string, int>, string> values { get; set; }
 			}
 
+			[Serializable]
 			public class MetadataConvertedField
 			{
 				public string fieldConverter { get; set; }
@@ -54,6 +60,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 				public Guid? destFieldId { get; set; }
 				public List<ValueXmlElementMapping> destFields { get; set; }
 
+				[Serializable]
 				public class ValueXmlElementMapping
 				{
 					public string sourceElementName { get; set; }

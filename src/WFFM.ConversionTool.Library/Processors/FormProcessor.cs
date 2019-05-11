@@ -31,6 +31,7 @@ namespace WFFM.ConversionTool.Library.Processors
 		private AppSettings _appSettings;
 		private IMetadataProvider _metadataProvider;
 		private SubmitConverter _submitConverter;
+		private AppearanceConverter _appearanceConverter;
 
 		private readonly string FormTemplateName = "form";
 		private readonly string PageTemplateName = "page";
@@ -39,7 +40,7 @@ namespace WFFM.ConversionTool.Library.Processors
 		private readonly string ButtonTemplateName = "button";
 
 		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
-			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter)
+			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			logger = iLogger;
@@ -48,6 +49,7 @@ namespace WFFM.ConversionTool.Library.Processors
 			_appSettings = appSettings;
 			_metadataProvider = metadataProvider;
 			_submitConverter = submitConverter;
+			_appearanceConverter = appearanceConverter;
 		}
 
 		public void ConvertForms()
@@ -124,6 +126,11 @@ namespace WFFM.ConversionTool.Library.Processors
 
 				// Convert Submit form section fields
 				_submitConverter.Convert(form, pageItem);
+
+				// Convert Appearance fields
+				_appearanceConverter.ConvertTitle(form, pageItem);
+				_appearanceConverter.ConvertIntroduction(form, pageItem);
+				_appearanceConverter.ConvertFooter(form, pageItem);
 				
 				// Migrate Data
 

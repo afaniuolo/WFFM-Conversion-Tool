@@ -48,6 +48,7 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<FormProcessor>();
 			container.Register<SubmitConverter>();
+			container.Register<AppearanceConverter>();
 
 			// Configuration to registere unregistered converter types
 			container.ResolveUnregisteredType += (sender, e) =>
