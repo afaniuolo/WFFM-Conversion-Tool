@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Factories;
+using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers;
@@ -91,8 +92,8 @@ namespace WFFM.ConversionTool.Library.Converters
 					// Create Text item
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
 					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-
-					var fieldValues = GetFieldValues(form, new Guid(FormIntroductionFieldId), string.Empty);
+					
+					var fieldValues = GetFieldValues(form, new Guid(FormIntroductionFieldId), string.Empty, true);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextFieldId)).values = fieldValues;
@@ -121,7 +122,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
 					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-					var fieldValues = GetFieldValues(form, new Guid(FormFooterFieldId), string.Empty);
+					var fieldValues = GetFieldValues(form, new Guid(FormFooterFieldId), string.Empty, true);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextFieldId)).values = fieldValues;
@@ -147,7 +148,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			}
 		}
 
-		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue)
+		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue, bool stripHtml = false)
 		{
 			var values = new Dictionary<Tuple<string, int>, string>();
 			IEnumerable<Tuple<string, int>> langVersions = sourceItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
@@ -156,6 +157,10 @@ namespace WFFM.ConversionTool.Library.Converters
 			{
 				var value = sourceItem.Fields.FirstOrDefault(f =>
 					f.FieldId == sourceFieldId && f.Language == langVersion.Item1 && f.Version == langVersion.Item2)?.Value;
+				if (stripHtml)
+				{
+					value = XmlHelper.StripHtml(value);
+				}
 				values.Add(langVersion, value ?? defaultValue);
 			}
 

@@ -75,6 +75,17 @@ namespace WFFM.ConversionTool.Library.Helpers
 			return null;
 		}
 
+		public static string StripHtml(string fieldValue)
+		{
+			if (!string.IsNullOrEmpty(fieldValue))
+			{
+				XmlDocument xmlDocument = new XmlDocument();
+				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+				return xmlDocument.InnerText;
+			}
+			return fieldValue;
+		}
+
 
 		private static string AddParentNodeAndEncodeElementValue(string fieldValue)
 		{
