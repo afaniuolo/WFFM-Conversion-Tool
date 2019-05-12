@@ -24,6 +24,33 @@
             },
             {
                 "fieldId": "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}" // __Display name
+            },
+            {
+                "fieldId": "{C8F93AFE-BFD4-4E8F-9C61-152559854661}" // __Valid from
+            },
+            {
+                "fieldId": "{4C346442-E859-4EFD-89B2-44AEDF467D21}" // __Valid to
+            },
+            {
+                "fieldId": "{B8F42732-9CB8-478D-AE95-07E25345FB0F}" // __Hide version
+            },
+            {
+                "fieldId": "{86FE4F77-4D9A-4EC3-9ED9-263D03BD1965}" // __Publish
+            },
+            {
+                "fieldId": "{7EAD6FD6-6CF1-4ACA-AC6B-B200E7BAFE88}" // __Unpublish
+            },
+            {
+                "fieldId": "{74484BDF-7C86-463C-B49F-7B73B9AFC965}" // __Publishing groups
+            },
+            {
+                "fieldId": "{9135200A-5626-4DD8-AB9D-D665B8C11748}" // __Never publish
+            },
+            {
+                "fieldId": "{52807595-0F8F-4B20-8D2A-CB71D28C6103}" // __Owner
+            },
+            {
+                "fieldId": "{DEC8D2D5-E3CF-48B6-A653-8E69E2716641}" // __Security
             }
         ]
     }
