@@ -108,6 +108,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return GetSourceItemAndFields(item);
 		}
 
+		public bool ItemExists(Guid itemId)
+		{
+			return _destMasterDb.Items.Any(i => i.ID == itemId);
+		}
+
 		private void AddOrUpdateItem(SCItem scItem)
 		{
 			var dbItem = new Item()

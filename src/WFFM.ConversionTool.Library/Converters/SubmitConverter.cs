@@ -23,13 +23,15 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
 		private IFieldProvider _fieldProvider;
+		private AppSettings _appSettings;
 		
-		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider)
+		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
 			_fieldProvider = fieldProvider;
+			_appSettings = appSettings;
 		}
 
 		public void Convert(SCItem form, SCItem pageItem)
@@ -93,12 +95,17 @@ namespace WFFM.ConversionTool.Library.Converters
 						var successPageId = successPageLink.Attributes["id"]?.Value;
 						if (successPageId != null)
 						{
-							// Redirect To Page Action
-							var redirectToPageValues = new Dictionary<Guid, string>();
-							redirectToPageValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_RedirectToPageActionValue);
-							redirectToPageValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", successPageId));
-							redirectToPageValues.Add(new Guid(BaseTemplateConstants.SortOrderFieldId), "5000");
-							ConvertFieldsToSubmitActionItem("Redirect to Page", redirectToPageValues, buttonItem);
+							if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(successPageId)))
+							{
+								// Redirect To Page Action
+								var redirectToPageValues = new Dictionary<Guid, string>();
+								redirectToPageValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+									SubmitActionConstants.SubmitActionField_RedirectToPageActionValue);
+								redirectToPageValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+									string.Format("{{\"referenceId\":\"{0}\"}}", successPageId));
+								redirectToPageValues.Add(new Guid(BaseTemplateConstants.SortOrderFieldId), "5000");
+								ConvertFieldsToSubmitActionItem("Redirect to Page", redirectToPageValues, buttonItem);
+							}
 						}
 					}
 				}
@@ -146,11 +153,16 @@ namespace WFFM.ConversionTool.Library.Converters
 					var goalId = trackingGoalEvent.Attributes["id"]?.Value;
 					if (!string.IsNullOrEmpty(goalId))
 					{
-						// Create Trigger Goal Save Action
-						var triggerGoalValues = new Dictionary<Guid, string>();
-						triggerGoalValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_TriggerGoalActionValue); // Submit Action field
-						triggerGoalValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
-						ConvertFieldsToSubmitActionItem("Trigger Goal", triggerGoalValues, buttonItem);
+						if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(goalId)))
+						{
+							// Create Trigger Goal Save Action
+							var triggerGoalValues = new Dictionary<Guid, string>();
+							triggerGoalValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+								SubmitActionConstants.SubmitActionField_TriggerGoalActionValue); // Submit Action field
+							triggerGoalValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+								string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
+							ConvertFieldsToSubmitActionItem("Trigger Goal", triggerGoalValues, buttonItem);
+						}
 					}
 				}
 			}
@@ -180,11 +192,16 @@ namespace WFFM.ConversionTool.Library.Converters
 							var trackingCampaignId = trackingCampaign.Count > 0 ? trackingCampaign[0].Attributes["id"]?.Value : null;
 							if (trackingCampaignId != null)
 							{
-								// Create Trigger Campaign Activity Save Action
-								var triggerCampaignActivityValues = new Dictionary<Guid, string>();
-								triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_TriggerCampaignActivityActionValue);
-								triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
-								ConvertFieldsToSubmitActionItem("Trigger Campaign Activity", triggerCampaignActivityValues, buttonItem);
+								if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(trackingCampaignId)))
+								{
+									// Create Trigger Campaign Activity Save Action
+									var triggerCampaignActivityValues = new Dictionary<Guid, string>();
+									triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+										SubmitActionConstants.SubmitActionField_TriggerCampaignActivityActionValue);
+									triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+										string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
+									ConvertFieldsToSubmitActionItem("Trigger Campaign Activity", triggerCampaignActivityValues, buttonItem);
+								}
 							}
 						}
 						else

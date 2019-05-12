@@ -14,6 +14,8 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string metadataFolderRelativePath { get; set; }
 		public string invalidItemNameChars { get; set; }
 
+		public bool enableReferencedItemCheck { get; set; }
+
 		public class Converter
 		{
 			public string name { get; set; }
