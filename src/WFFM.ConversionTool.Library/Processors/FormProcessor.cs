@@ -20,6 +20,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
+using WFFM.ConversionTool.Library.Utilities;
 
 namespace WFFM.ConversionTool.Library.Processors
 {
@@ -81,6 +82,13 @@ namespace WFFM.ConversionTool.Library.Processors
 
 
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
+
+			Console.WriteLine($"Found {forms.Count} forms to convert.");
+			Console.WriteLine();
+			Console.WriteLine("Starting forms conversion...");
+			Console.WriteLine();
+
+			var formCounter = 0;
 			foreach (var form in forms)
 			{
 				// Convert and Migrate Form items
@@ -131,10 +139,16 @@ namespace WFFM.ConversionTool.Library.Processors
 				_appearanceConverter.ConvertTitle(form, pageItem);
 				_appearanceConverter.ConvertIntroduction(form, pageItem);
 				_appearanceConverter.ConvertFooter(form, pageItem);
-				
-				// Migrate Data
 
+				formCounter++;
+				// Update progress bar
+				ProgressBar.DrawTextProgressBar(formCounter, forms.Count);
 			}
+
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine("Finished forms conversion.");
+			Console.WriteLine();
 		}
 
 		

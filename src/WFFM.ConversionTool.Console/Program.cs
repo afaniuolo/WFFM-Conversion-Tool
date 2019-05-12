@@ -26,13 +26,25 @@ namespace WFFM.ConversionTool.Console
 
 		static void Main(string[] args)
 		{
+			// Init Console output
+			System.Console.WriteLine();
+			System.Console.WriteLine(" ***********************************************************************");
+			System.Console.WriteLine(" *                                                                     *");
+			System.Console.WriteLine(" *                 WFFM Conversion Tool - v1.0.0                       *");
+			System.Console.WriteLine(" *                                                                     *");
+			System.Console.WriteLine(" ***********************************************************************");
+			System.Console.WriteLine();
+
 			// Configure connection strings
-			
+
 			// Read and analyze source data
 			var formProcessor = container.GetInstance<FormProcessor>();
 			formProcessor.ConvertForms();
 
 			// Convert & Migrate data
+			System.Console.WriteLine("Started forms data migration...");
+			System.Console.WriteLine();
+			System.Console.ReadLine();
 
 
 		}

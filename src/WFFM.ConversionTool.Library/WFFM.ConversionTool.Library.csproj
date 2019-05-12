@@ -114,6 +114,7 @@
     <Compile Include="Repositories\DestMasterRepository.cs" />
     <Compile Include="Repositories\ISourceMasterRepository.cs" />
     <Compile Include="Repositories\SourceMasterRepository.cs" />
+    <Compile Include="Utilities\ProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
