@@ -22,12 +22,14 @@ namespace WFFM.ConversionTool.Library.Converters
 	{
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
+		private IFieldProvider _fieldProvider;
 		
-		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
+		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
+			_fieldProvider = fieldProvider;
 		}
 
 		public void Convert(SCItem form, SCItem pageItem)
@@ -199,7 +201,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
 			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-			var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormSuccessMessageFieldId),
+			var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormSuccessMessageFieldId),
 				"Thank you for filling in the form.");
 
 			// Set text field
@@ -213,7 +215,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
 			var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
 
-			var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormSubmitNameFieldId), "Submit");
+			var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormSubmitNameFieldId), "Submit");
 
 			// Set button title
 			buttonMetadata.fields.newFields
@@ -223,21 +225,6 @@ namespace WFFM.ConversionTool.Library.Converters
 				.First(field => field.destFieldId == new Guid(BaseTemplateConstants.DisplayNameFieldId)).values = fieldValues;
 
 			return WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
-		}
-
-		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue)
-		{
-			var values = new Dictionary<Tuple<string, int>, string>();
-			IEnumerable<Tuple<string, int>> langVersions = sourceItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
-			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
-			foreach (var langVersion in langVersions)
-			{
-				var value = sourceItem.Fields.FirstOrDefault(f =>
-					f.FieldId == sourceFieldId && f.Language == langVersion.Item1 && f.Version == langVersion.Item2)?.Value;
-				values.Add(langVersion, value ?? defaultValue);
-			}
-
-			return values;
 		}
 
 		private void CreateOrUpdateItem(string metadataTemplateName, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)

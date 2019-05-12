@@ -87,6 +87,8 @@
     <Compile Include="Factories\IItemFactory.cs" />
     <Compile Include="Factories\ItemFactory.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
+    <Compile Include="Providers\FieldProvider.cs" />
+    <Compile Include="Providers\IFieldProvider.cs" />
     <Compile Include="Providers\IMetadataProvider.cs" />
     <Compile Include="Providers\MetadataProvider.cs" />
     <Compile Include="IoC.cs" />

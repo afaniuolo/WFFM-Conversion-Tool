@@ -17,19 +17,22 @@ namespace WFFM.ConversionTool.Library.Converters
 	{
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
+		private IFieldProvider _fieldProvider;
 
-		public AppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
+		public AppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
+			_fieldProvider = fieldProvider;
 		}
 
 		public void ConvertTitle(SCItem form, SCItem pageItem)
 		{
 			var titleItemName = "Title";
+			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-			DeleteExistingTextItem(pageItem.ID, titleItemName);
+			DeleteItem(pageItem.ID, titleItemName, textMetadata);
 
 			var showTitle = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormShowTitleFieldId));
 			if (showTitle == null || showTitle.Value == "1")
@@ -43,9 +46,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 					// Create Text item
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
-					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-
-					var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormTitleFieldId), titleItemName);
+					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormTitleFieldId), titleItemName);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;
@@ -63,8 +64,9 @@ namespace WFFM.ConversionTool.Library.Converters
 		public void ConvertIntroduction(SCItem form, SCItem pageItem)
 		{
 			var introductionItemName = "Introduction";
+			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-			DeleteExistingTextItem(pageItem.ID, introductionItemName);
+			DeleteItem(pageItem.ID, introductionItemName, textMetadata);
 
 			var showIntroduction = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormShowIntroductionFieldId));
 			if (showIntroduction != null && showIntroduction.Value == "1")
@@ -74,10 +76,8 @@ namespace WFFM.ConversionTool.Library.Converters
 				if (!string.IsNullOrEmpty(introduction))
 				{
 					// Create Text item
-					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
-					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-					
-					var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormIntroductionFieldId), string.Empty, true);
+					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);					
+					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormIntroductionFieldId), string.Empty, true);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;
@@ -92,8 +92,9 @@ namespace WFFM.ConversionTool.Library.Converters
 		public void ConvertFooter(SCItem form, SCItem pageItem)
 		{
 			var footerItemName = "Footer";
+			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-			DeleteExistingTextItem(pageItem.ID, footerItemName);
+			DeleteItem(pageItem.ID, footerItemName, textMetadata);
 
 			var showFooter = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormShowFooterFieldId));
 			if (showFooter != null && showFooter.Value == "1")
@@ -104,9 +105,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				{
 					// Create Text item
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
-					var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-
-					var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormFooterFieldId), string.Empty, true);
+					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormFooterFieldId), string.Empty, true);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;
@@ -129,36 +128,6 @@ namespace WFFM.ConversionTool.Library.Converters
 					return "h1";
 				default:
 					return tagValue;
-			}
-		}
-
-		private Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue, bool stripHtml = false)
-		{
-			var values = new Dictionary<Tuple<string, int>, string>();
-			IEnumerable<Tuple<string, int>> langVersions = sourceItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
-			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
-			foreach (var langVersion in langVersions)
-			{
-				var value = sourceItem.Fields.FirstOrDefault(f =>
-					f.FieldId == sourceFieldId && f.Language == langVersion.Item1 && f.Version == langVersion.Item2)?.Value;
-				if (stripHtml)
-				{
-					value = XmlHelper.StripHtml(value);
-				}
-				values.Add(langVersion, value ?? defaultValue);
-			}
-
-			return values;
-		}
-
-		private void DeleteExistingTextItem(Guid parentId, string itemName)
-		{
-			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
-			var textItem = _destMasterRepository.GetSitecoreChildrenItems(textMetadata.destTemplateId, parentId)
-				.FirstOrDefault(item => string.Equals(item.Name, itemName, StringComparison.InvariantCultureIgnoreCase));
-			if (textItem != null)
-			{
-				_destMasterRepository.DeleteSitecoreItem(textItem);
 			}
 		}
 	}

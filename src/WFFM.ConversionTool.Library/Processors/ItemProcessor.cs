@@ -54,5 +54,15 @@ namespace WFFM.ConversionTool.Library.Processors
 				_destMasterRepository.AddOrUpdateSitecoreItem(descendantItem);
 			}
 		}
+
+		public void DeleteItem(Guid parentId, string itemName, MetadataTemplate metadataTemplate)
+		{
+			var textItem = _destMasterRepository.GetSitecoreChildrenItems(metadataTemplate.destTemplateId, parentId)
+				.FirstOrDefault(item => string.Equals(item.Name, itemName, StringComparison.InvariantCultureIgnoreCase));
+			if (textItem != null)
+			{
+				_destMasterRepository.DeleteSitecoreItem(textItem);
+			}
+		}
 	}
 }

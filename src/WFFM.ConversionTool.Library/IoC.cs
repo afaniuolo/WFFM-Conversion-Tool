@@ -42,6 +42,7 @@ namespace WFFM.ConversionTool.Library
 			container.Register<ISourceMasterRepository, SourceMasterRepository>();
 
 			container.Register<IFieldFactory, FieldFactory>();
+			container.Register<IFieldProvider, FieldProvider>();
 
 			container.Register<IItemConverter, ItemConverter>();
 			container.Register<IItemFactory, ItemFactory>();
