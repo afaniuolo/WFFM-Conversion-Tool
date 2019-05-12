@@ -59,6 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\BaseTemplateConstants.cs" />
+    <Compile Include="Constants\ButtonConstants.cs" />
+    <Compile Include="Constants\FormConstants.cs" />
+    <Compile Include="Constants\SubmitActionConstants.cs" />
+    <Compile Include="Constants\TextConstants.cs" />
     <Compile Include="Converters\AppearanceConverter.cs" />
     <Compile Include="Converters\BaseFieldConverter.cs" />
     <Compile Include="Converters\FieldConverters\DatasourceConverter.cs" />

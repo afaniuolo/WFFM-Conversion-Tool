@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Logging;
@@ -21,34 +22,7 @@ namespace WFFM.ConversionTool.Library.Converters
 	{
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
-
-		private const string FormTrackingFieldId = "{B0A67B2A-8B07-4E0B-8809-69F751709806}";
-		private const string SubmitActionFieldId = "{ABC57B6D-5542-4AB9-A889-106225A032E6}";
-		private const string SortOrderFieldId = "{BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}";
-		private const string DisplayNameFieldId = "{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}";
-		private const string FormSaveToDatabaseFieldId = "{5B891B54-4FCE-489E-A7E6-841D92E9859A}";
-		private const string FormSubmitModeFieldId = "{D755DE87-9C62-4EB3-83DC-2293784A3A3F}";
-		private const string FormSuccessPageFieldId = "{9C4C1994-5140-49D3-BAD7-DB997816F816}";
-		private const string ParametersFieldId = "{5C796924-3F06-4D1F-8510-8AD9A4244477}";
-		private const string ButtonNavigationFieldId = "{D842AF43-E220-48D7-9714-6EB2381D2B0C}";
-		private const string FormSaveActionFieldId = "{A7F779B9-5FCF-45CC-866B-7C973F5C4FAC}";
-		private const string FormSuccessMessageFieldId = "{4E2DC894-59A2-49BB-A49C-562F611169A2}";
-		private const string FormSubmitNameFieldId = "{B71296B6-32B9-4703-A8CB-FB7437271103}";
-
-		private const string FormSubmitModeField_RedirectModeValue = "{F4D50806-6B89-4F2D-89FE-F77FC0A07D48}";
-		private const string FormSubmitModeField_ShowMessageValue = "{3B8369A0-CC1A-4E9A-A3DB-7B086379C53B}";
 		
-		private const string FormSaveAction_RegisterCampaignValue = "{AD26FE98-EED1-45C8-95AE-F2714EE33C62}";
-
-		private const string SubmitActionField_SaveActionValue = "{0C61EAB3-A61E-47B8-AE0B-B6EBA0D6EB1B}";
-		private const string SubmitActionField_RedirectToPageActionValue = "{3F3E2093-9DEA-4199-86CA-44FC69EF624D}";
-		private const string SubmitActionField_TriggerGoalActionValue = "{106587B9-1B9C-4DDB-AE96-BAC8416C21B5}";
-		private const string SubmitActionField_TriggerCampaignActivityActionValue = "{4A937D74-7986-4E19-9D8E-EC14675B17F0}";
-
-		private const string ButtonTitleFIeldId = "{71FFD7B2-8B09-4F7B-8A66-1E4CEF653E8D}";
-
-		private const string TextFieldId = "{9666782B-21BB-40CE-B38F-8F6C53FA5070}";
-
 		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
@@ -62,7 +36,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			SCItem buttonItem = ConvertSubmitButton(form, pageItem);
 
 			// Get tracking field
-			string tracking = form.Fields.First(field => field.FieldId == new Guid(FormTrackingFieldId))?.Value;
+			string tracking = form.Fields.First(field => field.FieldId == new Guid(FormConstants.FormTrackingFieldId))?.Value;
 
 			// Save Data Action
 			ConvertSaveDataAction(form, buttonItem);
@@ -98,17 +72,17 @@ namespace WFFM.ConversionTool.Library.Converters
 		private void ConvertSaveDataAction(SCItem form, SCItem buttonItem)
 		{
 			var saveDataValues = new Dictionary<Guid, string>();
-			saveDataValues.Add(new Guid(SubmitActionFieldId), SubmitActionField_SaveActionValue);
-			saveDataValues.Add(new Guid(SortOrderFieldId), "0");
-			ConvertSourceFieldToSubmitActionItem(form, "SubmitActionDefinition", new Guid(FormSaveToDatabaseFieldId), "1", "Save Data", saveDataValues, buttonItem);
+			saveDataValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_SaveActionValue);
+			saveDataValues.Add(new Guid(BaseTemplateConstants.SortOrderFieldId), "0");
+			ConvertSourceFieldToSubmitActionItem(form, new Guid(FormConstants.FormSaveToDatabaseFieldId), "1", "Save Data", saveDataValues, buttonItem);
 		}
 
 		private void ConvertSubmitMode(SCItem form, SCItem buttonItem)
 		{
-			var submitMode = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormSubmitModeFieldId));
-			if (submitMode != null && submitMode.Value == FormSubmitModeField_RedirectModeValue)
+			var submitMode = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSubmitModeFieldId));
+			if (submitMode != null && submitMode.Value == FormConstants.FormSubmitModeField_RedirectModeValue)
 			{
-				var successPage = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormSuccessPageFieldId));
+				var successPage = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSuccessPageFieldId));
 				if (successPage != null && !string.IsNullOrEmpty(successPage.Value))
 				{
 					var successPageLink = XmlHelper.GetXmlElementNode(successPage.Value, "link");
@@ -119,15 +93,15 @@ namespace WFFM.ConversionTool.Library.Converters
 						{
 							// Redirect To Page Action
 							var redirectToPageValues = new Dictionary<Guid, string>();
-							redirectToPageValues.Add(new Guid(SubmitActionFieldId), SubmitActionField_RedirectToPageActionValue);
-							redirectToPageValues.Add(new Guid(ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", successPageId));
-							redirectToPageValues.Add(new Guid(SortOrderFieldId), "5000");
+							redirectToPageValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_RedirectToPageActionValue);
+							redirectToPageValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", successPageId));
+							redirectToPageValues.Add(new Guid(BaseTemplateConstants.SortOrderFieldId), "5000");
 							ConvertFieldsToSubmitActionItem("Redirect to Page", redirectToPageValues, buttonItem);
 						}
 					}
 				}
 			}
-			else if (submitMode == null || submitMode.Value == FormSubmitModeField_ShowMessageValue) // Show Message Mode
+			else if (submitMode == null || submitMode.Value == FormConstants.FormSubmitModeField_ShowMessageValue) // Show Message Mode
 			{
 				// Create success page
 				var successPageItemName = "Success Page";
@@ -155,7 +129,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				ConvertTextField(form, successPageId);
 
 				// Configure Navigation field in Submit button to go to next page
-				buttonItem.Fields.First(field => field.FieldId == new Guid(ButtonNavigationFieldId)).Value = "1";
+				buttonItem.Fields.First(field => field.FieldId == new Guid(ButtonConstants.ButtonNavigationFieldId)).Value = "1";
 			}
 		}
 
@@ -172,8 +146,8 @@ namespace WFFM.ConversionTool.Library.Converters
 					{
 						// Create Trigger Goal Save Action
 						var triggerGoalValues = new Dictionary<Guid, string>();
-						triggerGoalValues.Add(new Guid(SubmitActionFieldId), SubmitActionField_TriggerGoalActionValue); // Submit Action field
-						triggerGoalValues.Add(new Guid(ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
+						triggerGoalValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_TriggerGoalActionValue); // Submit Action field
+						triggerGoalValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
 						ConvertFieldsToSubmitActionItem("Trigger Goal", triggerGoalValues, buttonItem);
 					}
 				}
@@ -183,7 +157,7 @@ namespace WFFM.ConversionTool.Library.Converters
 		private void ConvertSaveActions(SCItem form, string tracking, SCItem buttonItem)
 		{
 			var formSaveActions = form.Fields
-				.FirstOrDefault(field => field.FieldId == new Guid(FormSaveActionFieldId))?.Value;
+				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId))?.Value;
 			if (!string.IsNullOrEmpty(formSaveActions))
 			{
 				var saveActionElements = XmlHelper.GetXmlElementNodeList(XmlHelper.GetXmlElementNode(formSaveActions, "g").InnerXml, "li");
@@ -198,7 +172,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 					foreach (var saveActionItem in saveActionItems)
 					{
-						if (saveActionItem.Key == FormSaveAction_RegisterCampaignValue)
+						if (saveActionItem.Key == FormConstants.FormSaveAction_RegisterCampaignValue)
 						{
 							var trackingCampaign = XmlHelper.GetXmlElementNodeList(tracking, "campaign");
 							var trackingCampaignId = trackingCampaign.Count > 0 ? trackingCampaign[0].Attributes["id"]?.Value : null;
@@ -206,8 +180,8 @@ namespace WFFM.ConversionTool.Library.Converters
 							{
 								// Create Trigger Campaign Activity Save Action
 								var triggerCampaignActivityValues = new Dictionary<Guid, string>();
-								triggerCampaignActivityValues.Add(new Guid(SubmitActionFieldId), SubmitActionField_TriggerCampaignActivityActionValue);
-								triggerCampaignActivityValues.Add(new Guid(ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
+								triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_TriggerCampaignActivityActionValue);
+								triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.ParametersFieldId), string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
 								ConvertFieldsToSubmitActionItem("Trigger Campaign Activity", triggerCampaignActivityValues, buttonItem);
 							}
 						}
@@ -225,11 +199,11 @@ namespace WFFM.ConversionTool.Library.Converters
 			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
 			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
-			var fieldValues = GetFieldValues(form, new Guid(FormSuccessMessageFieldId),
+			var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormSuccessMessageFieldId),
 				"Thank you for filling in the form.");
 
 			// Set text field
-			textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextFieldId)).values = fieldValues;
+			textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;
 
 			return WriteNewItem(textMetadata.destTemplateId, parentItem, "Success Message", textMetadata);
 		}
@@ -239,14 +213,14 @@ namespace WFFM.ConversionTool.Library.Converters
 			var parentItem = _destMasterRepository.GetSitecoreItem(parentId);
 			var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
 
-			var fieldValues = GetFieldValues(form, new Guid(FormSubmitNameFieldId), "Submit");
+			var fieldValues = GetFieldValues(form, new Guid(FormConstants.FormSubmitNameFieldId), "Submit");
 
 			// Set button title
 			buttonMetadata.fields.newFields
-				.First(field => field.destFieldId == new Guid(ButtonTitleFIeldId)).values = fieldValues;
+				.First(field => field.destFieldId == new Guid(ButtonConstants.ButtonTitleFIeldId)).values = fieldValues;
 			// Set display name
 			buttonMetadata.fields.newFields
-				.First(field => field.destFieldId == new Guid(DisplayNameFieldId)).values = fieldValues;
+				.First(field => field.destFieldId == new Guid(BaseTemplateConstants.DisplayNameFieldId)).values = fieldValues;
 
 			return WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
 		}
@@ -299,7 +273,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			}
 		}
 
-		private void ConvertSourceFieldToSubmitActionItem(SCItem form, string metadataTemplateName, Guid sourceFieldId,
+		private void ConvertSourceFieldToSubmitActionItem(SCItem form, Guid sourceFieldId,
 			string sourceFieldValue, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
 			SCField sourceFieldToConvert = null;
