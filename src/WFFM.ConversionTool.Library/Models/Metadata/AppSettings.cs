@@ -15,6 +15,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string invalidItemNameChars { get; set; }
 
 		public bool enableReferencedItemCheck { get; set; }
+		public string formsDataProvider { get; set; }
 
 		public class Converter
 		{

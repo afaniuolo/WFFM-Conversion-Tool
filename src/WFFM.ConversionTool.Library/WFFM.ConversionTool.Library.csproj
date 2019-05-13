@@ -95,12 +95,6 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Log4NetAdapter.cs" />
     <Compile Include="Logging\Log4NetTraceListener.cs" />
-    <Compile Include="Database\Forms\FieldData.cs" />
-    <Compile Include="Database\Forms\FormEntry.cs" />
-    <Compile Include="Database\Forms\SitecoreForms.cs" />
-    <Compile Include="Database\WFFM\FieldData.cs" />
-    <Compile Include="Database\WFFM\FormData.cs" />
-    <Compile Include="Database\WFFM\WFFM.cs" />
     <Compile Include="Models\Metadata\MetadataTemplate.cs" />
     <Compile Include="Models\Metadata\AppSettings.cs" />
     <Compile Include="Models\Sitecore\SCItem.cs" />
@@ -201,6 +195,11 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\WFFM.ConversionTool.FormsData\WFFM.ConversionTool.FormsData.csproj">
+      <Project>{b114cb85-c56c-430c-8e20-21b61b71f545}</Project>
+      <Name>WFFM.ConversionTool.FormsData</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

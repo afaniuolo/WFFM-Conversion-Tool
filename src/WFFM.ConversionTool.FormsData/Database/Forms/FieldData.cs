@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WFFM.ConversionTool.Library.Database.Forms
+namespace WFFM.ConversionTool.FormsData.Database.Forms
 {
 	[Table("FieldData")]
     public partial class FieldData

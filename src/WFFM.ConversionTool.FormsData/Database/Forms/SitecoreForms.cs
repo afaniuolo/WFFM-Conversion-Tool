@@ -1,6 +1,6 @@
 using System.Data.Entity;
 
-namespace WFFM.ConversionTool.Library.Database.Forms
+namespace WFFM.ConversionTool.FormsData.Database.Forms
 {
 	public partial class SitecoreForms : DbContext
 	{

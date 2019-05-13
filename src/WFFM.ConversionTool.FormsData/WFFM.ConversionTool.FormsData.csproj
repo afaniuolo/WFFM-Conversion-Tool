@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FF732927-E7CD-4A37-9728-1C865F872C39}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>WFFM.ConversionTool.Console</RootNamespace>
-    <AssemblyName>WFFM.ConversionTool.Console</AssemblyName>
+    <ProjectGuid>{B114CB85-C56C-430C-8E20-21B61B71F545}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WFFM.ConversionTool.FormsData</RootNamespace>
+    <AssemblyName>WFFM.ConversionTool.FormsData</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -38,12 +36,6 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="SimpleInjector, Version=4.4.3.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SimpleInjector.4.4.3\lib\net45\SimpleInjector.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -55,22 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Database\Forms\FieldData.cs" />
+    <Compile Include="Database\Forms\FormEntry.cs" />
+    <Compile Include="Database\Forms\SitecoreForms.cs" />
+    <Compile Include="Database\WFFM\FieldData.cs" />
+    <Compile Include="Database\WFFM\FormData.cs" />
+    <Compile Include="Database\WFFM\WFFM.cs" />
+    <Compile Include="Migrators\DataMigrator.cs" />
+    <Compile Include="Migrators\IDataMigrator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\IDataProvider.cs" />
+    <Compile Include="Providers\MongoDbDataReader.cs" />
+    <Compile Include="Providers\SqlDataReader.cs" />
+    <Compile Include="Repositories\ISitecoreFormsDbRepository.cs" />
+    <Compile Include="Repositories\SitecoreFormsDbRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WFFM.ConversionTool.FormsData\WFFM.ConversionTool.FormsData.csproj">
-      <Project>{b114cb85-c56c-430c-8e20-21b61b71f545}</Project>
-      <Name>WFFM.ConversionTool.FormsData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WFFM.ConversionTool.Library\WFFM.ConversionTool.Library.csproj">
-      <Project>{670ad498-f9f3-45bc-81a5-4c5841249298}</Project>
-      <Name>WFFM.ConversionTool.Library</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

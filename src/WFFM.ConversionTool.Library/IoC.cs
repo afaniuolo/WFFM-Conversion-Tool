@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SimpleInjector;
+using WFFM.ConversionTool.FormsData.Database.Forms;
+using WFFM.ConversionTool.FormsData.Migrators;
+using WFFM.ConversionTool.FormsData.Providers;
+using WFFM.ConversionTool.FormsData.Repositories;
 using WFFM.ConversionTool.Library.Converters;
-using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
@@ -14,6 +18,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
+using Container = SimpleInjector.Container;
 
 namespace WFFM.ConversionTool.Library
 {
@@ -29,8 +34,8 @@ namespace WFFM.ConversionTool.Library
 				c => true);
 
 			// Entity Framework Contexts registration
-			container.RegisterSingleton<Database.WFFM.WFFM>(CreateNewSourceContext);
-			container.RegisterSingleton<SitecoreForms>(CreateNewDestContext);
+			container.RegisterSingleton<FormsData.Database.WFFM.WFFM>(CreateWffmDbContext);
+			container.RegisterSingleton<SitecoreForms>(CreateExperienceFormsDbContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
 
@@ -38,8 +43,10 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<AppSettings>(createAppSettings);
 			container.Register<IMetadataProvider, MetadataProvider>();
 
+			// Repositories
 			container.Register<IDestMasterRepository, DestMasterRepository>();
 			container.Register<ISourceMasterRepository, SourceMasterRepository>();
+			container.Register<ISitecoreFormsDbRepository, SitecoreFormsDbRepository>();
 
 			container.Register<IFieldFactory, FieldFactory>();
 			container.Register<IFieldProvider, FieldProvider>();
@@ -50,6 +57,10 @@ namespace WFFM.ConversionTool.Library
 			container.Register<FormProcessor>();
 			container.Register<SubmitConverter>();
 			container.Register<AppearanceConverter>();
+
+			container.Register<DataMigrator>();
+
+			RegisterFormsDataProvider();
 
 			// Configuration to registere unregistered converter types
 			container.ResolveUnregisteredType += (sender, e) =>
@@ -86,14 +97,14 @@ namespace WFFM.ConversionTool.Library
 			}
 		}
 
-		private static Database.WFFM.WFFM CreateNewSourceContext()
+		private static FormsData.Database.WFFM.WFFM CreateWffmDbContext()
 		{
-			var myContext = new Database.WFFM.WFFM("name=WFFM");
+			var myContext = new FormsData.Database.WFFM.WFFM("name=WFFM");
 			myContext.Configuration.ProxyCreationEnabled = false;
 			return myContext;
 		}
 
-		private static SitecoreForms CreateNewDestContext()
+		private static SitecoreForms CreateExperienceFormsDbContext()
 		{
 			var myContext = new SitecoreForms("name=SitecoreForms");
 			myContext.Configuration.ProxyCreationEnabled = false;
@@ -120,6 +131,21 @@ namespace WFFM.ConversionTool.Library
 			var appSettingsFile = System.IO.File.ReadAllText("AppSettings.json"); // TODO: Add null checks
 			// Deserialize Json to Object
 			return JsonConvert.DeserializeObject<AppSettings>(appSettingsFile);
+		}
+
+		private static void RegisterFormsDataProvider()
+		{
+			var appSettings = createAppSettings();
+			if (string.Equals(appSettings.formsDataProvider, "sqlFormsDataProvider",
+				StringComparison.InvariantCultureIgnoreCase))
+			{
+				container.Register<IDataProvider, SqlDataProvider>();
+			}
+			else if (string.Equals(appSettings.formsDataProvider, "analyticsFormsDataProvider",
+				StringComparison.InvariantCultureIgnoreCase))
+			{
+				container.Register<IDataProvider, MongoDbDataProvider>();
+			}
 		}
 	}
 }

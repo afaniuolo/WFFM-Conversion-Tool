@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WFFM.ConversionTool.Library.Database.WFFM
+namespace WFFM.ConversionTool.FormsData.Database.WFFM
 {
 	[Table("FormData")]
     public partial class FormData

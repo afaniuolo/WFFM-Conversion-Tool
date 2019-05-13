@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFFM.ConversionTool.Console
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFFM.ConversionTool.Library", "src\WFFM.ConversionTool.Library\WFFM.ConversionTool.Library.csproj", "{670AD498-F9F3-45BC-81A5-4C5841249298}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFFM.ConversionTool.FormsData", "src\WFFM.ConversionTool.FormsData\WFFM.ConversionTool.FormsData.csproj", "{B114CB85-C56C-430C-8E20-21B61B71F545}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{670AD498-F9F3-45BC-81A5-4C5841249298}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{670AD498-F9F3-45BC-81A5-4C5841249298}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{670AD498-F9F3-45BC-81A5-4C5841249298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B114CB85-C56C-430C-8E20-21B61B71F545}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B114CB85-C56C-430C-8E20-21B61B71F545}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B114CB85-C56C-430C-8E20-21B61B71F545}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B114CB85-C56C-430C-8E20-21B61B71F545}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

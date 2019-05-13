@@ -1,6 +1,6 @@
 using System.Data.Entity;
 
-namespace WFFM.ConversionTool.Library.Database.WFFM
+namespace WFFM.ConversionTool.FormsData.Database.WFFM
 {
 	public partial class WFFM : DbContext
 	{

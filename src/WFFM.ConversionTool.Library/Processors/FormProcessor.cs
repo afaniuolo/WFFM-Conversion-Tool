@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Converters;
-using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.Master;
-using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Logging;
@@ -53,32 +51,32 @@ namespace WFFM.ConversionTool.Library.Processors
 			_appearanceConverter = appearanceConverter;
 		}
 
-		public void ConvertForms()
+		public List<Guid> ConvertForms()
 		{
 			var sourceFormTemplateId = _metadataProvider.GetItemMetadataByTemplateName(FormTemplateName)?.sourceTemplateId;
 
 			if (sourceFormTemplateId == null)
-				return;
+				return null;
 
 			var destPageTemplateId = _metadataProvider.GetItemMetadataByTemplateName(PageTemplateName)?.destTemplateId;
 
 			if (destPageTemplateId == null)
-				return;
+				return null;
 
 			var sourceSectionTemplateId = _metadataProvider.GetItemMetadataByTemplateName(SectionTemplateName)?.sourceTemplateId;
 
 			if (sourceSectionTemplateId == null)
-				return;
+				return null;
 
 			var sourceFieldTemplateId = _metadataProvider.GetItemMetadataByTemplateName(InputTemplateName)?.sourceTemplateId;
 
 			if (sourceFieldTemplateId == null)
-				return;
+				return null;
 
 			var destButtonTemplateId = _metadataProvider.GetItemMetadataByTemplateName(ButtonTemplateName)?.destTemplateId;
 
 			if (destButtonTemplateId == null)
-				return;
+				return null;
 
 
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
@@ -149,6 +147,8 @@ namespace WFFM.ConversionTool.Library.Processors
 			Console.WriteLine();
 			Console.WriteLine("Finished forms conversion.");
 			Console.WriteLine();
+
+			return forms.Select(form => form.ID).ToList();
 		}
 
 		
