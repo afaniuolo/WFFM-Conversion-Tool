@@ -12,6 +12,7 @@ using WFFM.ConversionTool.FormsData.Migrators;
 using WFFM.ConversionTool.Library;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Processors;
+using WFFM.ConversionTool.Utility;
 using ILogger = WFFM.ConversionTool.Library.Logging.ILogger;
 
 namespace WFFM.ConversionTool.Console
@@ -47,11 +48,17 @@ namespace WFFM.ConversionTool.Console
 			System.Console.WriteLine();
 
 			var dataMigrator = container.GetInstance<DataMigrator>();
+			int formsCounter = 0;
 			foreach (Guid convertedFormId in convertedForms)
 			{
 				dataMigrator.MigrateData(convertedFormId);
+				formsCounter++;
+				ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
 			}
 
+			System.Console.WriteLine();
+			System.Console.WriteLine("Finished forms data migration.");
+			System.Console.WriteLine();
 		}
 
 		

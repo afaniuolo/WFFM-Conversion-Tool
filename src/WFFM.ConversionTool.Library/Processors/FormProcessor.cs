@@ -18,7 +18,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
-using WFFM.ConversionTool.Library.Utilities;
+using WFFM.ConversionTool.Utility;
 
 namespace WFFM.ConversionTool.Library.Processors
 {
@@ -140,7 +140,7 @@ namespace WFFM.ConversionTool.Library.Processors
 
 				formCounter++;
 				// Update progress bar
-				ProgressBar.DrawTextProgressBar(formCounter, forms.Count);
+				ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
 			}
 
 			Console.WriteLine();

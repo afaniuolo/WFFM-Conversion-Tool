@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace WFFM.ConversionTool.Library.Utilities
+namespace WFFM.ConversionTool.Utility
 {
 	public class ProgressBar
 	{
-		public static void DrawTextProgressBar(int progress, int total)
+		public static void DrawTextProgressBar(int progress, int total, string progressMessage)
 		{
 			//draw empty progress bar
 			Console.CursorLeft = 0;
@@ -38,7 +34,7 @@ namespace WFFM.ConversionTool.Library.Utilities
 			//draw totals
 			Console.CursorLeft = 35;
 			Console.BackgroundColor = ConsoleColor.Black;
-			Console.Write(progress.ToString() + " of " + total.ToString() + " forms converted   "); //blanks at the end remove any excess
+			Console.Write($"{progress} of {total} {progressMessage}   "); //blanks at the end remove any excess
 		}
 	}
 }

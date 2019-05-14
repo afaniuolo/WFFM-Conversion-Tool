@@ -82,20 +82,28 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 					if (string.Equals(queryType, "root", StringComparison.InvariantCultureIgnoreCase))
 					{
 						string rootItemId = XmlHelper.GetXmlElementValue(queryElement.InnerXml, "value");
-						string textFieldValue = queryElement.Attributes["tf"].Value;
-						string valueFieldValue = queryElement.Attributes["vf"].Value;
+						string textFieldValue = queryElement.Attributes["tf"]?.Value ?? "__ItemName";
+						string valueFieldValue = queryElement.Attributes["vf"]?.Value ?? "__ItemName";
 
 						// Create fields
-						var datasourceField = CreateFieldFromElement(scField, new Guid("{5BE76442-950F-4C1F-A797-BEBD71101ABB}"), rootItemId);
+						var datasourceField = CreateFieldFromElement(scField, new Guid("{5BE76442-950F-4C1F-A797-BEBD71101ABB}"), rootItemId, FieldType.Shared);
 						if (datasourceField != null) convertedFields.Add(datasourceField);
 
-						var displayField = CreateFieldFromElement(scField, new Guid("{492361E0-72D8-4847-82BA-EBFC235CF57B}"), textFieldValue);
-						if (displayField != null) convertedFields.Add(displayField);
+						if (!string.IsNullOrEmpty(textFieldValue))
+						{
+							var displayField =
+								CreateFieldFromElement(scField, new Guid("{492361E0-72D8-4847-82BA-EBFC235CF57B}"), textFieldValue, FieldType.Shared);
+							if (displayField != null) convertedFields.Add(displayField);
+						}
 
-						var valueField = CreateFieldFromElement(scField, new Guid("{78778432-6327-4CEA-A28B-E190E3541D28}"), valueFieldValue);
-						if (valueField != null) convertedFields.Add(valueField);
+						if (!string.IsNullOrEmpty(valueFieldValue))
+						{
+							var valueField =
+								CreateFieldFromElement(scField, new Guid("{78778432-6327-4CEA-A28B-E190E3541D28}"), valueFieldValue, FieldType.Shared);
+							if (valueField != null) convertedFields.Add(valueField);
+						}
 
-						var isDynamicField = CreateFieldFromElement(scField, new Guid("{54424E06-0E7A-47A7-8CB2-7383D700472F}"), "1");
+						var isDynamicField = CreateFieldFromElement(scField, new Guid("{54424E06-0E7A-47A7-8CB2-7383D700472F}"), "1", FieldType.Shared);
 						if (isDynamicField != null) convertedFields.Add(isDynamicField);
 					}
 				}

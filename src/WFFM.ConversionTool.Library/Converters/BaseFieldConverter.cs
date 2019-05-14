@@ -41,6 +41,11 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		public SCField CreateFieldFromElement(SCField scField, Guid destFieldId, string convertedValue)
 		{
+			return CreateFieldFromElement(scField, destFieldId, convertedValue, scField.Type);
+		}
+
+		public SCField CreateFieldFromElement(SCField scField, Guid destFieldId, string convertedValue, FieldType fieldType)
+		{
 			return new SCField()
 			{
 				Created = DateTime.UtcNow,
@@ -48,7 +53,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				ItemId = scField.ItemId,
 				Language = scField.Language,
 				Version = scField.Version,
-				Type = scField.Type,
+				Type = fieldType,
 				Value = convertedValue,
 				FieldId = destFieldId,
 				Id = Guid.NewGuid()
