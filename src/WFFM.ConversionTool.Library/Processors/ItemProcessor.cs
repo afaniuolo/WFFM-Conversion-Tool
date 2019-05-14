@@ -46,6 +46,11 @@ namespace WFFM.ConversionTool.Library.Processors
 			return destItem.ID;
 		}
 
+		public void UpdateItem(SCItem item)
+		{
+			_destMasterRepository.AddOrUpdateSitecoreItem(item);
+		}
+
 		public virtual void WriteDescendentItems(MetadataTemplate metadataTemplate, SCItem parentItem)
 		{
 			var descendantItems = _itemFactory.CreateDescendantItems(metadataTemplate, parentItem);

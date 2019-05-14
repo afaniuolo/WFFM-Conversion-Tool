@@ -139,6 +139,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 				// Configure Navigation field in Submit button to go to next page
 				buttonItem.Fields.First(field => field.FieldId == new Guid(ButtonConstants.ButtonNavigationFieldId)).Value = "1";
+				UpdateItem(buttonItem);
 			}
 		}
 

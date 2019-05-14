@@ -12,6 +12,7 @@ namespace WFFM.ConversionTool.Library.Processors
 	{
 		void ConvertAndWriteItem(SCItem sourceItem, Guid parentId);
 		Guid WriteNewItem(Guid destTemplateId, SCItem parentItem, string itemName, MetadataTemplate metadataTemplate);
+		void UpdateItem(SCItem item);
 		void WriteDescendentItems(MetadataTemplate metadataTemplate, SCItem parentItem);
 	}
 }
