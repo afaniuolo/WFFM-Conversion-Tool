@@ -16,6 +16,12 @@ namespace WFFM.ConversionTool.Library.Repositories
 		{
 			_sitecoreFormsDb.FormEntries.AddOrUpdate(formEntry);
 			_sitecoreFormsDb.SaveChanges();
+
+			foreach (FieldData fieldData in formEntry.FieldDatas)
+			{
+				_sitecoreFormsDb.FieldDatas.AddOrUpdate(fieldData);
+			}
+			_sitecoreFormsDb.SaveChanges();
 		}
 	}
 }
