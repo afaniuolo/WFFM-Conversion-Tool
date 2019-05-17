@@ -14,7 +14,7 @@ namespace WFFM.ConversionTool.Library.Converters.FieldValueConverters
 			DateTime sourceDate;
 			if (DateTime.TryParseExact(sourceValue, "yyyyMMddThhmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out sourceDate))
 			{
-				return sourceDate.ToString("M/d/yyyy 12:00:00 AM");
+				return sourceDate.ToString("M/d/yyyy hh:mm:ss tt");
 			}
 			return sourceValue;
 		}
