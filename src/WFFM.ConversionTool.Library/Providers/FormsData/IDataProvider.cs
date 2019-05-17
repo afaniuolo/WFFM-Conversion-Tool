@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using WFFM.ConversionTool.FormsData.Database.WFFM;
+using WFFM.ConversionTool.Library.Database.WFFM;
 
-namespace WFFM.ConversionTool.FormsData.Providers
+namespace WFFM.ConversionTool.Library.Providers.FormsData
 {
 	public interface IDataProvider
 	{

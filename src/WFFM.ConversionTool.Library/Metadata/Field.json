@@ -5,6 +5,7 @@
     "destTemplateName": "Input",
     "baseTemplateMetadataFileName": "BaseTemplate.json",
     "sourceMappingFieldId": "{35C76A0B-B630-458C-AECC-1D62C50D24FC}", // Field Link
+    "dataValueType": "System.String",
     "fields": {
         "newFields": [
             {

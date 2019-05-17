@@ -3,6 +3,8 @@
     "destTemplateId": "{2F07293C-077F-456C-B715-FDB791ACB367}",
     "destTemplateName": "Checkbox",
     "baseTemplateMetadataFileName": "Field.json",
+    "dataValueType": "System.Boolean", 
+    "dataValueConverter": "BooleanConverter", 
     "fields": {
         "newFields": [
             {

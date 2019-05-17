@@ -101,6 +101,26 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return scItems;
 		}
 
+		public List<SCItem> GetSitecoreDescendantsItems(Guid parentId)
+		{
+			var scItems = new List<SCItem>();
+			var childrenItems = GetChildrenItems(parentId);
+			if (childrenItems.Any())
+			{
+				foreach (var item in childrenItems)
+				{
+					scItems.Add(GetSourceItemAndFields(item));
+				}
+
+				foreach (var childrenItem in childrenItems)
+				{
+					scItems.AddRange(GetSitecoreDescendantsItems(childrenItem.ID));
+				}
+			}
+
+			return scItems;
+		}
+
 		public SCItem GetSitecoreItem(Guid itemId)
 		{
 			var item = _destMasterDb.Items.FirstOrDefault(i => i.ID == itemId);
@@ -236,7 +256,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 		}
 
 		/// <summary>
-		/// Get the list of existing items by templateId in source master database
+		/// Get the list of existing items by templateId in master database
 		/// </summary>
 		/// <returns></returns>
 		private List<Item> GetItems(Guid templateId)
@@ -245,7 +265,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 		}
 
 		/// <summary>
-		/// Get the list of existing children items of a specific template of a parent item in source master database
+		/// Get the list of existing children items of a specific template of a parent item in master database
 		/// </summary>
 		/// <param name="templateId"></param>
 		/// <param name="parentId"></param>
@@ -256,7 +276,18 @@ namespace WFFM.ConversionTool.Library.Repositories
 		}
 
 		/// <summary>
-		/// Get list of fields of a Sitecore item from the source master database
+		/// Get the list of all existing children items of a parent item in the master database
+		/// </summary>
+		/// <param name="templateId"></param>
+		/// <param name="parentId"></param>
+		/// <returns></returns>
+		private List<Item> GetChildrenItems(Guid parentId)
+		{
+			return _destMasterDb.Items.Where(item => item.Name != "__Standard Values" && item.ParentID == parentId).ToList();
+		}
+
+		/// <summary>
+		/// Get list of fields of a Sitecore item from the master database
 		/// </summary>
 		private List<SCField> GetItemFields(Guid itemId)
 		{

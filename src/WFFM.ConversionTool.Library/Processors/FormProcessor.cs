@@ -18,7 +18,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Repositories;
-using WFFM.ConversionTool.Utility;
+using WFFM.ConversionTool.Library.Visualization;
 
 namespace WFFM.ConversionTool.Library.Processors
 {

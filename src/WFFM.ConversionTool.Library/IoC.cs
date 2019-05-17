@@ -6,17 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SimpleInjector;
-using WFFM.ConversionTool.FormsData.Database.Forms;
-using WFFM.ConversionTool.FormsData.Migrators;
-using WFFM.ConversionTool.FormsData.Providers;
-using WFFM.ConversionTool.FormsData.Repositories;
+using WFFM.ConversionTool.Library.Database.Forms;
+using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Migrators;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
-using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Providers.FormsData;
 using WFFM.ConversionTool.Library.Repositories;
 using Container = SimpleInjector.Container;
 
@@ -26,6 +25,8 @@ namespace WFFM.ConversionTool.Library
 	{
 		private static Container container = new Container();
 
+		private static readonly string _baseFieldConverterType = "WFFM.ConversionTool.Library.Converters.BaseFieldConverter, WFFM.ConversionTool.Library";
+
 		public static Container Initialize()
 		{
 			container.RegisterConditional(typeof(ILogger),
@@ -34,7 +35,7 @@ namespace WFFM.ConversionTool.Library
 				c => true);
 
 			// Entity Framework Contexts registration
-			container.RegisterSingleton<FormsData.Database.WFFM.WFFM>(CreateWffmDbContext);
+			container.RegisterSingleton<Library.Database.WFFM.WFFM>(CreateWffmDbContext);
 			container.RegisterSingleton<SitecoreForms>(CreateExperienceFormsDbContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
@@ -80,7 +81,21 @@ namespace WFFM.ConversionTool.Library
 			return container;
 		}
 
-		public static IFieldConverter CreateInstance(string converterType)
+		public static IFieldConverter CreateConverter(string converterName)
+		{
+			var converterType = _baseFieldConverterType;
+			if (converterName != null)
+			{
+				var metaConverter = createAppSettings().converters.FirstOrDefault(c => c.name == converterName)?.converterType;
+				if (!string.IsNullOrEmpty(metaConverter))
+				{
+					converterType = metaConverter;
+				}
+			}
+			return CreateInstance(converterType);
+		}
+
+		private static IFieldConverter CreateInstance(string converterType)
 		{
 			try
 			{
@@ -97,9 +112,9 @@ namespace WFFM.ConversionTool.Library
 			}
 		}
 
-		private static FormsData.Database.WFFM.WFFM CreateWffmDbContext()
+		private static Library.Database.WFFM.WFFM CreateWffmDbContext()
 		{
-			var myContext = new FormsData.Database.WFFM.WFFM("name=WFFM");
+			var myContext = new Library.Database.WFFM.WFFM("name=WFFM");
 			myContext.Configuration.ProxyCreationEnabled = false;
 			return myContext;
 		}

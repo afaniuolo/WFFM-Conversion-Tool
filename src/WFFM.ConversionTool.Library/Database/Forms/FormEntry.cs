@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WFFM.ConversionTool.FormsData.Database.Forms
+namespace WFFM.ConversionTool.Library.Database.Forms
 {
 	[Table("FormEntry")]
     public partial class FormEntry

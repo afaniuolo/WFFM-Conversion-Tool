@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 using log4net;
 using log4net.Core;
 using SimpleInjector;
-using WFFM.ConversionTool.FormsData.Migrators;
 using WFFM.ConversionTool.Library;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Migrators;
 using WFFM.ConversionTool.Library.Processors;
-using WFFM.ConversionTool.Utility;
+using WFFM.ConversionTool.Library.Visualization;
 using ILogger = WFFM.ConversionTool.Library.Logging.ILogger;
 
 namespace WFFM.ConversionTool.Console
@@ -40,25 +40,12 @@ namespace WFFM.ConversionTool.Console
 			// Configure connection strings
 
 			// Read and analyze source data
-			var formProcessor = container.GetInstance<FormProcessor>();
-			var convertedForms = formProcessor.ConvertForms();
+			//var formProcessor = container.GetInstance<FormProcessor>();
+			//var convertedForms = formProcessor.ConvertForms();
 
 			// Convert & Migrate data
-			System.Console.WriteLine("Started forms data migration...");
-			System.Console.WriteLine();
-
 			var dataMigrator = container.GetInstance<DataMigrator>();
-			int formsCounter = 0;
-			foreach (Guid convertedFormId in convertedForms)
-			{
-				dataMigrator.MigrateData(convertedFormId);
-				formsCounter++;
-				ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
-			}
-
-			System.Console.WriteLine();
-			System.Console.WriteLine("Finished forms data migration.");
-			System.Console.WriteLine();
+			dataMigrator.MigrateData();
 		}
 
 		

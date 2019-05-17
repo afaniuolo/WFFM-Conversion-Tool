@@ -72,22 +72,33 @@
     <Compile Include="Converters\FieldConverters\SelectionModeConverter.cs" />
     <Compile Include="Converters\FieldConverters\TrackingConverter.cs" />
     <Compile Include="Converters\FieldConverters\YesNoConverter.cs" />
+    <Compile Include="Converters\FieldValueConverters\BooleanConverter.cs" />
+    <Compile Include="Converters\FieldValueConverters\DateValueConverter.cs" />
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
     <Compile Include="Converters\SubmitConverter.cs" />
+    <Compile Include="Database\Forms\FieldData.cs" />
+    <Compile Include="Database\Forms\FormEntry.cs" />
+    <Compile Include="Database\Forms\SitecoreForms.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />
     <Compile Include="Database\Master\SharedField.cs" />
     <Compile Include="Database\Master\UnversionedField.cs" />
     <Compile Include="Database\Master\VersionedField.cs" />
+    <Compile Include="Database\WFFM\FieldData.cs" />
+    <Compile Include="Database\WFFM\FormData.cs" />
+    <Compile Include="Database\WFFM\WFFM.cs" />
     <Compile Include="Factories\FieldFactory.cs" />
     <Compile Include="Factories\IFieldFactory.cs" />
     <Compile Include="Factories\IItemFactory.cs" />
     <Compile Include="Factories\ItemFactory.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
+    <Compile Include="Migrators\DataMigrator.cs" />
+    <Compile Include="Migrators\IDataMigrator.cs" />
     <Compile Include="Providers\FieldProvider.cs" />
+    <Compile Include="Providers\FormsData\IDataProvider.cs" />
     <Compile Include="Providers\IFieldProvider.cs" />
     <Compile Include="Providers\IMetadataProvider.cs" />
     <Compile Include="Providers\MetadataProvider.cs" />
@@ -104,10 +115,15 @@
     <Compile Include="Processors\IItemProcessor.cs" />
     <Compile Include="Processors\ItemProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\FormsData\MongoDbDataReader.cs" />
+    <Compile Include="Providers\FormsData\SqlDataReader.cs" />
     <Compile Include="Repositories\IDestMasterRepository.cs" />
     <Compile Include="Repositories\DestMasterRepository.cs" />
+    <Compile Include="Repositories\ISitecoreFormsDbRepository.cs" />
     <Compile Include="Repositories\ISourceMasterRepository.cs" />
+    <Compile Include="Repositories\SitecoreFormsDbRepository.cs" />
     <Compile Include="Repositories\SourceMasterRepository.cs" />
+    <Compile Include="Visualization\ProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -193,16 +209,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WFFM.ConversionTool.FormsData\WFFM.ConversionTool.FormsData.csproj">
-      <Project>{b114cb85-c56c-430c-8e20-21b61b71f545}</Project>
-      <Name>WFFM.ConversionTool.FormsData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WFFM.ConversionTool.Utility\WFFM.ConversionTool.Utility.csproj">
-      <Project>{e9c234f5-3206-4e96-884e-2be43d12db07}</Project>
-      <Name>WFFM.ConversionTool.Utility</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

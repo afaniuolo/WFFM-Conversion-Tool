@@ -25,8 +25,6 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IItemFactory _itemFactory;
 		private IDestMasterRepository _destMasterRepository;
 
-		private readonly string _baseFieldConverterType = "WFFM.ConversionTool.Library.Converters.BaseFieldConverter, WFFM.ConversionTool.Library";
-
 		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository)
 		{
 			_fieldFactory = fieldFactory;
@@ -147,7 +145,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								if (string.Equals(valueXmlElementMapping.sourceElementName, "Items",
 									StringComparison.InvariantCultureIgnoreCase))
 								{
-									IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
+									IFieldConverter converter = IoC.CreateConverter(valueXmlElementMapping.fieldConverter);
 
 									List<SCField> convertedFields = converter?.ConvertValueElementToFields(filteredConvertedField,
 										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
@@ -185,7 +183,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 							foreach (var valueXmlElementMapping in filteredValueElements)
 							{
-								IFieldConverter converter = InitConverter(valueXmlElementMapping.fieldConverter);
+								IFieldConverter converter = IoC.CreateConverter(valueXmlElementMapping.fieldConverter);
 
 								SCField destField = converter?.ConvertValueElement(filteredConvertedField, (Guid)valueXmlElementMapping.destFieldId, XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName), destItems);
 
@@ -198,7 +196,7 @@ namespace WFFM.ConversionTool.Library.Converters
 						// Process fields that have a single dest field
 						else if (convertedField.destFieldId != null)
 						{
-							IFieldConverter converter = InitConverter(convertedField.fieldConverter);
+							IFieldConverter converter = IoC.CreateConverter(convertedField.fieldConverter);
 							SCField destField = converter?.ConvertField(filteredConvertedField, (Guid)convertedField.destFieldId);
 
 							if (destField != null && destField.FieldId != Guid.Empty)
@@ -221,24 +219,5 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			return destItems;
 		}
-
-		private IFieldConverter InitConverter(string converterName)
-		{
-			var converterType = _baseFieldConverterType;
-			if (converterName != null)
-			{
-				var metaConverter = _appSettings.converters.FirstOrDefault(c => c.name == converterName)?.converterType;
-				if (!string.IsNullOrEmpty(metaConverter))
-				{
-					converterType = metaConverter;
-				}
-			}
-			return IoC.CreateInstance(converterType);
-		}
-
-
-
-
 	}
-
 }

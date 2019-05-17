@@ -93,6 +93,18 @@ namespace WFFM.ConversionTool.Library.Providers
 			metadataTemplate.descendantItems =
 				MergeDescendantItems(baseTemplateMeta.descendantItems, metadataTemplate.descendantItems);
 
+			// Override dataValueType
+			if (string.IsNullOrEmpty(metadataTemplate.dataValueType))
+			{
+				metadataTemplate.dataValueType = baseTemplateMeta.dataValueType;
+			}
+
+			// Override dataValueConverter
+			if (string.IsNullOrEmpty(metadataTemplate.dataValueConverter))
+			{
+				metadataTemplate.dataValueConverter = baseTemplateMeta.dataValueConverter;
+			}
+
 			return metadataTemplate;
 		}
 

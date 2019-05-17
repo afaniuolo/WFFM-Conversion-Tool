@@ -16,6 +16,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 
 		List<SCItem> GetSitecoreChildrenItems(Guid templateId, Guid parentId);
 		List<SCItem> GetSitecoreDescendantsItems(Guid templateId, Guid parentId);
+		List<SCItem> GetSitecoreDescendantsItems(Guid parentId);
 		SCItem GetSitecoreItem(Guid itemId);
 		bool ItemExists(Guid itemId);
 	}

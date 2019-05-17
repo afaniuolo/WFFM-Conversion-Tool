@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WFFM.ConversionTool.FormsData.Database.Forms;
+﻿using System.Data.Entity.Migrations;
+using WFFM.ConversionTool.Library.Database.Forms;
 
-namespace WFFM.ConversionTool.FormsData.Repositories
+namespace WFFM.ConversionTool.Library.Repositories
 {
 	public class SitecoreFormsDbRepository : ISitecoreFormsDbRepository
 	{

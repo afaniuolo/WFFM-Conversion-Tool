@@ -18,6 +18,8 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public MetadataFields fields { get; set; }
 		public Guid sourceMappingFieldId { get; set; }
 		public string sourceMappingFieldValue { get; set; }
+		public string dataValueType { get; set; }
+		public string dataValueConverter { get; set; }
 		public List<DescendantItem> descendantItems { get; set; }
 
 		[Serializable]

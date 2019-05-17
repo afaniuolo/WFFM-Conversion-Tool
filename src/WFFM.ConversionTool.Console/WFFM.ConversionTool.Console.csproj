@@ -63,17 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WFFM.ConversionTool.FormsData\WFFM.ConversionTool.FormsData.csproj">
-      <Project>{b114cb85-c56c-430c-8e20-21b61b71f545}</Project>
-      <Name>WFFM.ConversionTool.FormsData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\WFFM.ConversionTool.Library\WFFM.ConversionTool.Library.csproj">
       <Project>{670ad498-f9f3-45bc-81a5-4c5841249298}</Project>
       <Name>WFFM.ConversionTool.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WFFM.ConversionTool.Utility\WFFM.ConversionTool.Utility.csproj">
-      <Project>{e9c234f5-3206-4e96-884e-2be43d12db07}</Project>
-      <Name>WFFM.ConversionTool.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,6 +3,7 @@
     "destTemplateId": "{E8D5A5A3-6430-4701-BAAD-1DB1947616CC}",
     "destTemplateName": "Number",
     "baseTemplateMetadataFileName": "Input.json",
+    "dataValueType": "System.Double",
     "fields": {
         "newFields": [
             {
@@ -16,7 +17,7 @@
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-                    
+
                 ]
             },
             {

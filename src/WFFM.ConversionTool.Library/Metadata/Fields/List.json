@@ -2,13 +2,14 @@
     "destTemplateId": "{5B672865-55D2-413E-B699-FDFC7E732CCF}",
     "destTemplateName": "List",
     "baseTemplateMetadataFileName": "Field.json",
+    "dataValueType": "System.Collections.Generic.List`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]",
     "fields": {
         "convertedFields": [
             {
                 "fieldConverter": null,
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-                    
+
                 ]
             },
             {
@@ -40,5 +41,5 @@
             "destTemplateName": "Folder",
             "parentItemName": "Settings"
         }
-    ] 
+    ]
 }
