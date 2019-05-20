@@ -44,7 +44,12 @@ namespace WFFM.ConversionTool.Library.Providers
 			var newMetadataTemplates = DeepCopy(_metadataTemplates);
 			return newMetadataTemplates.FirstOrDefault(m => string.Equals(m.sourceMappingFieldValue, mappingValue, StringComparison.InvariantCultureIgnoreCase));
 		}
-		
+
+		public string[] GetAllMetadataFiles()
+		{
+			return _metadataFiles;
+		}
+
 		private string[] GetMetadataFileList()
 		{
 			var metadataDirPath = _appSettings.metadataFolderRelativePath;

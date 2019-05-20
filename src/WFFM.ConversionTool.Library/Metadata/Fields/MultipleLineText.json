@@ -13,18 +13,18 @@
         ],
         "convertedFields": [
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
                     {
                         "sourceElementName": "Rows",
                         "destFieldId": "{E43E4E5F-6B45-4E3B-8D85-85AB87D2CC12}", // Rows
-                        "fieldConverter": null
+                        "fieldConverter": ""
                     }
                 ]
             },
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
 

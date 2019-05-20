@@ -14,14 +14,14 @@
         ],
         "convertedFields": [
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
 
                 ]
             },
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
 

@@ -29,7 +29,7 @@
                 "destFieldId": "{D99833EA-238A-4505-90EF-C69BF3EBA946}"
             },
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{0F110210-9EA9-47C6-93AF-7DCE616C3602}", // Custom CSS Class
                 "destFieldId": "{7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA}" // CSS Class
             }

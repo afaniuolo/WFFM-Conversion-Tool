@@ -12,6 +12,7 @@ using WFFM.ConversionTool.Library;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Migrators;
 using WFFM.ConversionTool.Library.Processors;
+using WFFM.ConversionTool.Library.Validators;
 using WFFM.ConversionTool.Library.Visualization;
 using ILogger = WFFM.ConversionTool.Library.Logging.ILogger;
 
@@ -37,11 +38,20 @@ namespace WFFM.ConversionTool.Console
 			System.Console.WriteLine(" ***********************************************************************");
 			System.Console.WriteLine();
 
-			// Configure connection strings
+			// Validation
+			var metadataValidator = container.GetInstance<MetadataValidator>();
+			if (!metadataValidator.Validate())
+			{
+				System.Console.ReadLine();
+				return;
+			}
+
+			// Connection Strings
+			// Settings
 
 			// Read and analyze source data
-			//var formProcessor = container.GetInstance<FormProcessor>();
-			//var convertedForms = formProcessor.ConvertForms();
+			var formProcessor = container.GetInstance<FormProcessor>();
+			formProcessor.ConvertForms();
 
 			// Convert & Migrate data
 			var dataMigrator = container.GetInstance<DataMigrator>();

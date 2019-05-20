@@ -17,6 +17,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers.FormsData;
 using WFFM.ConversionTool.Library.Repositories;
+using WFFM.ConversionTool.Library.Validators;
 using Container = SimpleInjector.Container;
 
 namespace WFFM.ConversionTool.Library
@@ -61,6 +62,8 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<DataMigrator>();
 
+			container.Register<MetadataValidator>();
+
 			RegisterFormsDataProvider();
 
 			// Configuration to registere unregistered converter types
@@ -84,7 +87,7 @@ namespace WFFM.ConversionTool.Library
 		public static IFieldConverter CreateConverter(string converterName)
 		{
 			var converterType = _baseFieldConverterType;
-			if (converterName != null)
+			if (!string.IsNullOrEmpty(converterName))
 			{
 				var metaConverter = createAppSettings().converters.FirstOrDefault(c => c.name == converterName)?.converterType;
 				if (!string.IsNullOrEmpty(metaConverter))

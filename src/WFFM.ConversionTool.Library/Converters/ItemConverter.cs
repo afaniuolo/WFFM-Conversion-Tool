@@ -137,7 +137,7 @@ namespace WFFM.ConversionTool.Library.Converters
 							var valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
 							
 							var filteredValueElementsToMany = convertedField.destFields.Where(f =>
-								valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId == null);
+								valueElements.Contains(f.sourceElementName.ToLower()) && (f.destFieldId == null || f.destFieldId == Guid.Empty));
 
 							foreach (var valueXmlElementMapping in filteredValueElementsToMany)
 							{
@@ -179,7 +179,7 @@ namespace WFFM.ConversionTool.Library.Converters
 							}
 
 							var filteredValueElements =
-								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && f.destFieldId != null);
+								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && (f.destFieldId != null && f.destFieldId != Guid.Empty));
 
 							foreach (var valueXmlElementMapping in filteredValueElements)
 							{
@@ -194,7 +194,7 @@ namespace WFFM.ConversionTool.Library.Converters
 							}
 						}
 						// Process fields that have a single dest field
-						else if (convertedField.destFieldId != null)
+						else if (convertedField.destFieldId != null && convertedField.destFieldId != Guid.Empty)
 						{
 							IFieldConverter converter = IoC.CreateConverter(convertedField.fieldConverter);
 							SCField destField = converter?.ConvertField(filteredConvertedField, (Guid)convertedField.destFieldId);

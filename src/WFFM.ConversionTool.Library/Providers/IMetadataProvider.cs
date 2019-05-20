@@ -13,5 +13,6 @@ namespace WFFM.ConversionTool.Library.Providers
 		MetadataTemplate GetItemMetadataByTemplateId(Guid templateId);
 		MetadataTemplate GetItemMetadataByTemplateName(string templateName);
 		MetadataTemplate GetItemMetadataBySourceMappingFieldValue(string mappingValue);
+		string[] GetAllMetadataFiles();
 	}
 }

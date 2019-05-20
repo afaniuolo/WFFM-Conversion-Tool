@@ -5,34 +5,34 @@
     "fields": {
         "convertedFields": [
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
                     {
                         "sourceElementName": "MinLength",
                         "destFieldId": "{9F7DA002-7B86-436B-8DDA-7EFE5837B88E}", // Min Length
-                        "fieldConverter": null
+                        "fieldConverter": ""
                     },
                     {
                         "sourceElementName": "MaxLength",
                         "destFieldId": "{71061C01-A495-4BF3-A52C-D378346BFAE2}", // Max Length
-                        "fieldConverter": null
+                        "fieldConverter": ""
                     }
                 ]
             },
             {
-                "fieldConverter": null,
+                "fieldConverter": "",
                 "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
                 "destFields": [
                     {
                         "sourceElementName": "Text",
                         "destFieldId": "{B775BCA9-2605-4D60-B367-A0C354BE2504}", // Default Value
-                        "fieldConverter": null
+                        "fieldConverter": ""
                     },
                     {
                         "sourceElementName": "Information",
                         "destFieldId": "{A6972F08-CBB5-4830-A8C9-8A0AE34650D1}", // Placeholder Text
-                        "fieldConverter": null
+                        "fieldConverter": ""
                     }
                 ]
             }

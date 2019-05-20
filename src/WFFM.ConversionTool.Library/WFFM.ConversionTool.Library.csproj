@@ -123,6 +123,8 @@
     <Compile Include="Repositories\ISourceMasterRepository.cs" />
     <Compile Include="Repositories\SitecoreFormsDbRepository.cs" />
     <Compile Include="Repositories\SourceMasterRepository.cs" />
+    <Compile Include="Validators\IValidator.cs" />
+    <Compile Include="Validators\MetadataValidator.cs" />
     <Compile Include="Visualization\ProgressBar.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -209,6 +211,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Schemas\metadata-schema.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
