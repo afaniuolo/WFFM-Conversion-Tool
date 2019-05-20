@@ -29,6 +29,9 @@ namespace WFFM.ConversionTool.Console
 
 		static void Main(string[] args)
 		{
+			// Start watch
+			var stopwatch = Stopwatch.StartNew();
+			
 			// Init Console output
 			System.Console.WriteLine();
 			System.Console.WriteLine(" ***********************************************************************");
@@ -56,6 +59,11 @@ namespace WFFM.ConversionTool.Console
 			// Convert & Migrate data
 			var dataMigrator = container.GetInstance<DataMigrator>();
 			dataMigrator.MigrateData();
+
+			// Stop watch
+			System.Console.WriteLine();
+			System.Console.WriteLine($"Execution completed in {Math.Round(stopwatch.Elapsed.TotalMinutes, 2)} minutes.");
+			System.Console.WriteLine();
 		}
 
 		

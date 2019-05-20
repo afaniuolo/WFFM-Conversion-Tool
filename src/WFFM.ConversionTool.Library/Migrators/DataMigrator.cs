@@ -40,6 +40,8 @@ namespace WFFM.ConversionTool.Library.Migrators
 				_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID).ToList();
 
 			int formsCounter = 0;
+			ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
+
 			foreach (Guid convertedFormId in convertedForms)
 			{
 				MigrateFormData(convertedFormId);

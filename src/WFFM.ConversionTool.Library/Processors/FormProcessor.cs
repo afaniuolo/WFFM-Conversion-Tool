@@ -87,6 +87,9 @@ namespace WFFM.ConversionTool.Library.Processors
 			Console.WriteLine();
 
 			var formCounter = 0;
+			// Start progress bar
+			ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+
 			foreach (var form in forms)
 			{
 				// Convert and Migrate Form items
