@@ -50,6 +50,7 @@ namespace WFFM.ConversionTool.Library.Migrators
 			}
 
 			Console.WriteLine();
+			Console.WriteLine();
 			Console.WriteLine("Finished forms data migration.");
 			Console.WriteLine();
 		}
