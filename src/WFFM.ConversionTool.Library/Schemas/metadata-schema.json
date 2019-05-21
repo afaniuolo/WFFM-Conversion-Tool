@@ -1,6 +1,6 @@
 ﻿{
     "definitions": {},
-    "$schema": "http://json-schema.org/draft-03/schema,",
+    "$schema": "http://json-schema.org/draft-03/schema#",
     "type": "object",
     "title": "The metadata template file schema.",
     "properties": {

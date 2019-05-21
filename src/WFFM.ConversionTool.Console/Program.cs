@@ -41,7 +41,7 @@ namespace WFFM.ConversionTool.Console
 			System.Console.WriteLine(" ***********************************************************************");
 			System.Console.WriteLine();
 
-			// Validation
+			// Metadata Validation
 			var metadataValidator = container.GetInstance<MetadataValidator>();
 			if (!metadataValidator.Validate())
 			{
@@ -49,8 +49,15 @@ namespace WFFM.ConversionTool.Console
 				return;
 			}
 
+			// AppSettings Validation
+			var appSettingsValidator = container.GetInstance<AppSettingsValidator>();
+			if (!appSettingsValidator.Validate())
+			{
+				System.Console.ReadLine();
+				return;
+			}
+
 			// Connection Strings
-			// Settings
 
 			// Read and analyze source data
 			var formProcessor = container.GetInstance<FormProcessor>();
