@@ -64,6 +64,7 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<MetadataValidator>();
 			container.Register<AppSettingsValidator>();
+			container.Register<DbConnectionStringValidator>();
 
 			RegisterFormsDataProvider();
 

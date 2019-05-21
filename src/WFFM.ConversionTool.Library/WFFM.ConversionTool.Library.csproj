@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -78,6 +79,7 @@
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
     <Compile Include="Converters\SubmitConverter.cs" />
+    <Compile Include="Database\ConnectionTester.cs" />
     <Compile Include="Database\Forms\FieldData.cs" />
     <Compile Include="Database\Forms\FormEntry.cs" />
     <Compile Include="Database\Forms\SitecoreForms.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Repositories\SitecoreFormsDbRepository.cs" />
     <Compile Include="Repositories\SourceMasterRepository.cs" />
     <Compile Include="Validators\AppSettingsValidator.cs" />
+    <Compile Include="Validators\DbConnectionStringValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\MetadataValidator.cs" />
     <Compile Include="Visualization\ProgressBar.cs" />

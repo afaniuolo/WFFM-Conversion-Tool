@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Core;
 using SimpleInjector;
 using WFFM.ConversionTool.Library;
+using WFFM.ConversionTool.Library.Database;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Migrators;
 using WFFM.ConversionTool.Library.Processors;
@@ -31,7 +33,7 @@ namespace WFFM.ConversionTool.Console
 		{
 			// Start watch
 			var stopwatch = Stopwatch.StartNew();
-			
+
 			// Init Console output
 			System.Console.WriteLine();
 			System.Console.WriteLine(" ***********************************************************************");
@@ -43,21 +45,15 @@ namespace WFFM.ConversionTool.Console
 
 			// Metadata Validation
 			var metadataValidator = container.GetInstance<MetadataValidator>();
-			if (!metadataValidator.Validate())
-			{
-				System.Console.ReadLine();
-				return;
-			}
+			if (!metadataValidator.Validate()) return;
 
 			// AppSettings Validation
 			var appSettingsValidator = container.GetInstance<AppSettingsValidator>();
-			if (!appSettingsValidator.Validate())
-			{
-				System.Console.ReadLine();
-				return;
-			}
+			if (!appSettingsValidator.Validate()) return;
 
-			// Connection Strings
+			// Connection Strings Testing
+			var dbConnectionStringValidator = container.GetInstance<DbConnectionStringValidator>();
+			if (!dbConnectionStringValidator.Validate()) return;
 
 			// Read and analyze source data
 			var formProcessor = container.GetInstance<FormProcessor>();
@@ -72,8 +68,5 @@ namespace WFFM.ConversionTool.Console
 			System.Console.WriteLine($"Execution completed in {Math.Round(stopwatch.Elapsed.TotalMinutes, 2)} minutes.");
 			System.Console.WriteLine();
 		}
-
-		
 	}
-
 }
