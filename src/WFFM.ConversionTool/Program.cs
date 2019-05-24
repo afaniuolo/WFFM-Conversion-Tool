@@ -24,6 +24,10 @@ namespace WFFM.ConversionTool
 	{
 		static readonly Container container;
 
+		private static bool help = false;
+		private static bool convert = false;
+		private static bool onlydata = false;
+
 		static Program()
 		{
 			container = IoC.Initialize();
@@ -34,6 +38,22 @@ namespace WFFM.ConversionTool
 			// Start watch
 			var stopwatch = Stopwatch.StartNew();
 
+			// Init Console App Parameters
+			InitializeAppParameters(args);
+
+			// Render Help message if needed
+			if (help)
+			{
+				Console.WriteLine();
+				Console.WriteLine("Available command parameters:");
+				Console.WriteLine();
+				Console.WriteLine("/convert                 to convert and migrate items and data in destination databases.");
+				Console.WriteLine();
+				Console.WriteLine("/convert /onlydata       to convert and migrate only data in destination database.");
+				Console.WriteLine();
+				return;
+			}
+
 			// Init Console output
 			System.Console.WriteLine();
 			System.Console.WriteLine(" ***********************************************************************");
@@ -42,7 +62,7 @@ namespace WFFM.ConversionTool
 			System.Console.WriteLine(" *                                                                     *");
 			System.Console.WriteLine(" ***********************************************************************");
 			System.Console.WriteLine();
-
+			
 			// Metadata Validation
 			var metadataValidator = container.GetInstance<MetadataValidator>();
 			if (!metadataValidator.Validate()) return;
@@ -55,9 +75,12 @@ namespace WFFM.ConversionTool
 			var dbConnectionStringValidator = container.GetInstance<DbConnectionStringValidator>();
 			if (!dbConnectionStringValidator.Validate()) return;
 
-			// Read and analyze source data
-			var formProcessor = container.GetInstance<FormProcessor>();
-			formProcessor.ConvertForms();
+			if (!onlydata)
+			{
+				// Read and analyze source data
+				var formProcessor = container.GetInstance<FormProcessor>();
+				formProcessor.ConvertForms();
+			}
 
 			// Convert & Migrate data
 			var dataMigrator = container.GetInstance<DataMigrator>();
@@ -67,6 +90,27 @@ namespace WFFM.ConversionTool
 			System.Console.WriteLine();
 			System.Console.WriteLine($"Execution completed in {Math.Round(stopwatch.Elapsed.TotalMinutes, 2)} minutes.");
 			System.Console.WriteLine();
+		}
+
+		private static void InitializeAppParameters(string[] args)
+		{
+			for (int i = 0; i < args.Length; i++)
+			{
+				string arg = args[i];
+
+				switch (arg.ToLower())
+				{
+					case "/help":
+						help = true;
+						break;
+					case "/convert":
+						convert = true;
+						break;
+					case "/onlydata":
+						onlydata = true;
+						break;
+				}
+			}
 		}
 	}
 }
