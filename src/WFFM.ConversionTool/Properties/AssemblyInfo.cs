@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WFFM.ConversionTool.Console")]
+[assembly: AssemblyTitle("WFFM.ConversionTool")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WFFM.ConversionTool.Console")]
+[assembly: AssemblyProduct("WFFM.ConversionTool")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ff732927-e7cd-4a37-9728-1c865f872c39")]
+[assembly: Guid("49cd87dd-7950-4296-87b0-d5495d7a3a5a")]
 
 // Version information for an assembly consists of the following four values:
 //

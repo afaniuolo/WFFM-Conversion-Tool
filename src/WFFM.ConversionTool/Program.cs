@@ -18,7 +18,7 @@ using WFFM.ConversionTool.Library.Validators;
 using WFFM.ConversionTool.Library.Visualization;
 using ILogger = WFFM.ConversionTool.Library.Logging.ILogger;
 
-namespace WFFM.ConversionTool.Console
+namespace WFFM.ConversionTool
 {
 	class Program
 	{

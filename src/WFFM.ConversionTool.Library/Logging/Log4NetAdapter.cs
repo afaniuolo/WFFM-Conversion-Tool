@@ -14,6 +14,8 @@ namespace WFFM.ConversionTool.Library.Logging
 
 		public Log4NetAdapter()
 		{
+			log4net.GlobalContext.Properties["LogName"] = $"log.{DateTime.Now.ToString("yyyyMMdd.hhmmss")}.txt";
+
 			m_Adaptee = LogManager.GetLogger(typeof(T));
 
 			log4net.Config.XmlConfigurator.Configure();
