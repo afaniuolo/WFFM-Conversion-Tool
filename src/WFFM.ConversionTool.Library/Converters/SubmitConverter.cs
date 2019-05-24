@@ -173,6 +173,9 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			var formSaveActions = form.Fields
 				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId))?.Value;
+
+			var submitActionsMetadata = _appSettings.submitActions;
+
 			if (!string.IsNullOrEmpty(formSaveActions))
 			{
 				var saveActionElements = XmlHelper.GetXmlElementNodeList(XmlHelper.GetXmlElementNode(formSaveActions, "g").InnerXml, "li");
@@ -207,7 +210,23 @@ namespace WFFM.ConversionTool.Library.Converters
 						}
 						else
 						{
-							// TODO: logic to flag save actions not mapped
+							// Convert other save actions if mapped in AppSettings.json
+							var submitAction =
+								_appSettings.submitActions.FirstOrDefault(s => s.sourceSaveActionId == Guid.Parse(saveActionItem.Key));
+
+							if (submitAction != null)
+							{
+								IFieldConverter converter = IoC.CreateConverter(submitAction.destParametersConverterType);
+								var submitActionValues = new Dictionary<Guid, string>();
+								submitActionValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+									submitAction.destSubmitActionFieldValue);
+								submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+									converter.ConvertValue(saveActionItem.Value));
+							}
+							else
+							{
+								// TODO: logic to flag save actions not mapped for analysis
+							}
 						}
 					}
 				}
