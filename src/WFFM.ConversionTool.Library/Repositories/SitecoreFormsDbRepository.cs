@@ -1,4 +1,6 @@
-﻿using System.Data.Entity.Migrations;
+﻿using System;
+using System.Data.Entity.Migrations;
+using System.Linq;
 using WFFM.ConversionTool.Library.Database.Forms;
 
 namespace WFFM.ConversionTool.Library.Repositories
@@ -22,6 +24,11 @@ namespace WFFM.ConversionTool.Library.Repositories
 				_sitecoreFormsDb.FieldDatas.AddOrUpdate(fieldData);
 			}
 			_sitecoreFormsDb.SaveChanges();
+		}
+
+		public void DeleteFieldDataByFormRecordId(Guid formRecordId)
+		{
+			_sitecoreFormsDb.FieldDatas.RemoveRange(_sitecoreFormsDb.FieldDatas.Where(f => f.FormEntryID == formRecordId));
 		}
 	}
 }

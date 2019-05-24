@@ -10,6 +10,7 @@ using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Database.Master;
+using WFFM.ConversionTool.Library.Database.MongoDB;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Migrators;
@@ -40,6 +41,7 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<SitecoreForms>(CreateExperienceFormsDbContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
+			container.RegisterSingleton<MongoAnalytics>(createMongoAnalyticsContext);
 
 			// App Settings
 			container.RegisterSingleton<AppSettings>(createAppSettings);
@@ -142,6 +144,14 @@ namespace WFFM.ConversionTool.Library
 		{
 			var myContext = new DestMasterDb("name=DestMasterDb");
 			myContext.Configuration.ProxyCreationEnabled = false;
+			return myContext;
+		}
+
+		private static MongoAnalytics createMongoAnalyticsContext()
+		{
+			var mongoDbConnectionString =
+				System.Configuration.ConfigurationManager.ConnectionStrings["mongodb_analytics"].ConnectionString;
+			var myContext = new MongoAnalytics(mongoDbConnectionString);
 			return myContext;
 		}
 

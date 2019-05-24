@@ -63,8 +63,13 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 			foreach (FormData formDataRecord in formDataRecords)
 			{
+				// Delete existing field data records in Sitecore Forms destination db
+				_sitecoreFormsDbRepository.DeleteFieldDataByFormRecordId(formDataRecord.Id);
+
+				// Get Field Data records data from forms data provider
 				var fieldDataRecords = _dataProvider.GetFieldDataRecords(formDataRecord.Id);
 
+				// Convert the source field data records
 				List<FieldData> fieldDataFormsRecords = fieldDataRecords.Select(data => ConvertFieldData(data, fieldValueTypeCollection)).ToList();
 
 				FormEntry formEntry = new FormEntry()
