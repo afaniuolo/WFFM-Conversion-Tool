@@ -4,15 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Database;
+using WFFM.ConversionTool.Library.Models.Metadata;
 
 namespace WFFM.ConversionTool.Library.Validators
 {
 	public class DbConnectionStringValidator : IValidator
 	{
+		private AppSettings _appSettings;
+
+		public DbConnectionStringValidator(AppSettings appSettings)
+		{
+			_appSettings = appSettings;
+		}
+
 		public bool Validate()
 		{
-			return ValidateConnectionString("WFFM") && ValidateConnectionString("SitecoreForms") &&
-			       ValidateConnectionString("SourceMasterDb") && ValidateConnectionString("DestMasterDb");
+			bool isSqlFormsDataProvider = string.Equals(_appSettings.formsDataProvider, "sqlFormsDataProvider", StringComparison.InvariantCultureIgnoreCase);
+
+			return ValidateConnectionString("SitecoreForms") && ValidateConnectionString("SourceMasterDb") && ValidateConnectionString("DestMasterDb") &&
+				(isSqlFormsDataProvider ? ValidateConnectionString("WFFM") : ValidateConnectionString("mongodb_analytics"));
 		}
 
 		private bool ValidateConnectionString(string connectionStringName)
