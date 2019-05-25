@@ -102,7 +102,7 @@ namespace WFFM.ConversionTool.Library
 			return CreateInstance(converterType);
 		}
 
-		private static IFieldConverter CreateInstance(string converterType)
+		public static IFieldConverter CreateInstance(string converterType)
 		{
 			try
 			{

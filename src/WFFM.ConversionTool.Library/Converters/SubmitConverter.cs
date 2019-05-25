@@ -185,7 +185,7 @@ namespace WFFM.ConversionTool.Library.Converters
 					foreach (XmlNode saveActionElement in saveActionElements)
 					{
 						saveActionItems.Add(saveActionElement.Attributes["id"].Value,
-							XmlHelper.GetXmlElementValue(saveActionElement.Value, "parameters"));
+							XmlHelper.GetXmlElementValue(saveActionElement.InnerXml, "parameters"));
 					}
 
 					foreach (var saveActionItem in saveActionItems)
@@ -216,12 +216,13 @@ namespace WFFM.ConversionTool.Library.Converters
 
 							if (submitAction != null)
 							{
-								IFieldConverter converter = IoC.CreateConverter(submitAction.destParametersConverterType);
+								IFieldConverter converter = IoC.CreateInstance(submitAction.destParametersConverterType);
 								var submitActionValues = new Dictionary<Guid, string>();
 								submitActionValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
 									submitAction.destSubmitActionFieldValue);
 								submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
 									converter.ConvertValue(saveActionItem.Value));
+								ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
 							}
 							else
 							{

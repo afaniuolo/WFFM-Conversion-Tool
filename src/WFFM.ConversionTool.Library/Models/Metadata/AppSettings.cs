@@ -28,6 +28,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public class SubmitAction
 		{
 			public Guid sourceSaveActionId { get; set; }
+			public string destSubmitActionItemName { get; set; }
 			public string destSubmitActionFieldValue { get; set; }
 			public string destParametersConverterType { get; set; }
 		}
