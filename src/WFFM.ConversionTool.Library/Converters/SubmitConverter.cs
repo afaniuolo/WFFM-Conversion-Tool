@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Factories;
@@ -174,8 +175,6 @@ namespace WFFM.ConversionTool.Library.Converters
 			var formSaveActions = form.Fields
 				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId))?.Value;
 
-			var submitActionsMetadata = _appSettings.submitActions;
-
 			if (!string.IsNullOrEmpty(formSaveActions))
 			{
 				var saveActionElements = XmlHelper.GetXmlElementNodeList(XmlHelper.GetXmlElementNode(formSaveActions, "g").InnerXml, "li");
@@ -221,7 +220,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								submitActionValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
 									submitAction.destSubmitActionFieldValue);
 								submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
-									converter.ConvertValue(saveActionItem.Value));
+									converter.ConvertValue(HttpUtility.HtmlDecode((saveActionItem.Value.Replace("&amp;","&")))));
 								ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
 							}
 							else
