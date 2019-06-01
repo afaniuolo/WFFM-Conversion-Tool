@@ -17,6 +17,7 @@ using WFFM.ConversionTool.Library.Migrators;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers.FormsData;
+using WFFM.ConversionTool.Library.Reporting;
 using WFFM.ConversionTool.Library.Repositories;
 using WFFM.ConversionTool.Library.Validators;
 using Container = SimpleInjector.Container;
@@ -47,10 +48,13 @@ namespace WFFM.ConversionTool.Library
 			container.RegisterSingleton<AppSettings>(createAppSettings);
 			container.Register<IMetadataProvider, MetadataProvider>();
 
+			// Reporting
+			container.Register<IReporter, AnalysisReporter>(Lifestyle.Singleton);
+
 			// Repositories
-			container.Register<IDestMasterRepository, DestMasterRepository>();
-			container.Register<ISourceMasterRepository, SourceMasterRepository>();
-			container.Register<ISitecoreFormsDbRepository, SitecoreFormsDbRepository>();
+			container.Register<IDestMasterRepository, DestMasterRepository>(Lifestyle.Singleton);
+			container.Register<ISourceMasterRepository, SourceMasterRepository>(Lifestyle.Singleton);
+			container.Register<ISitecoreFormsDbRepository, SitecoreFormsDbRepository>(Lifestyle.Singleton);
 
 			container.Register<IFieldFactory, FieldFactory>();
 			container.Register<IFieldProvider, FieldProvider>();

@@ -1,0 +1,1 @@
+﻿This folder stores the generated conversion analysis reports.

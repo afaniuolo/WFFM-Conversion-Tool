@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="DnsClient, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DnsClient.1.2.0\lib\net471\DnsClient.dll</HintPath>
     </Reference>
@@ -70,6 +73,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -121,6 +127,7 @@
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Migrators\DataMigrator.cs" />
     <Compile Include="Migrators\IDataMigrator.cs" />
+    <Compile Include="Models\Reporting\ReportingRecord.cs" />
     <Compile Include="Providers\FieldProvider.cs" />
     <Compile Include="Providers\FormsData\IDataProvider.cs" />
     <Compile Include="Providers\IFieldProvider.cs" />
@@ -141,6 +148,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\FormsData\MongoDbDataReader.cs" />
     <Compile Include="Providers\FormsData\SqlDataReader.cs" />
+    <Compile Include="Reporting\AnalysisReporter.cs" />
+    <Compile Include="Reporting\IReporter.cs" />
     <Compile Include="Repositories\IDestMasterRepository.cs" />
     <Compile Include="Repositories\DestMasterRepository.cs" />
     <Compile Include="Repositories\ISitecoreFormsDbRepository.cs" />

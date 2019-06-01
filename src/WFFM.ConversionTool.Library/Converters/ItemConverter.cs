@@ -10,8 +10,10 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
+using WFFM.ConversionTool.Library.Models.Reporting;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Reporting;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Converters
@@ -24,14 +26,16 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IMetadataProvider _metadataProvider;
 		private IItemFactory _itemFactory;
 		private IDestMasterRepository _destMasterRepository;
+		private IReporter _conversionReporter;
 
-		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository, IReporter conversionReporter)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
 			_metadataProvider = metadataProvider;
 			_itemFactory = itemFactory;
 			_destMasterRepository = destMasterRepository;
+			_conversionReporter = conversionReporter;
 		}
 
 		public List<SCItem> Convert(SCItem scItem, Guid destParentId)
@@ -216,6 +220,15 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			destItem.Fields = destFields;
 			destItems.Add(destItem);
+
+			// Reporting
+			var unmappedSourceFields = sourceFields?.Where(f => (_itemMetadataTemplate.fields.existingFields == null || !_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId)) 
+			                                                   && (_itemMetadataTemplate.fields.convertedFields == null || !_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId)));
+
+			foreach (SCField unmappedSourceField in unmappedSourceFields)
+			{
+				_conversionReporter.AddUnmappedItemField(unmappedSourceField, itemId);
+			}
 
 			return destItems;
 		}

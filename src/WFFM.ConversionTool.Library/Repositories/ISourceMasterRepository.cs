@@ -14,5 +14,8 @@ namespace WFFM.ConversionTool.Library.Repositories
 		List<SCItem> GetSitecoreItems(Guid templateId);
 		bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem);
 		List<SCItem> GetSitecoreChildrenItems(Guid templateId, Guid parentId);
+		string GetSitecoreItemName(Guid itemId);
+		string GetItemPath(Guid itemId);
+		Guid GetItemTemplateId(Guid itemId);
 	}
 }

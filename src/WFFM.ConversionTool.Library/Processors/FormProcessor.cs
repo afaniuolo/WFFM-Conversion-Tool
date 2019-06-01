@@ -17,6 +17,7 @@ using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Reporting;
 using WFFM.ConversionTool.Library.Repositories;
 using WFFM.ConversionTool.Library.Visualization;
 
@@ -31,6 +32,7 @@ namespace WFFM.ConversionTool.Library.Processors
 		private IMetadataProvider _metadataProvider;
 		private SubmitConverter _submitConverter;
 		private AppearanceConverter _appearanceConverter;
+		private IReporter _conversionReporter;
 
 		private readonly string FormTemplateName = "form";
 		private readonly string PageTemplateName = "page";
@@ -39,7 +41,7 @@ namespace WFFM.ConversionTool.Library.Processors
 		private readonly string ButtonTemplateName = "button";
 
 		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
-			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter)
+			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter, IReporter conversionReporter)
 			: base(destMasterRepository, itemConverter, itemFactory)
 		{
 			logger = iLogger;
@@ -49,6 +51,7 @@ namespace WFFM.ConversionTool.Library.Processors
 			_metadataProvider = metadataProvider;
 			_submitConverter = submitConverter;
 			_appearanceConverter = appearanceConverter;
+			_conversionReporter = conversionReporter;
 		}
 
 		public List<Guid> ConvertForms()
@@ -150,6 +153,9 @@ namespace WFFM.ConversionTool.Library.Processors
 			Console.WriteLine();
 			Console.WriteLine("Finished forms conversion.");
 			Console.WriteLine();
+
+			// Write analysis results
+			_conversionReporter.GenerateOutput();
 
 			return forms.Select(form => form.ID).ToList();
 		}

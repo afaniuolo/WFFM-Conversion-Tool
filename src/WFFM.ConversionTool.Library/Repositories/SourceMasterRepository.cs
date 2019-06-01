@@ -52,6 +52,39 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return scItems;
 		}
 
+		public string GetSitecoreItemName(Guid itemId)
+		{
+			return _sourceMasterDb.Items.FirstOrDefault(item => item.ID == itemId)?.Name;
+		}
+
+		public string GetItemPath(Guid itemId)
+		{
+			var scItem = _sourceMasterDb.Items.FirstOrDefault(item => item.ID == itemId);
+			if (scItem == null)
+			{
+				return string.Empty;
+			}
+
+			List<string> itemNames = new List<string>();
+			itemNames.Add(scItem.Name);
+			var isRootSitecoreItem = false;
+			while (!isRootSitecoreItem)
+			{
+				scItem = _sourceMasterDb.Items.FirstOrDefault(item => item.ID == scItem.ParentID);
+				if (scItem == null) break;
+				itemNames.Add(scItem.Name);
+				isRootSitecoreItem = scItem.ID == new Guid("{11111111-1111-1111-1111-111111111111}");		
+			}
+
+			itemNames.Reverse();
+			return "/" + String.Join("/", itemNames);
+		}
+
+		public Guid GetItemTemplateId(Guid itemId)
+		{
+			return _sourceMasterDb.Items.FirstOrDefault(item => item.ID == itemId)?.TemplateID ?? Guid.Empty;
+		}
+
 		private SCItem GetSourceItemAndFields(Item sourceItem)
 		{
 			return new SCItem()
