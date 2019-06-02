@@ -11,6 +11,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 	public interface IReporter
 	{
 		void AddUnmappedItemField(SCField field, Guid itemId);
+		void AddUnmappedFormFieldItem(Guid itemId, string sourceMappingFieldValue);
 		void GenerateOutput();
 	}
 }

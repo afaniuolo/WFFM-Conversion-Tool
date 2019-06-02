@@ -43,11 +43,17 @@ namespace WFFM.ConversionTool.Library.Converters
 			_itemMetadataTemplate = _metadataProvider.GetItemMetadataByTemplateId(scItem.TemplateID);
 			if (_itemMetadataTemplate.sourceMappingFieldId != null && _itemMetadataTemplate.sourceMappingFieldId != Guid.Empty)
 			{
-				var mappedMetadataTemplate = _metadataProvider.GetItemMetadataBySourceMappingFieldValue(scItem.Fields
-					.FirstOrDefault(f => f.FieldId == _itemMetadataTemplate.sourceMappingFieldId)?.Value);
+				var sourceMappingFieldValue = scItem.Fields
+					.FirstOrDefault(f => f.FieldId == _itemMetadataTemplate.sourceMappingFieldId)?.Value;
+				var mappedMetadataTemplate = _metadataProvider.GetItemMetadataBySourceMappingFieldValue(sourceMappingFieldValue);
 				if (mappedMetadataTemplate != null)
 				{
 					_itemMetadataTemplate = mappedMetadataTemplate;
+				}
+				else
+				{
+					// Add record in conversion analysis
+					_conversionReporter.AddUnmappedFormFieldItem(scItem.ID, sourceMappingFieldValue);
 				}
 			}
 

@@ -55,8 +55,21 @@ namespace WFFM.ConversionTool.Library.Reporting
 				ItemTemplateName = _sourceMasterRepository.GetSitecoreItemName(_sourceMasterRepository.GetItemTemplateId(itemId)),
 				FieldId = field.FieldId.ToString("B").ToUpper(),
 				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
-				FieldType = field.Type,
+				FieldType = field.Type.ToString(),
 				Message = "Source Field Not Mapped"
+			});
+		}
+
+		public void AddUnmappedFormFieldItem(Guid itemId, string sourceMappingFieldValue)
+		{
+			AddReportingRecord(new ReportingRecord()
+			{
+				ItemId = itemId.ToString("B").ToUpper(),
+				ItemName = _sourceMasterRepository.GetSitecoreItemName(itemId),
+				ItemPath = _sourceMasterRepository.GetItemPath(itemId),
+				ItemTemplateId = _sourceMasterRepository.GetItemTemplateId(itemId).ToString("B").ToUpper(),
+				ItemTemplateName = _sourceMasterRepository.GetSitecoreItemName(_sourceMasterRepository.GetItemTemplateId(itemId)),
+				Message = $"Form Field Item Not Mapped - Form Field Type Name = {_sourceMasterRepository.GetSitecoreItemName(Guid.Parse(sourceMappingFieldValue))}"
 			});
 		}
 
@@ -73,7 +86,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			// Filter out base standard fields if analysis_ExcludeBaseStandardFields is set to true
 			if (_appSettings.analysis_ExcludeBaseStandardFields)
 			{
-				_reportingRecords = _reportingRecords.Where(r => !r.FieldName.StartsWith("__")).ToList();
+				_reportingRecords = _reportingRecords.Where(r => string.IsNullOrEmpty(r.FieldName) || !r.FieldName.StartsWith("__")).ToList();
 			}
 
 			// Convert to CSV file
