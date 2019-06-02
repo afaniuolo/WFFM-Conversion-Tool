@@ -77,11 +77,16 @@ namespace WFFM.ConversionTool.Library.Reporting
 			}
 
 			// Convert to CSV file
-			using (var writer = new StreamWriter($"Analysis\\AnalysisReport.{DateTime.Now.ToString("yyyyMMdd.hhmmss")}.csv"))
+			var filePath = $"Analysis\\AnalysisReport.{DateTime.Now.ToString("yyyyMMdd.hhmmss")}.csv";
+			using (var writer = new StreamWriter(filePath))
 			using (var csv = new CsvWriter(writer))
 			{
 				csv.WriteRecords(_reportingRecords);
 			}
+
+			Console.WriteLine();
+			Console.WriteLine("Conversion analysis report can be reviewed here: " + filePath);
+			Console.WriteLine();
 		}
 	}
 }

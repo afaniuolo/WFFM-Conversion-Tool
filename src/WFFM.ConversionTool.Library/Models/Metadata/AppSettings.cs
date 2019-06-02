@@ -13,6 +13,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public List<Converter> converters { get; set; }
 		public List<SubmitAction> submitActions { get; set; }
 
+		public bool enableOnlyAnalysisByDefault { get; set; }
 		public string metadataFolderRelativePath { get; set; }
 		public string invalidItemNameChars { get; set; }
 

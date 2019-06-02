@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers;
@@ -18,19 +19,23 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
 		private IFieldProvider _fieldProvider;
+		private AppSettings _appSettings;
 
-		public AppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider)
-			: base(destMasterRepository, itemConverter, itemFactory)
+		public AppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
+			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
 			_fieldProvider = fieldProvider;
+			_appSettings = appSettings;
 		}
 
 		public void ConvertTitle(SCItem form, SCItem pageItem)
 		{
 			var titleItemName = "Title";
 			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
+
+			pageItem = CheckItemNotNullForAnalysis(pageItem);
 
 			DeleteItem(pageItem.ID, titleItemName, textMetadata);
 
@@ -66,6 +71,8 @@ namespace WFFM.ConversionTool.Library.Converters
 			var introductionItemName = "Introduction";
 			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
 
+			pageItem = CheckItemNotNullForAnalysis(pageItem);
+
 			DeleteItem(pageItem.ID, introductionItemName, textMetadata);
 
 			var showIntroduction = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormShowIntroductionFieldId));
@@ -93,6 +100,8 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			var footerItemName = "Footer";
 			var textMetadata = _metadataProvider.GetItemMetadataByTemplateName("Text");
+
+			pageItem = CheckItemNotNullForAnalysis(pageItem);
 
 			DeleteItem(pageItem.ID, footerItemName, textMetadata);
 

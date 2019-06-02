@@ -77,6 +77,11 @@ namespace WFFM.ConversionTool.Library.Factories
 		{
 			var itemId = Guid.NewGuid();
 
+			if (_appSettings.enableOnlyAnalysisByDefault && parentItem == null)
+			{
+				parentItem = CreateDummyItem();
+			}
+
 			return new SCItem()
 			{
 				ID = itemId,
@@ -87,6 +92,15 @@ namespace WFFM.ConversionTool.Library.Factories
 				Updated = DateTime.Now,
 				TemplateID = _itemMetadataTemplate.destTemplateId,
 				Fields = CreateFields(itemId, parentItem)
+			};
+		}
+
+		public SCItem CreateDummyItem()
+		{
+			return new SCItem()
+			{
+				ID = Guid.NewGuid(),
+				Fields = new List<SCField>()
 			};
 		}
 
@@ -119,6 +133,11 @@ namespace WFFM.ConversionTool.Library.Factories
 
 		private SCItem CreateDescendantItem(MetadataTemplate.DescendantItem descendantItem, SCItem destParentItem)
 		{
+			if (_appSettings.enableOnlyAnalysisByDefault && destParentItem == null)
+			{
+				destParentItem = CreateDummyItem();
+			}
+
 			var descendantItemMetadataTemplate =
 				_metadataProvider.GetItemMetadataByTemplateName(descendantItem.destTemplateName);
 			var children = _destMasterRepository.GetSitecoreChildrenItems(descendantItemMetadataTemplate.destTemplateId,

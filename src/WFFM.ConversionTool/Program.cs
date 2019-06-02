@@ -13,6 +13,7 @@ using WFFM.ConversionTool.Library;
 using WFFM.ConversionTool.Library.Database;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Migrators;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Validators;
 using WFFM.ConversionTool.Library.Visualization;
@@ -62,7 +63,7 @@ namespace WFFM.ConversionTool
 			System.Console.WriteLine(" *                                                                     *");
 			System.Console.WriteLine(" ***********************************************************************");
 			System.Console.WriteLine();
-			
+
 			// Metadata Validation
 			var metadataValidator = container.GetInstance<MetadataValidator>();
 			if (!metadataValidator.Validate()) return;
@@ -75,6 +76,13 @@ namespace WFFM.ConversionTool
 			var dbConnectionStringValidator = container.GetInstance<DbConnectionStringValidator>();
 			if (!dbConnectionStringValidator.Validate()) return;
 
+			// Get AppSettings instance
+			var appSettings = container.GetInstance<AppSettings>();
+			if (convert)
+			{
+				appSettings.enableOnlyAnalysisByDefault = false;
+			}
+
 			if (!onlydata)
 			{
 				// Read and analyze source data
@@ -82,9 +90,12 @@ namespace WFFM.ConversionTool
 				formProcessor.ConvertForms();
 			}
 
-			// Convert & Migrate data
-			var dataMigrator = container.GetInstance<DataMigrator>();
-			dataMigrator.MigrateData();
+			if (convert)
+			{
+				// Convert & Migrate data
+				var dataMigrator = container.GetInstance<DataMigrator>();
+				dataMigrator.MigrateData();
+			}
 
 			// Stop watch
 			System.Console.WriteLine();
@@ -98,15 +109,16 @@ namespace WFFM.ConversionTool
 			{
 				string arg = args[i];
 
-				switch (arg.ToLower())
+				switch (arg.ToLower().Replace("/", "").Replace("-", ""))
 				{
-					case "/help":
+					case "help":
+					case "?":
 						help = true;
 						break;
-					case "/convert":
+					case "convert":
 						convert = true;
 						break;
-					case "/onlydata":
+					case "onlydata":
 						onlydata = true;
 						break;
 				}

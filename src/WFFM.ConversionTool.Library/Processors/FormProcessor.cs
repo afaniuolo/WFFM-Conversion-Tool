@@ -42,7 +42,7 @@ namespace WFFM.ConversionTool.Library.Processors
 
 		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
 			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter, IReporter conversionReporter)
-			: base(destMasterRepository, itemConverter, itemFactory)
+			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			logger = iLogger;
 			_sourceMasterRepository = sourceMasterRepository;

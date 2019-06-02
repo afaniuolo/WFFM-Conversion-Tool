@@ -16,12 +16,14 @@ namespace WFFM.ConversionTool.Library.Processors
 		private IDestMasterRepository _destMasterRepository;
 		private IItemConverter _itemConverter;
 		private IItemFactory _itemFactory;
+		private AppSettings _appSettings;
 
-		public ItemProcessor(IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory)
+		public ItemProcessor(IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, AppSettings appSettings)
 		{
 			_destMasterRepository = destMasterRepository;
 			_itemConverter = itemConverter;
 			_itemFactory = itemFactory;
+			_appSettings = appSettings;
 
 		}
 
@@ -68,6 +70,16 @@ namespace WFFM.ConversionTool.Library.Processors
 			{
 				_destMasterRepository.DeleteSitecoreItem(textItem);
 			}
+		}
+
+		public SCItem CheckItemNotNullForAnalysis(SCItem item)
+		{
+			if (_appSettings.enableOnlyAnalysisByDefault && item == null)
+			{
+				item = _itemFactory.CreateDummyItem();
+			}
+
+			return item;
 		}
 	}
 }

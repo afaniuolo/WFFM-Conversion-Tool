@@ -25,14 +25,16 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IMetadataProvider _metadataProvider;
 		private IFieldProvider _fieldProvider;
 		private AppSettings _appSettings;
+		private IItemFactory _itemFactory;
 		
 		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
-			: base(destMasterRepository, itemConverter, itemFactory)
+			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
 			_fieldProvider = fieldProvider;
 			_appSettings = appSettings;
+			_itemFactory = itemFactory;
 		}
 
 		public void Convert(SCItem form, SCItem pageItem)
@@ -58,6 +60,8 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		private SCItem ConvertSubmitButton(SCItem form, SCItem pageItem)
 		{
+			pageItem = CheckItemNotNullForAnalysis(pageItem);
+
 			var buttonMetadata = _metadataProvider.GetItemMetadataByTemplateName("Button");
 			SCItem buttonItem;
 			if (!_destMasterRepository.ItemHasChildrenOfTemplate(buttonMetadata.destTemplateId, pageItem))
@@ -84,6 +88,8 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		private void ConvertSubmitMode(SCItem form, SCItem buttonItem)
 		{
+			buttonItem = CheckItemNotNullForAnalysis(buttonItem);
+
 			var submitMode = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSubmitModeFieldId));
 			if (submitMode != null && submitMode.Value == FormConstants.FormSubmitModeField_RedirectModeValue)
 			{
@@ -139,7 +145,10 @@ namespace WFFM.ConversionTool.Library.Converters
 				ConvertTextField(form, successPageId);
 
 				// Configure Navigation field in Submit button to go to next page
-				buttonItem.Fields.First(field => field.FieldId == new Guid(ButtonConstants.ButtonNavigationFieldId)).Value = "1";
+				if (buttonItem.Fields.Any())
+				{
+					buttonItem.Fields.First(field => field.FieldId == new Guid(ButtonConstants.ButtonNavigationFieldId)).Value = "1";
+				}
 				UpdateItem(buttonItem);
 			}
 		}
@@ -268,10 +277,14 @@ namespace WFFM.ConversionTool.Library.Converters
 		{
 			var metadataTemplate = _metadataProvider.GetItemMetadataByTemplateName(metadataTemplateName);
 
+			buttonItem = CheckItemNotNullForAnalysis(buttonItem);
+
 			// Get Submit Action Folder
 			var submitActionsFolder =
 				_destMasterRepository.GetSitecoreChildrenItems(_metadataProvider.GetItemMetadataByTemplateName("Folder").destTemplateId,
 					buttonItem.ID).FirstOrDefault();
+
+			submitActionsFolder = CheckItemNotNullForAnalysis(submitActionsFolder);
 
 			var existingConvertedItem = _destMasterRepository
 				.GetSitecoreChildrenItems(metadataTemplate.destTemplateId, submitActionsFolder.ID)

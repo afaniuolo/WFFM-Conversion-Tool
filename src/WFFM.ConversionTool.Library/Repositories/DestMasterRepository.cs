@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WFFM.ConversionTool.Library.Database.Master;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
+using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 
 namespace WFFM.ConversionTool.Library.Repositories
@@ -15,11 +16,13 @@ namespace WFFM.ConversionTool.Library.Repositories
 	{
 		private ILogger logger;
 		private DestMasterDb _destMasterDb;
+		private AppSettings _appSettings;
 
-		public DestMasterRepository(ILogger iLogger, DestMasterDb destMasterDb)
+		public DestMasterRepository(ILogger iLogger, DestMasterDb destMasterDb, AppSettings appSettings)
 		{
 			logger = iLogger;
 			_destMasterDb = destMasterDb;
+			_appSettings = appSettings;
 		}
 
 		public void AddOrUpdateSitecoreItem(SCItem destItem)
@@ -66,13 +69,15 @@ namespace WFFM.ConversionTool.Library.Repositories
 
 		public bool ItemHasChildrenOfTemplate(Guid templateId, SCItem scItem)
 		{
+			if (scItem == null) return false;
 			return _destMasterDb.Items.Any(item => item.TemplateID == templateId && item.ParentID == scItem.ID);
 		}
 
 		public List<SCItem> GetSitecoreChildrenItems(Guid templateId, Guid parentId)
 		{
-			var childrenItems = GetChildrenItems(templateId, parentId);
 			List<SCItem> scItems = new List<SCItem>();
+			var childrenItems = GetChildrenItems(templateId, parentId);
+			
 			foreach (var item in childrenItems)
 			{
 				scItems.Add(GetSourceItemAndFields(item));
@@ -146,7 +151,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 				TemplateID = scItem.TemplateID
 			};
 			_destMasterDb.Items.AddOrUpdate(dbItem);
-			_destMasterDb.SaveChanges();
+			if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 		}
 
 		private void AddOrUpdateSharedField(SCField scField)
@@ -162,7 +167,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Value = scField.Value,
 				Id = fieldCheck?.Id ?? scField.Id
 			});
-			_destMasterDb.SaveChanges();
+			if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 		}
 
 		private void AddOrUpdateUnversionedField(SCField scField)
@@ -179,7 +184,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Id = fieldCheck?.Id ?? scField.Id,
 				Language = scField.Language
 			});
-			_destMasterDb.SaveChanges();
+			if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 		}
 
 		private void AddOrUpdateVersionedField(SCField scField)
@@ -197,7 +202,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 				Language = scField.Language,
 				Version = scField.Version ?? 1
 			});
-			_destMasterDb.SaveChanges();
+			if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 		}
 
 		private void DeleteItem(SCItem scItem)
@@ -206,7 +211,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			if (dbItem != null)
 			{
 				_destMasterDb.Items.Remove(dbItem);
-				_destMasterDb.SaveChanges();
+				if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 			}
 		}
 
@@ -216,7 +221,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			if (dbField != null)
 			{
 				_destMasterDb.SharedFields.Remove(dbField);
-				_destMasterDb.SaveChanges();
+				if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 			}
 		}
 
@@ -226,7 +231,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			if (dbField != null)
 			{
 				_destMasterDb.UnversionedFields.Remove(dbField);
-				_destMasterDb.SaveChanges();
+				if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 			}
 		}
 
@@ -236,7 +241,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 			if (dbField != null)
 			{
 				_destMasterDb.VersionedFields.Remove(dbField);
-				_destMasterDb.SaveChanges();
+				if (!_appSettings.enableOnlyAnalysisByDefault) _destMasterDb.SaveChanges();
 			}
 		}
 
