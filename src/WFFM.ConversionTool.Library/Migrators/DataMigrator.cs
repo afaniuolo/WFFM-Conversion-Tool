@@ -18,14 +18,16 @@ namespace WFFM.ConversionTool.Library.Migrators
 		private IDataProvider _dataProvider;
 		private ISitecoreFormsDbRepository _sitecoreFormsDbRepository;
 		private IDestMasterRepository _destMasterRepository;
+		private ISourceMasterRepository _sourceMasterRepository;
 		private IMetadataProvider _metadataProvider;
 		private AppSettings _appSettings;
 
-		public DataMigrator(IDataProvider dataProvider, ISitecoreFormsDbRepository sitecoreFormsDbRepository, IDestMasterRepository destMasterRepository, IMetadataProvider metadataProvider, AppSettings appSettings)
+		public DataMigrator(IDataProvider dataProvider, ISitecoreFormsDbRepository sitecoreFormsDbRepository, IDestMasterRepository destMasterRepository, ISourceMasterRepository sourceMasterRepository, IMetadataProvider metadataProvider, AppSettings appSettings)
 		{
 			_dataProvider = dataProvider;
 			_sitecoreFormsDbRepository = sitecoreFormsDbRepository;
 			_destMasterRepository = destMasterRepository;
+			_sourceMasterRepository = sourceMasterRepository;
 			_metadataProvider = metadataProvider;
 			_appSettings = appSettings;
 		}
@@ -37,7 +39,8 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 			var convertedForms = _destMasterRepository.GetSitecoreDescendantsItems(
 				_metadataProvider.GetItemMetadataByTemplateName("Form").destTemplateId,
-				_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID).ToList();
+				_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID)
+				.Where(formId => _sourceMasterRepository.GetSitecoreItemName(formId) != null).ToList();
 
 			int formsCounter = 0;
 			ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
