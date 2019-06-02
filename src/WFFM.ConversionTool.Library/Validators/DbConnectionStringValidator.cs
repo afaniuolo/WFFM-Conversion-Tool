@@ -33,8 +33,8 @@ namespace WFFM.ConversionTool.Library.Validators
 			if (!connectionIsValid)
 			{
 				Console.WriteLine();
-				Console.WriteLine("Execution aborted!");
-				Console.WriteLine($"The {connectionStringName} connection string is not valid.");
+				Console.WriteLine("  Execution aborted!");
+				Console.WriteLine($"  The {connectionStringName} connection string is not valid.");
 				Console.WriteLine();
 			}
 

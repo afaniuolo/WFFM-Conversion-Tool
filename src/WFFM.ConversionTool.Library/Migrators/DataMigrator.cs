@@ -32,7 +32,7 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 		public void MigrateData()
 		{
-			Console.WriteLine("Started forms data migration...");
+			Console.WriteLine("  Started forms data migration...");
 			Console.WriteLine();
 
 			var convertedForms = _destMasterRepository.GetSitecoreDescendantsItems(
@@ -51,7 +51,7 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 			Console.WriteLine();
 			Console.WriteLine();
-			Console.WriteLine("Finished forms data migration.");
+			Console.WriteLine("  Finished forms data migration.");
 			Console.WriteLine();
 		}
 

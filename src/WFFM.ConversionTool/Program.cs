@@ -27,7 +27,7 @@ namespace WFFM.ConversionTool
 
 		private static bool help = false;
 		private static bool convert = false;
-		private static bool onlydata = false;
+		private static bool nodata = false;
 
 		static Program()
 		{
@@ -46,22 +46,23 @@ namespace WFFM.ConversionTool
 			if (help)
 			{
 				Console.WriteLine();
-				Console.WriteLine("Available command parameters:");
+				Console.WriteLine("  Executes the conversion and migration of items and data from Sitecore WFFM source to Sitecore Experience Forms destination.");
 				Console.WriteLine();
-				Console.WriteLine("/convert                 to convert and migrate items and data in destination databases.");
+				Console.WriteLine("  WFFM.ConversionTool.exe [-convert] [-nodata]");
 				Console.WriteLine();
-				Console.WriteLine("/convert /onlydata       to convert and migrate only data in destination database.");
+				Console.WriteLine("  -convert             to convert and migrate items and data in destination databases.");
+				Console.WriteLine("  -convert -nodata     to convert and migrate only items in destination database.");
 				Console.WriteLine();
 				return;
 			}
 
 			// Init Console output
 			System.Console.WriteLine();
-			System.Console.WriteLine(" ***********************************************************************");
-			System.Console.WriteLine(" *                                                                     *");
-			System.Console.WriteLine(" *                 WFFM Conversion Tool - v1.0.0                       *");
-			System.Console.WriteLine(" *                                                                     *");
-			System.Console.WriteLine(" ***********************************************************************");
+			System.Console.WriteLine("  ***********************************************************************");
+			System.Console.WriteLine("  *                                                                     *");
+			System.Console.WriteLine("  *                 WFFM Conversion Tool - v1.0.0                       *");
+			System.Console.WriteLine("  *                                                                     *");
+			System.Console.WriteLine("  ***********************************************************************");
 			System.Console.WriteLine();
 
 			// Metadata Validation
@@ -83,14 +84,11 @@ namespace WFFM.ConversionTool
 				appSettings.enableOnlyAnalysisByDefault = false;
 			}
 
-			if (!onlydata)
-			{
-				// Read and analyze source data
-				var formProcessor = container.GetInstance<FormProcessor>();
-				formProcessor.ConvertForms();
-			}
-
-			if (convert)
+			// Read and analyze source data
+			var formProcessor = container.GetInstance<FormProcessor>();
+			formProcessor.ConvertForms();
+			
+			if (convert && !nodata)
 			{
 				// Convert & Migrate data
 				var dataMigrator = container.GetInstance<DataMigrator>();
@@ -99,7 +97,7 @@ namespace WFFM.ConversionTool
 
 			// Stop watch
 			System.Console.WriteLine();
-			System.Console.WriteLine($"Execution completed in {Math.Round(stopwatch.Elapsed.TotalMinutes, 2)} minutes.");
+			System.Console.WriteLine($"  Execution completed in {Math.Round(stopwatch.Elapsed.TotalMinutes, 2)} minutes.");
 			System.Console.WriteLine();
 		}
 
@@ -118,8 +116,8 @@ namespace WFFM.ConversionTool
 					case "convert":
 						convert = true;
 						break;
-					case "onlydata":
-						onlydata = true;
+					case "nodata":
+						nodata = true;
 						break;
 				}
 			}

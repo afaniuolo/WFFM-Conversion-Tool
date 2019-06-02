@@ -42,8 +42,8 @@ namespace WFFM.ConversionTool.Library.Validators
 				if (!metadataFileJson.IsValid(metadataSchema))
 				{
 					Console.WriteLine();
-					Console.WriteLine("Execution aborted!");
-					Console.WriteLine(string.Format("The following metadata file doesn't contain a valid JSON object: {0}", metadataFile));
+					Console.WriteLine("  Execution aborted!");
+					Console.WriteLine(string.Format("  The following metadata file doesn't contain a valid JSON object: {0}", metadataFile));
 					Console.WriteLine();
 					return false;
 				}

@@ -29,8 +29,8 @@ namespace WFFM.ConversionTool.Library.Validators
 			if (!appSettingsFileJson.IsValid(appSettingsSchema))
 			{
 				Console.WriteLine();
-				Console.WriteLine("Execution aborted!");
-				Console.WriteLine(string.Format("The following file doesn't contain a valid JSON object: {0}", AppSettingsFilePath));
+				Console.WriteLine("  Execution aborted!");
+				Console.WriteLine(string.Format("  The following file doesn't contain a valid JSON object: {0}", AppSettingsFilePath));
 				Console.WriteLine();
 				return false;
 			}

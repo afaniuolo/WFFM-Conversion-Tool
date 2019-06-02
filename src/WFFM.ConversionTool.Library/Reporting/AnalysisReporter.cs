@@ -85,7 +85,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			}
 
 			Console.WriteLine();
-			Console.WriteLine("Conversion analysis report can be reviewed here: " + filePath);
+			Console.WriteLine("  Conversion analysis report can be reviewed here: " + filePath);
 			Console.WriteLine();
 		}
 	}

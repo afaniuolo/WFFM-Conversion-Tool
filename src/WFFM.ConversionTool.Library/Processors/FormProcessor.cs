@@ -84,9 +84,9 @@ namespace WFFM.ConversionTool.Library.Processors
 
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 
-			Console.WriteLine($"Found {forms.Count} forms to convert.");
+			Console.WriteLine($"  Found {forms.Count} forms to convert.");
 			Console.WriteLine();
-			Console.WriteLine("Starting forms conversion...");
+			Console.WriteLine("  Starting forms conversion...");
 			Console.WriteLine();
 
 			var formCounter = 0;
@@ -151,7 +151,7 @@ namespace WFFM.ConversionTool.Library.Processors
 
 			Console.WriteLine();
 			Console.WriteLine();
-			Console.WriteLine("Finished forms conversion.");
+			Console.WriteLine("  Finished forms conversion.");
 			Console.WriteLine();
 
 			// Write analysis results
