@@ -88,8 +88,8 @@ namespace WFFM.ConversionTool.Library.Reporting
 				FieldId = field.FieldId.ToString("B").ToUpper(),
 				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
 				FieldType = field.Type.ToString(),
-				ReferencedItemId = saveActionId.ToString("B").ToUpper(),
-				ReferencedItemName = _sourceMasterRepository.GetSitecoreItemName(saveActionId),
+				FieldValueReferencedItemId = saveActionId.ToString("B").ToUpper(),
+				FieldValueReferencedItemName = _sourceMasterRepository.GetSitecoreItemName(saveActionId),
 				Message = "Form Save Action Not Mapped"
 			});
 		}
@@ -108,7 +108,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 				FieldId = field.FieldId.ToString("B").ToUpper(),
 				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
 				FieldType = field.Type.ToString(),
-				ElementName = sourceFieldValueElementName,
+				FieldValueElementName = sourceFieldValueElementName,
 				Message = "Source Field Element Value Not Mapped"
 			});
 		}
@@ -123,7 +123,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			// Filter out fields converted in ad-hoc converters
 			_reportingRecords = _reportingRecords.Where(r => !_convertedFieldIds.Contains(r.FieldId) 
 			                                                 || (string.Equals(r.FieldId, FormConstants.FormSaveActionFieldId, StringComparison.InvariantCultureIgnoreCase) 
-			                                                     && !string.IsNullOrEmpty(r.ReferencedItemId)))
+			                                                     && !string.IsNullOrEmpty(r.FieldValueReferencedItemId)))
 				.OrderBy(record => record.ItemPath).ToList();
 
 			// Filter out base standard fields if analysis_ExcludeBaseStandardFields is set to true
