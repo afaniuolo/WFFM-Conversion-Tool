@@ -33,7 +33,8 @@ namespace WFFM.ConversionTool.Library.Reporting
 			FormConstants.FormSubmitNameFieldId,
 			FormConstants.FormSuccessMessageFieldId,
 			FormConstants.FormSuccessPageFieldId,
-			FormConstants.FormTitleTagFieldId
+			FormConstants.FormTitleTagFieldId,
+			FormConstants.FormSaveActionFieldId
 		};
 
 		public AnalysisReporter(ISourceMasterRepository sourceMasterRepository, AppSettings appSettings)
@@ -73,6 +74,26 @@ namespace WFFM.ConversionTool.Library.Reporting
 			});
 		}
 
+		public void AddUnmappedSaveAction(SCField field, Guid itemId, Guid saveActionId)
+		{
+			AddReportingRecord(new ReportingRecord()
+			{
+				ItemId = itemId.ToString("B").ToUpper(),
+				ItemName = _sourceMasterRepository.GetSitecoreItemName(itemId),
+				ItemPath = _sourceMasterRepository.GetItemPath(itemId),
+				ItemVersion = field.Version,
+				ItemLanguage = field.Language,
+				ItemTemplateId = _sourceMasterRepository.GetItemTemplateId(itemId).ToString("B").ToUpper(),
+				ItemTemplateName = _sourceMasterRepository.GetSitecoreItemName(_sourceMasterRepository.GetItemTemplateId(itemId)),
+				FieldId = field.FieldId.ToString("B").ToUpper(),
+				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
+				FieldType = field.Type.ToString(),
+				ReferencedItemId = saveActionId.ToString("B").ToUpper(),
+				ReferencedItemName = _sourceMasterRepository.GetSitecoreItemName(saveActionId),
+				Message = "Form Save Action Not Mapped"
+			});
+		}
+
 		private void AddReportingRecord(ReportingRecord reportingRecord)
 		{
 			_reportingRecords.Add(reportingRecord);
@@ -81,7 +102,10 @@ namespace WFFM.ConversionTool.Library.Reporting
 		public void GenerateOutput()
 		{
 			// Filter out fields converted in ad-hoc converters
-			_reportingRecords = _reportingRecords.Where(r => !_convertedFieldIds.Contains(r.FieldId)).ToList();
+			_reportingRecords = _reportingRecords.Where(r => !_convertedFieldIds.Contains(r.FieldId) 
+			                                                 || (string.Equals(r.FieldId, FormConstants.FormSaveActionFieldId, StringComparison.InvariantCultureIgnoreCase) 
+			                                                     && !string.IsNullOrEmpty(r.ReferencedItemId)))
+				.ToList();
 
 			// Filter out base standard fields if analysis_ExcludeBaseStandardFields is set to true
 			if (_appSettings.analysis_ExcludeBaseStandardFields)
@@ -98,7 +122,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			}
 
 			Console.WriteLine();
-			Console.WriteLine("  Conversion analysis report can be reviewed here: " + filePath);
+			Console.WriteLine("  Conversion analysis report has been generated and saved here: " + filePath);
 			Console.WriteLine();
 		}
 	}

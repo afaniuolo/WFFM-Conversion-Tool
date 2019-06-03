@@ -15,6 +15,7 @@ using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Processors;
 using WFFM.ConversionTool.Library.Providers;
+using WFFM.ConversionTool.Library.Reporting;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Converters
@@ -25,16 +26,16 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IMetadataProvider _metadataProvider;
 		private IFieldProvider _fieldProvider;
 		private AppSettings _appSettings;
-		private IItemFactory _itemFactory;
+		private IReporter _analysisReporter;
 		
-		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
+		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings, IReporter analysisReporter)
 			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_destMasterRepository = destMasterRepository;
 			_metadataProvider = metadataProvider;
 			_fieldProvider = fieldProvider;
 			_appSettings = appSettings;
-			_itemFactory = itemFactory;
+			_analysisReporter = analysisReporter;
 		}
 
 		public void Convert(SCItem form, SCItem pageItem)
@@ -181,8 +182,9 @@ namespace WFFM.ConversionTool.Library.Converters
 
 		private void ConvertSaveActions(SCItem form, string tracking, SCItem buttonItem)
 		{
-			var formSaveActions = form.Fields
-				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId))?.Value;
+			var formSaveActionField = form.Fields
+				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId));
+			var formSaveActions = formSaveActionField?.Value;
 
 			if (!string.IsNullOrEmpty(formSaveActions))
 			{
@@ -234,7 +236,7 @@ namespace WFFM.ConversionTool.Library.Converters
 							}
 							else
 							{
-								// TODO: logic to flag save actions not mapped for analysis
+								_analysisReporter.AddUnmappedSaveAction(formSaveActionField, form.ID, Guid.Parse(saveActionItem.Key));
 							}
 						}
 					}

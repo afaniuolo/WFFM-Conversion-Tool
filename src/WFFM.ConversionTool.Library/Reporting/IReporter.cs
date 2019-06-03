@@ -12,6 +12,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 	{
 		void AddUnmappedItemField(SCField field, Guid itemId);
 		void AddUnmappedFormFieldItem(Guid itemId, string sourceMappingFieldValue);
+		void AddUnmappedSaveAction(SCField field, Guid itemId, Guid saveActionId);
 		void GenerateOutput();
 	}
 }
