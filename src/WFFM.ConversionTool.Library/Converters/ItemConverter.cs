@@ -185,6 +185,12 @@ namespace WFFM.ConversionTool.Library.Converters
 									{
 										destItems.AddRange(convertedItems);
 									}
+
+									// Reporting
+									if (convertedFields?.Count > 0 && convertedItems?.Count > 0)
+									{
+										_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, valueXmlElementMapping.sourceElementName);
+									}
 								}
 							}
 

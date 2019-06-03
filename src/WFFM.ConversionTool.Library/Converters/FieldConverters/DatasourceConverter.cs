@@ -9,16 +9,19 @@ using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
+using WFFM.ConversionTool.Library.Reporting;
 
 namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 {
 	public class DatasourceConverter : BaseFieldConverter
 	{
 		private IItemFactory _itemFactory;
+		private IReporter _analysisReporter;
 
-		public DatasourceConverter(IItemFactory itemFactory)
+		public DatasourceConverter(IItemFactory itemFactory, IReporter analysisReporter)
 		{
 			_itemFactory = itemFactory;
+			_analysisReporter = analysisReporter;
 		}
 
 		public override List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue, MetadataTemplate metadataTemplate, SCItem sourceItem)
