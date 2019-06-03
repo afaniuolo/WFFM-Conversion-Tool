@@ -58,11 +58,6 @@
                         "sourceElementName": "PredefinedValidator",
                         "destFieldId": "", // Conversion not needed - Validations value set by standard values of dest template
                         "fieldConverter": ""
-                    },
-                    {
-                        "sourceElementName": "RegexPattern",
-                        "destFieldId": "",
-                        "fieldConverter": ""
                     }
                 ]
             },
@@ -72,21 +67,6 @@
                 "destFields": [
                     {
                         "sourceElementName": "PredefinedValidatorTextMessage",
-                        "destFieldId": "",
-                        "fieldConverter": ""
-                    },
-                    {
-                        "sourceElementName": "DynamicStringLengthAttribute",
-                        "destFieldId": "",
-                        "fieldConverter": ""
-                    },
-                    {
-                        "sourceElementName": "DynamicRequiredAttribute",
-                        "destFieldId": "",
-                        "fieldConverter": ""
-                    },
-                    {
-                        "sourceElementName": "MultiRegularExpressionAttribute",
                         "destFieldId": "",
                         "fieldConverter": ""
                     }

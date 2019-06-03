@@ -145,7 +145,7 @@ namespace WFFM.ConversionTool.Library.Converters
 						if (convertedField.destFields != null && convertedField.destFields.Any())
 						{
 							var valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
-							
+
 							var filteredValueElementsToMany = convertedField.destFields.Where(f =>
 								valueElements.Contains(f.sourceElementName.ToLower()) && (f.destFieldId == null || f.destFieldId == Guid.Empty));
 
@@ -202,6 +202,16 @@ namespace WFFM.ConversionTool.Library.Converters
 									destFields.Add(destField);
 								}
 							}
+
+							// Reporting
+							var unmappedValueElementSourceFields = valueElements.Where(v =>
+								!convertedField.destFields.Select(f => f.sourceElementName)
+									.Contains(v, StringComparer.InvariantCultureIgnoreCase));
+
+							foreach (var unmappedValueElementSourceField in unmappedValueElementSourceFields)
+							{
+								_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, unmappedValueElementSourceField);
+							}
 						}
 						// Process fields that have a single dest field
 						else if (convertedField.destFieldId != null && convertedField.destFieldId != Guid.Empty)
@@ -228,8 +238,8 @@ namespace WFFM.ConversionTool.Library.Converters
 			destItems.Add(destItem);
 
 			// Reporting
-			var unmappedSourceFields = sourceFields?.Where(f => (_itemMetadataTemplate.fields.existingFields == null || !_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId)) 
-			                                                   && (_itemMetadataTemplate.fields.convertedFields == null || !_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId)));
+			var unmappedSourceFields = sourceFields?.Where(f => (_itemMetadataTemplate.fields.existingFields == null || !_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId))
+															   && (_itemMetadataTemplate.fields.convertedFields == null || !_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId)));
 
 			foreach (SCField unmappedSourceField in unmappedSourceFields)
 			{

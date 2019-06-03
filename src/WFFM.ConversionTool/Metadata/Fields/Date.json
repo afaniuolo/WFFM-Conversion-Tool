@@ -32,11 +32,6 @@
                         "sourceElementName": "SelectedDate",
                         "destFieldId": "{6D66CA46-0489-4129-BA2C-CDE3E935DB7C}", // Default Value
                         "fieldConverter": "DateConverter"
-                    },
-                    {
-                        "sourceElementName": "DateFormat",
-                        "destFieldId": "",
-                        "fieldConverter": ""
                     }
                 ]
             },

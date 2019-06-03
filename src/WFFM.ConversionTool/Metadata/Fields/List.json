@@ -9,7 +9,17 @@
                 "fieldConverter": "",
                 "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
                 "destFields": [
-
+                    // UNCOMMENT IF MIGRATING USING WFFM BEFORE VERSION 8.0 Update-1
+                    //{
+                    //    "sourceElementName": "Items",
+                    //    "destFieldId": "",
+                    //    "fieldConverter": "DatasourceConverter"
+                    //},
+                    //{
+                    //    "sourceElementName": "SelectedValue",
+                    //    "destFieldId": "{21ED172D-97E2-4AC4-8EAF-0A8860B891F4}", // Default Selection
+                    //    "fieldConverter": "SelectedValueConverter"
+                    //}
                 ]
             },
             {

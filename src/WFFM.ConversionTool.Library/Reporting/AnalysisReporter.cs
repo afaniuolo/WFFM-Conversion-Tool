@@ -94,6 +94,25 @@ namespace WFFM.ConversionTool.Library.Reporting
 			});
 		}
 
+		public void AddUnmappedValueElementSourceField(SCField field, Guid itemId, string sourceFieldValueElementName)
+		{
+			AddReportingRecord(new ReportingRecord()
+			{
+				ItemId = itemId.ToString("B").ToUpper(),
+				ItemName = _sourceMasterRepository.GetSitecoreItemName(itemId),
+				ItemPath = _sourceMasterRepository.GetItemPath(itemId),
+				ItemVersion = field.Version,
+				ItemLanguage = field.Language,
+				ItemTemplateId = _sourceMasterRepository.GetItemTemplateId(itemId).ToString("B").ToUpper(),
+				ItemTemplateName = _sourceMasterRepository.GetSitecoreItemName(_sourceMasterRepository.GetItemTemplateId(itemId)),
+				FieldId = field.FieldId.ToString("B").ToUpper(),
+				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
+				FieldType = field.Type.ToString(),
+				ElementName = sourceFieldValueElementName,
+				Message = "Source Field Element Value Not Mapped"
+			});
+		}
+
 		private void AddReportingRecord(ReportingRecord reportingRecord)
 		{
 			_reportingRecords.Add(reportingRecord);
@@ -105,7 +124,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			_reportingRecords = _reportingRecords.Where(r => !_convertedFieldIds.Contains(r.FieldId) 
 			                                                 || (string.Equals(r.FieldId, FormConstants.FormSaveActionFieldId, StringComparison.InvariantCultureIgnoreCase) 
 			                                                     && !string.IsNullOrEmpty(r.ReferencedItemId)))
-				.ToList();
+				.OrderBy(record => record.ItemPath).ToList();
 
 			// Filter out base standard fields if analysis_ExcludeBaseStandardFields is set to true
 			if (_appSettings.analysis_ExcludeBaseStandardFields)
