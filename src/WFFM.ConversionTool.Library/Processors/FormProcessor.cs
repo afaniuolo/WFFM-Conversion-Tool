@@ -94,14 +94,25 @@ namespace WFFM.ConversionTool.Library.Processors
 					forms = forms.Where(form => form.ParentID != _appSettings.itemReferences["sourceSampleFormsFolderId"]).ToList();
 				}
 
-				Console.WriteLine($"  Found {forms.Count} forms to convert.");
-				Console.WriteLine();
-				Console.WriteLine("  Starting forms conversion...");
-				Console.WriteLine();
+				if (_appSettings.enableOnlyAnalysisByDefault)
+				{
+					Console.WriteLine($"  Found {forms.Count} forms to analyze.");
+					Console.WriteLine();
+					Console.WriteLine("  Starting forms analysis...");
+					Console.WriteLine();
+				}
+				else
+				{
+					Console.WriteLine($"  Found {forms.Count} forms to convert.");
+					Console.WriteLine();
+					Console.WriteLine("  Starting forms conversion...");
+					Console.WriteLine();
+				}
 
 				var formCounter = 0;
 				// Start progress bar
-				ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+				var formAction = _appSettings.enableOnlyAnalysisByDefault ? "analyzed" : "converted";
+				ProgressBar.DrawTextProgressBar(formCounter, forms.Count, $"forms {formAction}");
 
 				foreach (var form in forms)
 				{
@@ -156,13 +167,23 @@ namespace WFFM.ConversionTool.Library.Processors
 
 					formCounter++;
 					// Update progress bar
-					ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+					ProgressBar.DrawTextProgressBar(formCounter, forms.Count, $"forms {formAction}");
 				}
 
-				Console.WriteLine();
-				Console.WriteLine();
-				Console.WriteLine("  Finished forms conversion.");
-				Console.WriteLine();
+				if (_appSettings.enableOnlyAnalysisByDefault)
+				{
+					Console.WriteLine();
+					Console.WriteLine();
+					Console.WriteLine("  Finished forms analysis.");
+					Console.WriteLine();
+				}
+				else
+				{
+					Console.WriteLine();
+					Console.WriteLine();
+					Console.WriteLine("  Finished forms conversion.");
+					Console.WriteLine();
+				}
 
 				// Write analysis results
 				_conversionReporter.GenerateOutput();
