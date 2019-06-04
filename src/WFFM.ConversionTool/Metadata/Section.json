@@ -26,6 +26,40 @@
                 "destFieldId": "{84ECE662-5034-40CB-9C60-744DB64BB294}",
                 "valueType": "System.Guid.ToString" // Random Guid to String
             }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{821724F3-30BB-4152-A770-88BC43AC175A}", // Title
+                "destFieldId": ""
+            },
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
+                "destFields": [
+                    {
+                        "sourceElementName": "CssClass",
+                        "destFieldId": "{7ABAA3F6-6EC0-4B65-A463-7919BFAE55AA}", // Css Class
+                        "fieldConverter": ""
+                    },
+                    {
+                        "sourceElementName": "ShowLegend",
+                        "destFieldId": "",
+                        "fieldConverter": ""
+                    }
+                ]
+            },
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
+                "destFields": [
+                    {
+                        "sourceElementName": "Information",
+                        "destFieldId": "",
+                        "fieldConverter": ""
+                    }
+                ]
+            }
         ]
     }
 }

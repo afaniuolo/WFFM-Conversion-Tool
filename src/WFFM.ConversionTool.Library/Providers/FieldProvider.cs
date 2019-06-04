@@ -13,12 +13,20 @@ namespace WFFM.ConversionTool.Library.Providers
 		public Dictionary<Tuple<string, int>, string> GetFieldValues(SCItem sourceItem, Guid sourceFieldId, string defaultValue, bool stripHtml = false)
 		{
 			var values = new Dictionary<Tuple<string, int>, string>();
+			var fieldType = sourceItem.Fields.FirstOrDefault(f => f.FieldId == sourceFieldId)?.Type;
 			IEnumerable<Tuple<string, int>> langVersions = sourceItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
 			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 			foreach (var langVersion in langVersions)
 			{
 				var value = sourceItem.Fields.FirstOrDefault(f =>
 					f.FieldId == sourceFieldId && f.Language == langVersion.Item1 && f.Version == langVersion.Item2)?.Value;
+
+				if (fieldType == FieldType.Unversioned)
+				{
+					value = sourceItem.Fields.FirstOrDefault(f =>
+						f.FieldId == sourceFieldId && f.Language == langVersion.Item1)?.Value;
+				}
+
 				if (stripHtml)
 				{
 					value = XmlHelper.StripHtml(value);

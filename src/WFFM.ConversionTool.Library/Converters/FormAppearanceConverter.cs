@@ -14,14 +14,14 @@ using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Converters
 {
-	public class AppearanceConverter : ItemProcessor
+	public class FormAppearanceConverter : ItemProcessor
 	{
 		private IDestMasterRepository _destMasterRepository;
 		private IMetadataProvider _metadataProvider;
 		private IFieldProvider _fieldProvider;
 		private AppSettings _appSettings;
 
-		public AppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
+		public FormAppearanceConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings)
 			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_destMasterRepository = destMasterRepository;

@@ -64,7 +64,8 @@ namespace WFFM.ConversionTool.Library
 
 			container.Register<FormProcessor>();
 			container.Register<SubmitConverter>();
-			container.Register<AppearanceConverter>();
+			container.Register<FormAppearanceConverter>();
+			container.Register<SectionAppearanceConverter>();
 
 			container.Register<DataMigrator>();
 

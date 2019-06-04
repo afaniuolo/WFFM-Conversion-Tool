@@ -31,7 +31,8 @@ namespace WFFM.ConversionTool.Library.Processors
 		private AppSettings _appSettings;
 		private IMetadataProvider _metadataProvider;
 		private SubmitConverter _submitConverter;
-		private AppearanceConverter _appearanceConverter;
+		private FormAppearanceConverter _formAppearanceConverter;
+		private SectionAppearanceConverter _sectionAppearanceConverter;
 		private IReporter _conversionReporter;
 
 		private readonly string FormTemplateName = "form";
@@ -41,7 +42,8 @@ namespace WFFM.ConversionTool.Library.Processors
 		private readonly string ButtonTemplateName = "button";
 
 		public FormProcessor(ILogger logger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
-			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter, IReporter conversionReporter)
+			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, 
+			FormAppearanceConverter formAppearanceConverter, SectionAppearanceConverter sectionAppearanceConverter, IReporter conversionReporter)
 			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_logger = logger;
@@ -50,7 +52,8 @@ namespace WFFM.ConversionTool.Library.Processors
 			_appSettings = appSettings;
 			_metadataProvider = metadataProvider;
 			_submitConverter = submitConverter;
-			_appearanceConverter = appearanceConverter;
+			_formAppearanceConverter = formAppearanceConverter;
+			_sectionAppearanceConverter = sectionAppearanceConverter;
 			_conversionReporter = conversionReporter;
 		}
 
@@ -140,6 +143,8 @@ namespace WFFM.ConversionTool.Library.Processors
 					foreach (var section in sections)
 					{
 						ConvertAndWriteItem(section, pageId);
+						_sectionAppearanceConverter.ConvertTitle(section);
+						_sectionAppearanceConverter.ConvertInformation(section);
 					}
 
 					// Convert and Migrate Form Field items
@@ -160,10 +165,10 @@ namespace WFFM.ConversionTool.Library.Processors
 					// Convert Submit form section fields
 					_submitConverter.Convert(form, pageItem);
 
-					// Convert Appearance fields
-					_appearanceConverter.ConvertTitle(form, pageItem);
-					_appearanceConverter.ConvertIntroduction(form, pageItem);
-					_appearanceConverter.ConvertFooter(form, pageItem);
+					// Convert Form Appearance fields
+					_formAppearanceConverter.ConvertTitle(form, pageItem);
+					_formAppearanceConverter.ConvertIntroduction(form, pageItem);
+					_formAppearanceConverter.ConvertFooter(form, pageItem);
 
 					formCounter++;
 					// Update progress bar
