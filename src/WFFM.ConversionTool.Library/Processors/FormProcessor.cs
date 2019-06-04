@@ -25,7 +25,7 @@ namespace WFFM.ConversionTool.Library.Processors
 {
 	public class FormProcessor : ItemProcessor, IFormProcessor
 	{
-		private ILogger logger;
+		private ILogger _logger;
 		private ISourceMasterRepository _sourceMasterRepository;
 		private IDestMasterRepository _destMasterRepository;
 		private AppSettings _appSettings;
@@ -40,11 +40,11 @@ namespace WFFM.ConversionTool.Library.Processors
 		private readonly string InputTemplateName = "field";
 		private readonly string ButtonTemplateName = "button";
 
-		public FormProcessor(ILogger iLogger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
+		public FormProcessor(ILogger logger, ISourceMasterRepository sourceMasterRepository, AppSettings appSettings, IMetadataProvider metadataProvider,
 			IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, SubmitConverter submitConverter, AppearanceConverter appearanceConverter, IReporter conversionReporter)
 			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
-			logger = iLogger;
+			_logger = logger;
 			_sourceMasterRepository = sourceMasterRepository;
 			_destMasterRepository = destMasterRepository;
 			_appSettings = appSettings;
@@ -56,116 +56,126 @@ namespace WFFM.ConversionTool.Library.Processors
 
 		public List<Guid> ConvertForms()
 		{
-			var sourceFormTemplateId = _metadataProvider.GetItemMetadataByTemplateName(FormTemplateName)?.sourceTemplateId;
-
-			if (sourceFormTemplateId == null)
-				return null;
-
-			var destPageTemplateId = _metadataProvider.GetItemMetadataByTemplateName(PageTemplateName)?.destTemplateId;
-
-			if (destPageTemplateId == null)
-				return null;
-
-			var sourceSectionTemplateId = _metadataProvider.GetItemMetadataByTemplateName(SectionTemplateName)?.sourceTemplateId;
-
-			if (sourceSectionTemplateId == null)
-				return null;
-
-			var sourceFieldTemplateId = _metadataProvider.GetItemMetadataByTemplateName(InputTemplateName)?.sourceTemplateId;
-
-			if (sourceFieldTemplateId == null)
-				return null;
-
-			var destButtonTemplateId = _metadataProvider.GetItemMetadataByTemplateName(ButtonTemplateName)?.destTemplateId;
-
-			if (destButtonTemplateId == null)
-				return null;
-
-
-			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
-
-			// Filter sample forms out
-			if (_appSettings.excludeSampleWffmForms)
+			try
 			{
-				forms = forms.Where(form => form.ParentID != _appSettings.itemReferences["sourceSampleFormsFolderId"]).ToList();
-			}
 
-			Console.WriteLine($"  Found {forms.Count} forms to convert.");
-			Console.WriteLine();
-			Console.WriteLine("  Starting forms conversion...");
-			Console.WriteLine();
 
-			var formCounter = 0;
-			// Start progress bar
-			ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+				var sourceFormTemplateId = _metadataProvider.GetItemMetadataByTemplateName(FormTemplateName)?.sourceTemplateId;
 
-			foreach (var form in forms)
-			{
-				// Convert and Migrate Form items
-				ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
+				if (sourceFormTemplateId == null)
+					return null;
 
-				// Create Page item
-				var pageId = Guid.Empty;
-				SCItem pageItem = null;
-				if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid)destPageTemplateId, form))
+				var destPageTemplateId = _metadataProvider.GetItemMetadataByTemplateName(PageTemplateName)?.destTemplateId;
+
+				if (destPageTemplateId == null)
+					return null;
+
+				var sourceSectionTemplateId = _metadataProvider.GetItemMetadataByTemplateName(SectionTemplateName)?.sourceTemplateId;
+
+				if (sourceSectionTemplateId == null)
+					return null;
+
+				var sourceFieldTemplateId = _metadataProvider.GetItemMetadataByTemplateName(InputTemplateName)?.sourceTemplateId;
+
+				if (sourceFieldTemplateId == null)
+					return null;
+
+				var destButtonTemplateId = _metadataProvider.GetItemMetadataByTemplateName(ButtonTemplateName)?.destTemplateId;
+
+				if (destButtonTemplateId == null)
+					return null;
+
+
+				var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
+
+				// Filter sample forms out
+				if (_appSettings.excludeSampleWffmForms)
 				{
-					// Create Page items for each form (only once)
-					pageId = WriteNewItem((Guid)destPageTemplateId, form, "Page");
-				}
-				else
-				{
-					// Get Page Item Id
-					pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid)destPageTemplateId, form.ID).FirstOrDefault(item => string.Equals(item.Name, "Page", StringComparison.InvariantCultureIgnoreCase));
-					pageId = pageItem?.ID ?? form.ID;
-				}
-				if (pageItem == null) pageItem = _destMasterRepository.GetSitecoreItem(pageId);
-
-				// Convert and Migrate Section items
-				var sections = _sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceSectionTemplateId, form.ID);
-				foreach (var section in sections)
-				{
-					ConvertAndWriteItem(section, pageId);
+					forms = forms.Where(form => form.ParentID != _appSettings.itemReferences["sourceSampleFormsFolderId"]).ToList();
 				}
 
-				// Convert and Migrate Form Field items
-				List<SCItem> formFields = new List<SCItem>();
-				formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, form.ID));
-				foreach (var section in sections)
-				{
-					formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, section.ID));
-				}
+				Console.WriteLine($"  Found {forms.Count} forms to convert.");
+				Console.WriteLine();
+				Console.WriteLine("  Starting forms conversion...");
+				Console.WriteLine();
 
-				foreach (var formField in formFields)
-				{
-					var parentItem = _sourceMasterRepository.GetSitecoreItem(formField.ParentID);
-					var destParentId = parentItem.TemplateID == sourceFormTemplateId ? pageId : parentItem.ID;
-					ConvertAndWriteItem(formField, destParentId);
-				}
-
-				// Convert Submit form section fields
-				_submitConverter.Convert(form, pageItem);
-
-				// Convert Appearance fields
-				_appearanceConverter.ConvertTitle(form, pageItem);
-				_appearanceConverter.ConvertIntroduction(form, pageItem);
-				_appearanceConverter.ConvertFooter(form, pageItem);
-
-				formCounter++;
-				// Update progress bar
+				var formCounter = 0;
+				// Start progress bar
 				ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+
+				foreach (var form in forms)
+				{
+					// Convert and Migrate Form items
+					ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
+
+					// Create Page item
+					var pageId = Guid.Empty;
+					SCItem pageItem = null;
+					if (!_destMasterRepository.ItemHasChildrenOfTemplate((Guid)destPageTemplateId, form))
+					{
+						// Create Page items for each form (only once)
+						pageId = WriteNewItem((Guid)destPageTemplateId, form, "Page");
+					}
+					else
+					{
+						// Get Page Item Id
+						pageItem = _destMasterRepository.GetSitecoreChildrenItems((Guid)destPageTemplateId, form.ID).FirstOrDefault(item => string.Equals(item.Name, "Page", StringComparison.InvariantCultureIgnoreCase));
+						pageId = pageItem?.ID ?? form.ID;
+					}
+					if (pageItem == null) pageItem = _destMasterRepository.GetSitecoreItem(pageId);
+
+					// Convert and Migrate Section items
+					var sections = _sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceSectionTemplateId, form.ID);
+					foreach (var section in sections)
+					{
+						ConvertAndWriteItem(section, pageId);
+					}
+
+					// Convert and Migrate Form Field items
+					List<SCItem> formFields = new List<SCItem>();
+					formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, form.ID));
+					foreach (var section in sections)
+					{
+						formFields.AddRange(_sourceMasterRepository.GetSitecoreChildrenItems((Guid)sourceFieldTemplateId, section.ID));
+					}
+
+					foreach (var formField in formFields)
+					{
+						var parentItem = _sourceMasterRepository.GetSitecoreItem(formField.ParentID);
+						var destParentId = parentItem.TemplateID == sourceFormTemplateId ? pageId : parentItem.ID;
+						ConvertAndWriteItem(formField, destParentId);
+					}
+
+					// Convert Submit form section fields
+					_submitConverter.Convert(form, pageItem);
+
+					// Convert Appearance fields
+					_appearanceConverter.ConvertTitle(form, pageItem);
+					_appearanceConverter.ConvertIntroduction(form, pageItem);
+					_appearanceConverter.ConvertFooter(form, pageItem);
+
+					formCounter++;
+					// Update progress bar
+					ProgressBar.DrawTextProgressBar(formCounter, forms.Count, "forms converted");
+				}
+
+				Console.WriteLine();
+				Console.WriteLine();
+				Console.WriteLine("  Finished forms conversion.");
+				Console.WriteLine();
+
+				// Write analysis results
+				_conversionReporter.GenerateOutput();
+
+				return forms.Select(form => form.ID).ToList();
 			}
-
-			Console.WriteLine();
-			Console.WriteLine();
-			Console.WriteLine("  Finished forms conversion.");
-			Console.WriteLine();
-
-			// Write analysis results
-			_conversionReporter.GenerateOutput();
-
-			return forms.Select(form => form.ID).ToList();
+			catch (Exception ex)
+			{
+				_logger.Log(new LogEntry(LoggingEventType.Error, "Error while converting forms.", ex));
+				throw;
+			}
 		}
 
-		
+
 	}
 }

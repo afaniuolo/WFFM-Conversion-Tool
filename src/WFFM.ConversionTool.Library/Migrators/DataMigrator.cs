@@ -4,6 +4,7 @@ using System.Linq;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Providers;
 using WFFM.ConversionTool.Library.Providers.FormsData;
@@ -21,8 +22,9 @@ namespace WFFM.ConversionTool.Library.Migrators
 		private ISourceMasterRepository _sourceMasterRepository;
 		private IMetadataProvider _metadataProvider;
 		private AppSettings _appSettings;
+		private ILogger _logger;
 
-		public DataMigrator(IDataProvider dataProvider, ISitecoreFormsDbRepository sitecoreFormsDbRepository, IDestMasterRepository destMasterRepository, ISourceMasterRepository sourceMasterRepository, IMetadataProvider metadataProvider, AppSettings appSettings)
+		public DataMigrator(IDataProvider dataProvider, ISitecoreFormsDbRepository sitecoreFormsDbRepository, IDestMasterRepository destMasterRepository, ISourceMasterRepository sourceMasterRepository, IMetadataProvider metadataProvider, AppSettings appSettings, ILogger logger)
 		{
 			_dataProvider = dataProvider;
 			_sitecoreFormsDbRepository = sitecoreFormsDbRepository;
@@ -30,32 +32,41 @@ namespace WFFM.ConversionTool.Library.Migrators
 			_sourceMasterRepository = sourceMasterRepository;
 			_metadataProvider = metadataProvider;
 			_appSettings = appSettings;
+			_logger = logger;
 		}
 
 		public void MigrateData()
 		{
-			Console.WriteLine("  Started forms data migration...");
-			Console.WriteLine();
-
-			var convertedForms = _destMasterRepository.GetSitecoreDescendantsItems(
-				_metadataProvider.GetItemMetadataByTemplateName("Form").destTemplateId,
-				_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID)
-				.Where(formId => _sourceMasterRepository.GetSitecoreItemName(formId) != null).ToList();
-
-			int formsCounter = 0;
-			ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
-
-			foreach (Guid convertedFormId in convertedForms)
+			try
 			{
-				MigrateFormData(convertedFormId);
-				formsCounter++;
-				ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
-			}
+				Console.WriteLine("  Started forms data migration...");
+				Console.WriteLine();
 
-			Console.WriteLine();
-			Console.WriteLine();
-			Console.WriteLine("  Finished forms data migration.");
-			Console.WriteLine();
+				var convertedForms = _destMasterRepository.GetSitecoreDescendantsItems(
+					_metadataProvider.GetItemMetadataByTemplateName("Form").destTemplateId,
+					_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID)
+					.Where(formId => _sourceMasterRepository.GetSitecoreItemName(formId) != null).ToList();
+
+				int formsCounter = 0;
+				ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
+
+				foreach (Guid convertedFormId in convertedForms)
+				{
+					MigrateFormData(convertedFormId);
+					formsCounter++;
+					ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
+				}
+
+				Console.WriteLine();
+				Console.WriteLine();
+				Console.WriteLine("  Finished forms data migration.");
+				Console.WriteLine();
+			}
+			catch (Exception ex)
+			{
+				_logger.Log(new LogEntry(LoggingEventType.Error, "Failed to migrate forms data.", ex));
+				throw;
+			}
 		}
 
 		private void MigrateFormData(Guid formId)
@@ -146,6 +157,6 @@ namespace WFFM.ConversionTool.Library.Migrators
 			}
 
 			return collection;
-		}		
+		}
 	}
 }
