@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("WFFM.ConversionTool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Console app to convert and migrate Sitecore WFFM forms items and data to Sitecore Forms")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("WFFM.ConversionTool")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © 2019 Alessandro Faniuolo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
