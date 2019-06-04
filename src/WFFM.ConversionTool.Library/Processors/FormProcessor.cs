@@ -84,6 +84,12 @@ namespace WFFM.ConversionTool.Library.Processors
 
 			var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 
+			// Filter sample forms out
+			if (_appSettings.excludeSampleWffmForms)
+			{
+				forms = forms.Where(form => form.ParentID != _appSettings.itemReferences["sourceSampleFormsFolderId"]).ToList();
+			}
+
 			Console.WriteLine($"  Found {forms.Count} forms to convert.");
 			Console.WriteLine();
 			Console.WriteLine("  Starting forms conversion...");

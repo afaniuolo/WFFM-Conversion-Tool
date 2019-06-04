@@ -20,6 +20,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public bool enableReferencedItemCheck { get; set; }
 		public string formsDataProvider { get; set; }
 		public bool analysis_ExcludeBaseStandardFields { get; set; }
+		public bool excludeSampleWffmForms { get; set; }
 
 		public class Converter
 		{
