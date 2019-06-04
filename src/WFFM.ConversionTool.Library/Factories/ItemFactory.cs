@@ -77,6 +77,12 @@ namespace WFFM.ConversionTool.Library.Factories
 		{
 			var itemId = Guid.NewGuid();
 
+			// Check on Guid existence (super super super rare event that the Guid already exists)
+			while (_destMasterRepository.ItemExists(itemId))
+			{
+				itemId = Guid.NewGuid();
+			}
+
 			if (_appSettings.enableOnlyAnalysisByDefault && parentItem == null)
 			{
 				parentItem = CreateDummyItem();
