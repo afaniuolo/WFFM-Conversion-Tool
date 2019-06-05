@@ -84,7 +84,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				{
 					// Create Text item
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);					
-					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormIntroductionFieldId), string.Empty, true);
+					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormIntroductionFieldId), string.Empty, false);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;
@@ -114,7 +114,7 @@ namespace WFFM.ConversionTool.Library.Converters
 				{
 					// Create Text item
 					var parentItem = _destMasterRepository.GetSitecoreItem(pageItem.ID);
-					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormFooterFieldId), string.Empty, true);
+					var fieldValues = _fieldProvider.GetFieldValues(form, new Guid(FormConstants.FormFooterFieldId), string.Empty, false);
 
 					// Set text field
 					textMetadata.fields.newFields.First(field => field.destFieldId == new Guid(TextConstants.TextFieldId)).values = fieldValues;

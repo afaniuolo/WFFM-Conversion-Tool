@@ -38,6 +38,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			DeleteItem(sectionItem.ID, titleItemName, textMetadata);
 
 			var parameters = sectionItem.Fields.FirstOrDefault(field => field.FieldId == new Guid(SectionConstants.SectionParametersFieldId));
+			if (parameters == null) return;
 			var showLegend = XmlHelper.GetXmlElementValue(parameters.Value, SectionConstants.SectionShowLegendElementName);
 			if (showLegend == null || string.Equals(showLegend, "Yes", StringComparison.InvariantCultureIgnoreCase))
 			{

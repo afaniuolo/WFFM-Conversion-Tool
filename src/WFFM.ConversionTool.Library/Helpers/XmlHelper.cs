@@ -13,11 +13,22 @@ namespace WFFM.ConversionTool.Library.Helpers
 		{
 			List<string> elementNames = new List<string>();
 			XmlDocument xmlDocument = new XmlDocument();
-			xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-
-			foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
+			fieldValue = SanitizeFieldValue(fieldValue);
+			try
 			{
-				elementNames.Add(childNode.Name.ToLower());
+				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+
+				foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
+				{
+					elementNames.Add(childNode.Name.ToLower());
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine();
+				Console.WriteLine("XmlHelper - GetXmlElementNames - Failed to parse Xml value - Value = " + fieldValue);
+				Console.WriteLine(e);
+				Console.WriteLine();
 			}
 
 			return elementNames;
@@ -28,15 +39,26 @@ namespace WFFM.ConversionTool.Library.Helpers
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-
-				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
-
-				if (elementsByTagName.Count > 0)
+				fieldValue = SanitizeFieldValue(fieldValue);
+				try
 				{
-					var element = elementsByTagName.Item(0);
-					return element?.InnerXml;
+					xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+
+					XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
+
+					if (elementsByTagName.Count > 0)
+					{
+						var element = elementsByTagName.Item(0);
+						return element?.InnerXml;
+					}
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine();
+					Console.WriteLine("XmlHelper - GetXmlElementValue - Failed to parse Xml value - Value = " + fieldValue);
+					Console.WriteLine(e);
+					Console.WriteLine();
+				}			
 			}
 			return string.Empty;
 		}
@@ -46,14 +68,25 @@ namespace WFFM.ConversionTool.Library.Helpers
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-
-				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
-
-				if (elementsByTagName.Count > 0)
+				fieldValue = SanitizeFieldValue(fieldValue);
+				try
 				{
-					return elementsByTagName.Item(0);
+					xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+
+					XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
+
+					if (elementsByTagName.Count > 0)
+					{
+						return elementsByTagName.Item(0);
+					}
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine();
+					Console.WriteLine("XmlHelper - GetXmlElementNode - Failed to parse Xml value - Value = " + fieldValue);
+					Console.WriteLine(e);
+					Console.WriteLine();
+				}			
 			}
 			return null;
 		}
@@ -63,14 +96,25 @@ namespace WFFM.ConversionTool.Library.Helpers
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-
-				XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
-
-				if (elementsByTagName.Count > 0)
+				fieldValue = SanitizeFieldValue(fieldValue);
+				try
 				{
-					return elementsByTagName;
+					xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+
+					XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName(elementName);
+
+					if (elementsByTagName.Count > 0)
+					{
+						return elementsByTagName;
+					}
 				}
+				catch (Exception e)
+				{
+					Console.WriteLine();
+					Console.WriteLine("XmlHelper - GetXmlElementNodeList - Failed to parse Xml value - Value = " + fieldValue);
+					Console.WriteLine(e);
+					Console.WriteLine();
+				}				
 			}
 			return null;
 		}
@@ -80,8 +124,20 @@ namespace WFFM.ConversionTool.Library.Helpers
 			if (!string.IsNullOrEmpty(fieldValue))
 			{
 				XmlDocument xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
-				return xmlDocument.InnerText;
+				fieldValue = SanitizeFieldValue(fieldValue);
+				try
+				{
+					xmlDocument.LoadXml(AddParentNodeAndEncodeElementValue(fieldValue));
+					return xmlDocument.InnerText;
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine();
+					Console.WriteLine("XmlHelper - StripHtml - Failed to parse Xml value - Value = " + fieldValue);
+					Console.WriteLine(e);
+					Console.WriteLine();
+				}
+				
 			}
 			return fieldValue;
 		}
@@ -98,6 +154,13 @@ namespace WFFM.ConversionTool.Library.Helpers
 			}
 
 			return fieldValue;
+		}
+
+		private static string SanitizeFieldValue(string fieldValue)
+		{
+			return fieldValue.Replace("<br>", "<br/>")
+				.Replace("</em<","</em><")
+				.Replace("</i<","</i><");
 		}
 	}
 }

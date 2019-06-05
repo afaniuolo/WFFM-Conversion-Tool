@@ -44,7 +44,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			SCItem buttonItem = ConvertSubmitButton(form, pageItem);
 
 			// Get tracking field
-			string tracking = form.Fields.First(field => field.FieldId == new Guid(FormConstants.FormTrackingFieldId))?.Value;
+			string tracking = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormTrackingFieldId))?.Value;
 
 			// Save Data Action
 			ConvertSaveDataAction(form, buttonItem);
@@ -157,23 +157,26 @@ namespace WFFM.ConversionTool.Library.Converters
 		private void ConvertTriggerGoal(SCItem form, string tracking, SCItem buttonItem)
 		{
 			var trackingEvents = XmlHelper.GetXmlElementNodeList(tracking, "event");
-			if (trackingEvents.Count > 0)
+			if (trackingEvents != null && trackingEvents.Count > 0)
 			{
 				var trackingGoalEvent = trackingEvents[trackingEvents.Count - 1];
 				if (trackingGoalEvent != null)
 				{
-					var goalId = trackingGoalEvent.Attributes["id"]?.Value;
-					if (!string.IsNullOrEmpty(goalId))
+					if (trackingGoalEvent.Attributes != null)
 					{
-						if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(goalId)))
+						var goalId = trackingGoalEvent.Attributes["id"]?.Value;
+						if (!string.IsNullOrEmpty(goalId))
 						{
-							// Create Trigger Goal Save Action
-							var triggerGoalValues = new Dictionary<Guid, string>();
-							triggerGoalValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
-								SubmitActionConstants.SubmitActionField_TriggerGoalActionValue); // Submit Action field
-							triggerGoalValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
-								string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
-							ConvertFieldsToSubmitActionItem("Trigger Goal", triggerGoalValues, buttonItem);
+							if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(goalId)))
+							{
+								// Create Trigger Goal Save Action
+								var triggerGoalValues = new Dictionary<Guid, string>();
+								triggerGoalValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+									SubmitActionConstants.SubmitActionField_TriggerGoalActionValue); // Submit Action field
+								triggerGoalValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+									string.Format("{{\"referenceId\":\"{0}\"}}", goalId)); // Parameters field
+								ConvertFieldsToSubmitActionItem("Trigger Goal", triggerGoalValues, buttonItem);
+							}
 						}
 					}
 				}
@@ -194,8 +197,9 @@ namespace WFFM.ConversionTool.Library.Converters
 				{
 					foreach (XmlNode saveActionElement in saveActionElements)
 					{
-						saveActionItems.Add(saveActionElement.Attributes["id"].Value,
-							XmlHelper.GetXmlElementValue(saveActionElement.InnerXml, "parameters"));
+						if (saveActionElement.Attributes != null)
+							saveActionItems.Add(saveActionElement.Attributes["id"].Value,
+								XmlHelper.GetXmlElementValue(saveActionElement.InnerXml, "parameters"));
 					}
 
 					foreach (var saveActionItem in saveActionItems)
@@ -203,18 +207,22 @@ namespace WFFM.ConversionTool.Library.Converters
 						if (saveActionItem.Key == FormConstants.FormSaveAction_RegisterCampaignValue)
 						{
 							var trackingCampaign = XmlHelper.GetXmlElementNodeList(tracking, "campaign");
-							var trackingCampaignId = trackingCampaign.Count > 0 ? trackingCampaign[0].Attributes["id"]?.Value : null;
-							if (trackingCampaignId != null)
+							var xmlAttributeCollection = trackingCampaign[0].Attributes;
+							if (xmlAttributeCollection != null)
 							{
-								if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(trackingCampaignId)))
+								var trackingCampaignId = trackingCampaign.Count > 0 ? xmlAttributeCollection["id"]?.Value : null;
+								if (trackingCampaignId != null)
 								{
-									// Create Trigger Campaign Activity Save Action
-									var triggerCampaignActivityValues = new Dictionary<Guid, string>();
-									triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
-										SubmitActionConstants.SubmitActionField_TriggerCampaignActivityActionValue);
-									triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
-										string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
-									ConvertFieldsToSubmitActionItem("Trigger Campaign Activity", triggerCampaignActivityValues, buttonItem);
+									if (!_appSettings.enableReferencedItemCheck || _destMasterRepository.ItemExists(new Guid(trackingCampaignId)))
+									{
+										// Create Trigger Campaign Activity Save Action
+										var triggerCampaignActivityValues = new Dictionary<Guid, string>();
+										triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
+											SubmitActionConstants.SubmitActionField_TriggerCampaignActivityActionValue);
+										triggerCampaignActivityValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+											string.Format("{{\"referenceId\":\"{0}\"}}", trackingCampaignId));
+										ConvertFieldsToSubmitActionItem("Trigger Campaign Activity", triggerCampaignActivityValues, buttonItem);
+									}
 								}
 							}
 						}

@@ -19,7 +19,7 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 			}
 
 			var itemElements = XmlHelper.GetXmlElementNodeList(elementValue, "item");
-			if (itemElements.Count == 0)
+			if (itemElements == null || itemElements.Count == 0)
 			{
 				elementValue = string.Empty;
 				return base.ConvertValueElement(scField, destFieldId, elementValue, destItems);
