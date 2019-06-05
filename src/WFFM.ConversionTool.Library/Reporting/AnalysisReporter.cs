@@ -63,6 +63,8 @@ namespace WFFM.ConversionTool.Library.Reporting
 
 		public void AddUnmappedFormFieldItem(Guid itemId, string sourceMappingFieldValue)
 		{
+			var isNotEmpty = !string.IsNullOrEmpty(sourceMappingFieldValue);
+
 			AddReportingRecord(new ReportingRecord()
 			{
 				ItemId = itemId.ToString("B").ToUpper(),
@@ -70,7 +72,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 				ItemPath = _sourceMasterRepository.GetItemPath(itemId),
 				ItemTemplateId = _sourceMasterRepository.GetItemTemplateId(itemId).ToString("B").ToUpper(),
 				ItemTemplateName = _sourceMasterRepository.GetSitecoreItemName(_sourceMasterRepository.GetItemTemplateId(itemId)),
-				Message = $"Form Field Item Not Mapped - Form Field Type Name = {_sourceMasterRepository.GetSitecoreItemName(Guid.Parse(sourceMappingFieldValue))}"
+				Message = $"Form Field Item Not Mapped - Form Field Type Name = {(isNotEmpty ? _sourceMasterRepository.GetSitecoreItemName(Guid.Parse(sourceMappingFieldValue)) : sourceMappingFieldValue)}"
 			});
 		}
 
