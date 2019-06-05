@@ -33,5 +33,6 @@ namespace WFFM.ConversionTool.Library.Constants
 		public const string FormSubmitModeField_RedirectModeValue = "{F4D50806-6B89-4F2D-89FE-F77FC0A07D48}";
 		public const string FormSubmitModeField_ShowMessageValue = "{3B8369A0-CC1A-4E9A-A3DB-7B086379C53B}";
 		public const string FormSaveAction_RegisterCampaignValue = "{AD26FE98-EED1-45C8-95AE-F2714EE33C62}";
+		public const string FormSaveAction_SaveToDatabaseValue = "{F03608CC-559B-451E-BC5B-6A7ADFF32C94}";
 	}
 }

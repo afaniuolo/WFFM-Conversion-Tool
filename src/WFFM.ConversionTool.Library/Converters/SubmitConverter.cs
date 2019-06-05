@@ -226,6 +226,10 @@ namespace WFFM.ConversionTool.Library.Converters
 								}
 							}
 						}
+						else if (saveActionItem.Key == FormConstants.FormSaveAction_SaveToDatabaseValue)
+						{
+							ConvertSaveDataAction(form, buttonItem);
+						}
 						else
 						{
 							// Convert other save actions if mapped in AppSettings.json

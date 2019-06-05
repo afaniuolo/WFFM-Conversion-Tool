@@ -160,6 +160,9 @@ namespace WFFM.ConversionTool.Library.Helpers
 		{
 			return fieldValue.Replace("<br>", "<br/>")
 				.Replace("</em<","</em><")
+				.Replace("</b<","</b><")
+				.Replace("</a<","</a><")
+				.Replace("</strong<","</strong><")
 				.Replace("</i<","</i><");
 		}
 	}
