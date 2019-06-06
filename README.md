@@ -120,3 +120,11 @@ The *analysis convertion report* contains the following columns for each record:
     - *Source Field Element Value Not Mapped* - The source field XML element value is not mapped.
     - *Form Field Item Not Mapped - Form Field Type Name = field-type-name* - The form field type is not mapped, because the field is a custom field type. Form fields that are not mapped are still migrated and converted using the default destination *Input* form field type. 
 
+## How to Customize the WFFM Conversion Tool
+There are three type of customizations that can be implemented to expand the default mapping capabilities of the tool.
+
+### Definition of a new metadata file for a custom form field type
+
+### Implementation of a custom item field value converter
+
+### Implementation of a custom submit action parameters converter
