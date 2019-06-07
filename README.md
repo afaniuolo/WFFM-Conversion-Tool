@@ -31,8 +31,8 @@ The tool needs to be configured before using it. The following steps describe th
 1) Open the `WFFM.ConversionTool.exe.config` file and populate the following connection strings:   
     - `SourceMasterDb` - The connection string to the source Sitecore Master database.
     - `DestMasterDb` - The connection string to the destination Sitecore Master database.
-	- `SitecoreForms` - The connection string to the destination Sitecore Experience Forms database.
-	- `WFFM` - The connection string to the source Sitecore WFFM database (if applicable).
+    - `SitecoreForms` - The connection string to the destination Sitecore Experience Forms database.
+    - `WFFM` - The connection string to the source Sitecore WFFM database (if applicable).
     - `mongodb_analytics` - The connection string to the source Sitecore Analytics MongoDB database (if applicable)
 
     NOTE: *Only one between the WFFM and the mongodb_analytics connection string is required, and it depends on the type of  data source used in the source Sitecore instance to save WFFM forms data.*
@@ -46,7 +46,9 @@ The tool needs to be configured before using it. The following steps describe th
     - `analysis_ExcludeBaseStandardFields` - This setting is used to exclude base standard fields of Sitecore items from the list of fields that are reported about in the *conversion analysis report* output. The exclusion of the base standard fields from the analysis reporting process doesn't exclude them from the conversion process.
 
 ## How to Use the Tool
-The tool should be executed in a Command Prompt window application in order to control its input parameters and visualize the execution progress.
+The tool should be executed in a Command Prompt window application in order to control its input parameters and visualize the execution progress. 
+
+In the context of a Sitecore upgrade project, if all Sitecore content items have already been migrated to the destination Sitecore master database (for example using the Sitecore Express Migration tool), then the WFFM forms content items should be deleted from the destination Sitecore instance before running the WFFM Conversion Tool. 
 
 1) Launch a Command Prompt window application.
 2) Browse to the root folder where the tool has been extracted to.
