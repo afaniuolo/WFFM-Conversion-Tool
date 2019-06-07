@@ -36,16 +36,26 @@ namespace WFFM.ConversionTool.Library
 				c => typeof(Log4NetAdapter<>).MakeGenericType(c.Consumer.ImplementationType),
 				Lifestyle.Singleton,
 				c => true);
+			
+			// App Settings
+			container.RegisterSingleton<AppSettings>(createAppSettings);
+			var appSettings = createAppSettings();
+			bool isSqlFormsDataProvider = string.Equals(appSettings.formsDataProvider, "sqlFormsDataProvider", StringComparison.InvariantCultureIgnoreCase);
 
 			// Entity Framework Contexts registration
-			container.RegisterSingleton<Library.Database.WFFM.WFFM>(CreateWffmDbContext);
 			container.RegisterSingleton<SitecoreForms>(CreateExperienceFormsDbContext);
 			container.RegisterSingleton<SourceMasterDb>(createMasterDbSourceContext);
 			container.RegisterSingleton<DestMasterDb>(createMasterDbDestContext);
-			container.RegisterSingleton<MongoAnalytics>(createMongoAnalyticsContext);
+			if (isSqlFormsDataProvider)
+			{
+				container.RegisterSingleton<Library.Database.WFFM.WFFM>(CreateWffmDbContext);
+			}
+			else
+			{
+				container.RegisterSingleton<MongoAnalytics>(createMongoAnalyticsContext);
+			}
 
-			// App Settings
-			container.RegisterSingleton<AppSettings>(createAppSettings);
+			// Metadata Provider
 			container.Register<IMetadataProvider, MetadataProvider>();
 
 			// Reporting

@@ -28,11 +28,11 @@ The tool can be installed in any server or local machine that has access to the 
 ## How to Configure the Tool
 The tool needs to be configured before using it. The following steps describe the configuration options.
 
-1) Open the `WFFM.ConversionTool.exe.config` file and populate the following connection strings:
-    - `WFFM` - The connection string to the source Sitecore WFFM database (if applicable).
-    - `SitecoreForms` - The connection string to the destination Sitecore Experience Forms database.
+1) Open the `WFFM.ConversionTool.exe.config` file and populate the following connection strings:   
     - `SourceMasterDb` - The connection string to the source Sitecore Master database.
     - `DestMasterDb` - The connection string to the destination Sitecore Master database.
+	- `SitecoreForms` - The connection string to the destination Sitecore Experience Forms database.
+	- `WFFM` - The connection string to the source Sitecore WFFM database (if applicable).
     - `mongodb_analytics` - The connection string to the source Sitecore Analytics MongoDB database (if applicable)
 
     NOTE: *Only one between the WFFM and the mongodb_analytics connection strings is required, based on the available data source.*
