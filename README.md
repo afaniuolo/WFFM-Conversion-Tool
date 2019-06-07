@@ -3,7 +3,7 @@ The WFFM Conversion Tool is a console application that provides an automated sol
 
 The tool provides the ability to analyze the source items in the source Sitecore instance, before executing the actual conversion and migration of items to the destination Sitecore instance.
 
-The tool offers to the user the choice to migrate saved WFFM forms data from a SQL database or from a MongoDB database source to the destination Sitecore Experience Forms SQL database.
+The tool offers the users the choice to migrate saved WFFM forms data from a SQL database or from a MongoDB database source to the destination Sitecore Experience Forms SQL database.
 
 ## Sitecore Compatibility
 The tool has been designed to support the migration of sitecore items from any version of Sitecore to Sitecore 9.1+. The tool has been tested migrating WFFM forms items and data starting from Sitecore version 6.5.
@@ -35,7 +35,7 @@ The tool needs to be configured before using it. The following steps describe th
     - `DestMasterDb` - The connection string to the destination Sitecore Master database.
     - `mongodb_analytics` - The connection string to the source Sitecore Analytics MongoDB database (if applicable)
 
-    NOTE: *Only one between the WFFM and the mongodb_analytics connection strings is required, based on the available data source.*
+    NOTE: *Only one between the WFFM and the mongodb_analytics connection string is required, and it depends on the type of  data source used in the source Sitecore instance to save WFFM forms data.*
 
 2) Open the `AppSettings.json` file and modify the following settings, if needed:
     - `formsDataProvider` - This setting is used to configure the data provider used to read the stored forms data to migrate. Available values:
@@ -49,19 +49,19 @@ The tool needs to be configured before using it. The following steps describe th
 The tool should be executed in a Command Prompt window application in order to control its input parameters and visualize the execution progress.
 
 1) Launch a Command Prompt window application.
-2) Browse to the folder where the tool has been extracted to.
-3) The tool is executed running the `WFFM.ConversionTool.exe` executable file. Available options:
+2) Browse to the root folder where the tool has been extracted to.
+3) The tool is executed running the `WFFM.ConversionTool.exe` executable file. Available options are:
     - `WFFM.ConversionTool.exe` (no input parameters) - Use this option to execute a dry run of the forms item conversion process, without writing any data in the destination databases. The *conversion analysis report* will be generated and stored in the `Analysis` folder.
     - `WFFM.ConversionTool.exe help` or `WFFM.ConversionTool.exe ?` - Use this option to get a list of available input parameters.
     - `WFFM.ConversionTool.exe -convert` - Use this option to execute the conversion and migration of both forms items and their stored data to the destination databases.
     - `WFFM.ConversionTool.exe -convert -nodata` - Use this option to execute the conversion and migration of forms items only. Stored forms data will not be converted and migrated.
-4) After the tool execution is finished successfully, if the destination Sitecore instance was running in IIS while the tool was executed, recycle the web application app pool to clear the Sitecore Items cache.
+4) After the tool execution is finished successfully, if the destination Sitecore instance was running in IIS while the tool was executed, recycle the app pool of the destination Sitecore web application to clear the Sitecore Items cache.
 5) Once you login in the destination Sitecore instance, the migrated forms will not be listed in the Forms section (accessible from the Sitecore Desktop) until the `sitecore_master_index` index is rebuilt. Use the Indexing Manager in the Sitecore Control Panel to rebuild it.
 
 NOTE: The *conversion analysis report* is always generated, independently if it is a dry run or a real conversion being executed.
 
 ## Conversion Behaviors
-The tool enforces some specific behaviors during the conversion process, following best practice processes. Some of them are:
+The tool enforces some specific behaviors during the conversion process, following best practices. Some of them are:
 - *Page Creation* - For each form, the tool creates a new *Page* item under the parent Form item.
 - *Text Fields Creation* - Any decorator fields, like for example the form title, the form introduction or the form footer, are converted in *Text* fields and positioned in the form in the correct location.
 - *Success Message Creation in Second Page* - For each form that shows a success message when a submit action is successful, the tool creates a second *Page* item with a *Text* field that contains the success message. The full approach has been implemented following the answer in [this](https://sitecore.stackexchange.com/questions/14834/how-to-show-success-message-in-sitecore-9-forms) Sitecore StackExchange question.
@@ -69,7 +69,7 @@ The tool enforces some specific behaviors during the conversion process, followi
 ## Metadata Configuration
 The tool uses mapping configuration rules for each destination form item entity (form, fields, buttons, text,...) to control the conversion of form items and their fields. These mapping rules are defined and stored in *Metadata Template* files in JSON format, all stored under the `Metadata` folder. All *Metadata Template* files are validated using the `metadata-schema.json` file stored in the `Schemas` folder.
 
-*Metadata Template* objects can inherit some properties from other metadata files, avoiding the repetition of mapping rules across multiple *Metadata Template* objects. The base metadata file that doesn't inherit any metadata file is the metadata template defined in the `baseTemplate.json` file.
+*Metadata Template* objects can inherit some properties from other metadata files, avoiding the repetition of mapping rules across multiple *Metadata Template* objects. The base metadata file that doesn't inherit from any other metadata file is the `baseTemplate.json` metadata file.
 
 ### Metadata Properties
 The valid properties available in the *Metadata Template* files are the following:
@@ -123,7 +123,7 @@ The *analysis convertion report* contains the following columns for each record:
     - *Form Field Item Not Mapped - Form Field Type Name = field-type-name* - The form field type is not mapped, because the field is a custom field type. Form fields that are not mapped are still migrated and converted using the default destination *Input* form field type. 
 
 ## How to Expand the WFFM Conversion Tool to Convert Custom Entities
-Some of the items or fields that cannot be mapped could be custom items created to expand the out-of-the-box functionality of the Sitecore WFFM module. For example, custom entities could be custom form field types or custom save actions. To help developers to automate the conversion and migration of custom entities, the tool allows to expand its default mapping capabilities, as described in details in the next three sections.
+Some of the items or fields that cannot be mapped could be custom items created to expand the out-of-the-box functionality of the Sitecore WFFM module. For example, custom entities could be custom form field types or custom save actions. To help developers to automate the conversion and migration of custom entities, the tool allows to expand its default mapping capabilities, as described in the next three sections.
 
 ### How to Map a Custom Form Field Type
 Any metadata .json file stored under the `Metadata` folder is parsed and validated by the tool when its execution starts. A custom form field type will requires its own *Metadata Template* file to describe its conversion fields mappings.
@@ -132,8 +132,10 @@ Usually custom field types are customization of a default WFFM form field type. 
 
 The `baseTemplateMetadataFileName` property should contain the name of the metadata file of the inherited default WFFM form field type. 
 
+A useful online resource to validate the content of a metadata file is the [JSON Schema Validator](https://www.jsonschemavalidator.net/). The JSON schema of the metadata file is included in the tool `Schemas` folder and also available [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/blob/master/src/WFFM.ConversionTool/Schemas/metadata-schema.json).
+
 ### How to Customize the Conversion of a Field Value
-The *fieldConverter* property of *convertedField` mapping objects in metadata files allows to specify the name of a converter to process the source value of a field. Converters are defined in the `AppSettings.json` configuratio file in the *converters* property. This property is an array of *converter* objects that have the following properties:
+The *fieldConverter* property of *convertedField* mapping objects in metadata files allows to specify the name of a converter to process the source value of a field. Converters are defined in the `AppSettings.json` configuratio file in the *converters* property. This property is an array of *converter* objects that have the following properties:
 - `name` - Name of the converter, used as value in the *fieldConverter* property in metadata files.
 - `converterType` - Type of the class object that defines the converter.
 
@@ -141,7 +143,7 @@ The tool allows the loading of converter types defined in external libraries at 
 
 The new custom converter will need to be added in the list of converters in the `AppSettings.json` configuration file. Its library dll file should be copied in the `libs` folder of the tool.
 
-### How to map a Custom Submit Action
+### How to Map a Custom Submit Action
 Custom submit actions can be defined and mapped in the `AppSettings.json` file in the `submitActions` property. This property contains an array of `submitAction` objects, that have the following properties:
 - `sourceSaveActionId` - The Id of the source save action item.
 - `destSubmitActionItemName` - The name of the destination submit action item.
@@ -149,3 +151,8 @@ Custom submit actions can be defined and mapped in the `AppSettings.json` file i
 - `destParametersConverterType` - The name of the field converter to use to convert the save action parameters.
 
 The custom field converter should be created as described in the previous section, overriding the `ConvertValue` method defined in the inherited `BaseFieldConverted` class.
+
+## Bugs and Feature Requests
+Please open new Issue [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/issues) to report any bug that you might encounter in the execution of the tool or to suggest a modification or a new feature for the tool.
+
+Thank you!
