@@ -20,7 +20,9 @@ namespace WFFM.ConversionTool.Library.Models.Reporting
 		public string FieldId { get; set; }
 		public string FieldName { get; set; }
 		public string FieldType { get; set; }
+		public string FieldValue { get; set; }
 		public string FieldValueElementName { get; set; }
+		public string FieldValueElementValue { get; set; }
 		public string FieldValueReferencedItemId { get; set; }
 		public string FieldValueReferencedItemName { get; set; }
 		public string Message { get; set; }
