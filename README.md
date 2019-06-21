@@ -115,7 +115,9 @@ The *analysis convertion report* contains the following columns for each record:
 - `FieldId` - Id of the field of the souce item.
 - `FieldName` - Name of the field of the source item.
 - `FieldType` - Type of the field of the source item.
+- `FieldValue` - Value of the field of the source item.
 - `FieldValueElementName` - Name of the XML element stored in the field of the source item.
+- `FieldValueElementValue` - Value of the XML element stored in the field of the source item.
 - `FieldValueReferencedItemId` - Id of the item referenced as value of the XML value element.
 - `FieldValueReferencedItemName` - Name of the item referenced as value of the XML value element.
 - `Message` - Analysis result message. Possible values are:
