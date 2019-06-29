@@ -106,14 +106,14 @@ namespace WFFM.ConversionTool.Library.Migrators
 				FieldName = wffmFieldData.FieldName,
 				FormEntryID = wffmFieldData.FormId,
 				ID = wffmFieldData.Id,
-				Value = GetFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.First(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
+				Value = ConvertFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.First(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
 				ValueType = collection.First(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueType ?? "System.String"
 			};
 		}
 
-		private string GetFieldDataValue(string value, string data, string dataValueConverter)
+		private string ConvertFieldDataValue(string value, string data, string dataValueConverter)
 		{
-			var dataValue = !string.IsNullOrEmpty(data) ? data : value;
+			var dataValue = GetFieldValue(value, data);
 			dataValue = XmlHelper.StripHtml(dataValue);
 
 			if (!string.IsNullOrEmpty(dataValueConverter))
@@ -123,6 +123,16 @@ namespace WFFM.ConversionTool.Library.Migrators
 			}
 
 			return dataValue;
+		}
+
+		private string GetFieldValue(string value, string data)
+		{
+			if (!string.IsNullOrEmpty(data) && !string.Equals(data, "multipleline"))
+			{
+				return data;
+			}
+
+			return value;
 		}
 
 		public class FieldDataValueMetadata
