@@ -47,6 +47,12 @@ namespace WFFM.ConversionTool.Library.Migrators
 					_appSettings.itemReferences["destFormFolderId"]).Select(form => form.ID)
 					.Where(formId => _sourceMasterRepository.GetSitecoreItemName(formId) != null).ToList();
 
+				// Filter forms to select only included forms in appSettings "includeOnlyFormIds" parameter
+				if (_appSettings.includeOnlyFormIds != null && _appSettings.includeOnlyFormIds.Any())
+				{
+					convertedForms = convertedForms.Where(form => _appSettings.includeOnlyFormIds.Contains(form)).ToList();
+				}
+
 				int formsCounter = 0;
 				ProgressBar.DrawTextProgressBar(formsCounter, convertedForms.Count, "forms data migrated");
 

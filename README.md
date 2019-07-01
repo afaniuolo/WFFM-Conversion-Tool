@@ -44,6 +44,7 @@ The tool needs to be configured before using it. The following steps describe th
     - `invalidItemNameChars` - This settings is used to configure the list of invalid characters to be excluded when creating a new item's name.
     - `enableReferencedItemCheck` - This setting is used to enable or disable the check existence of a referenced item in any form fields value. When enabled, the tool will not populate fields that refers an item that doesn't exist in the destination Sitecore master database.
     - `analysis_ExcludeBaseStandardFields` - This setting is used to exclude base standard fields of Sitecore items from the list of fields that are reported about in the *conversion analysis report* output. The exclusion of the base standard fields from the analysis reporting process doesn't exclude them from the conversion process.
+    - `includeOnlyFormIds` - This setting is used to select a subset of source forms to convert, specifying an array of source form IDs. This selection applies to both forms items conversion process and forms data migration process.
 
 ## How to Use the Tool
 The tool should be executed in a Command Prompt window application in order to control its input parameters and visualize the execution progress. 

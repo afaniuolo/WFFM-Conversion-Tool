@@ -91,6 +91,12 @@ namespace WFFM.ConversionTool.Library.Processors
 
 				var forms = _sourceMasterRepository.GetSitecoreItems((Guid)sourceFormTemplateId);
 
+				// Filter forms to select only included forms in appSettings "includeOnlyFormIds" parameter
+				if (_appSettings.includeOnlyFormIds != null && _appSettings.includeOnlyFormIds.Any())
+				{
+					forms = forms.Where(form => _appSettings.includeOnlyFormIds.Contains(form.ID)).ToList();
+				}
+
 				// Filter sample forms out
 				if (_appSettings.excludeSampleWffmForms)
 				{

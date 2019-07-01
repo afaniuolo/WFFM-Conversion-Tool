@@ -21,6 +21,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public string formsDataProvider { get; set; }
 		public bool analysis_ExcludeBaseStandardFields { get; set; }
 		public bool excludeSampleWffmForms { get; set; }
+		public List<Guid> includeOnlyFormIds { get; set; }
 
 		public class Converter
 		{
