@@ -1,10 +1,20 @@
-﻿using WFFM.ConversionTool.Library.Converters;
+﻿using System;
+using System.Text.RegularExpressions;
+using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Extensions.SitecoreFormsSendEmailSubmitAction.Converters
 {
 	public class SendEmailConverter : BaseFieldConverter
 	{
+		private IDestMasterRepository _destMasterRepository;
+
+		public SendEmailConverter(IDestMasterRepository destMasterRepository)
+		{
+			_destMasterRepository = destMasterRepository;
+		}
+
 		public override string ConvertValue(string sourceValue)
 		{
 			// example of sourceValue
@@ -16,12 +26,44 @@ namespace WFFM.ConversionTool.Extensions.SitecoreFormsSendEmailSubmitAction.Conv
 			var cc = XmlHelper.GetXmlElementValue(sourceValue, "cc");
 			var bcc = XmlHelper.GetXmlElementValue(sourceValue, "bcc");
 			var localfrom = XmlHelper.GetXmlElementValue(sourceValue, "localfrom");
-			var subject = XmlHelper.GetXmlElementValue(sourceValue, "subject");
-			var mail = XmlHelper.GetXmlElementValue(sourceValue, "mail");
+			var subject = ConvertFieldTokens(XmlHelper.GetXmlElementValue(sourceValue, "subject"));
+			var mail = ConvertFieldTokens(XmlHelper.GetXmlElementValue(sourceValue, "mail"));
 
 			var formValue = !string.IsNullOrEmpty(from) ? from : localfrom;
 
 			return $"{{\"from\":\"{formValue}\",\"to\":\"{to}\",\"cc\":\"{cc}\",\"bcc\":\"{bcc}\",\"subject\":\"{subject}\",\"message\":\"{mail}\",\"isHtml\":{isbodyhtml},\"customSmtpConfig\":\"<Host>{host}</Host>\"}}";
+		}
+
+		private string ConvertFieldTokens(string fieldText)
+		{
+			// Find all tokens
+			var matches = Regex.Matches(fieldText, @"\[(.*?)\]", RegexOptions.IgnoreCase);
+
+			foreach (Match match in matches)
+			{
+				Guid fieldId;
+				var fieldName = string.Empty;
+				var matchValue = match.Value.Replace("[", "").Replace("]", "");
+				if (Guid.TryParse(matchValue, out fieldId)) // case of token in subject field
+				{
+					// find field name
+					fieldName = _destMasterRepository.GetSitecoreItem(fieldId)?.Name;
+
+				}
+				else // case of token in message field
+				{
+					// get field label value
+					fieldName = XmlHelper.GetXmlElementValue(matchValue, "label");
+				}
+
+				if (!string.IsNullOrEmpty(fieldName))
+				{
+					// replace token with label value
+					fieldText = fieldText.Replace(matchValue, fieldName);
+				}
+			}
+
+			return fieldText;
 		}
 	}
 }
