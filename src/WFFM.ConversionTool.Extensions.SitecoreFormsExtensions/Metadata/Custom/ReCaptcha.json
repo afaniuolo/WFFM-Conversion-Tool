@@ -1,0 +1,31 @@
+﻿{
+    "sourceMappingFieldValue": "{7FB270BE-FEFC-49C3-8CB4-947878C099E5}", // Captcha
+    "destTemplateId": "{5A59C481-E3C3-4A03-A471-B5D1FB45181A}", // ReCaptcha
+    "destTemplateName": "CaptchaField",
+    "baseTemplateMetadataFileName": "Field.json",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "shared",
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
+                "value": "{E383BDE2-BC88-4278-83EF-832A15C9E94A}"
+            }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
+                "destFields": [
+
+                ]
+            },
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
+                "destFields": [
+
+                ]
+            }
+        ]
+    }
+}
