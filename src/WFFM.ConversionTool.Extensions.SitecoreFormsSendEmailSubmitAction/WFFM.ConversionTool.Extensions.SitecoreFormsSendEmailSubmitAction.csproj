@@ -50,7 +50,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.txt">
+    <Content Include="readme_SitecoreFormsSendEmailSubmitAction.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

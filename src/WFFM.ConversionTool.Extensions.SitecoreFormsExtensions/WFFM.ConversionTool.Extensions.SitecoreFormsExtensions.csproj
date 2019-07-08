@@ -49,7 +49,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.txt">
+    <Content Include="readme_SitecoreFormsExtensions.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
