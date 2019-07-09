@@ -3,6 +3,8 @@
     "destTemplateId": "{27686F73-AA5C-4E0E-AC6B-E3000D129E4F}",
     "destTemplateName": "FileUploadField",
     "baseTemplateMetadataFileName": "Input.json",
+    "dataValueType": "Feature.FormsExtensions.Business.FileUpload.StoredFile",
+    "dataValueConverter": "FileUploadConverter",
     "fields": {
         "newFields": [
             {

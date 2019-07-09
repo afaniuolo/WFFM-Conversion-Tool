@@ -120,7 +120,11 @@ namespace WFFM.ConversionTool.Library.Migrators
 		private string ConvertFieldDataValue(string value, string data, string dataValueConverter)
 		{
 			var dataValue = GetFieldValue(value, data);
-			dataValue = XmlHelper.StripHtml(dataValue);
+
+			if (dataValue.StartsWith("<"))
+			{
+				dataValue = XmlHelper.StripHtml(dataValue);
+			}
 
 			if (!string.IsNullOrEmpty(dataValueConverter))
 			{
@@ -133,7 +137,7 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 		private string GetFieldValue(string value, string data)
 		{
-			if (!string.IsNullOrEmpty(data) && !string.Equals(data, "multipleline"))
+			if (!string.IsNullOrEmpty(data) && !string.Equals(data, "multipleline") && !string.Equals(data, "medialink"))
 			{
 				return data;
 			}

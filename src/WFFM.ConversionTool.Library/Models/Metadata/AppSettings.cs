@@ -23,6 +23,8 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public bool excludeSampleWffmForms { get; set; }
 		public List<Guid> includeOnlyFormIds { get; set; }
 
+		public Dictionary<string, string> extensions { get; set; }
+
 		public class Converter
 		{
 			public string name { get; set; }
