@@ -44,6 +44,7 @@ The tool needs to be configured before using it. The following steps describe th
     - `invalidItemNameChars` - This settings is used to configure the list of invalid characters to be excluded when creating a new item's name.
     - `enableReferencedItemCheck` - This setting is used to enable or disable the check existence of a referenced item in any form fields value. When enabled, the tool will not populate fields that refers an item that doesn't exist in the destination Sitecore master database.
     - `analysis_ExcludeBaseStandardFields` - This setting is used to exclude base standard fields of Sitecore items from the list of fields that are reported about in the *conversion analysis report* output. The exclusion of the base standard fields from the analysis reporting process doesn't exclude them from the conversion process.
+    - `includeOnlyFormIds` - This setting is used to select a subset of source forms to convert, specifying an array of source form IDs. This selection applies to both forms items conversion process and forms data migration process.
 
 ## How to Use the Tool
 The tool should be executed in a Command Prompt window application in order to control its input parameters and visualize the execution progress. 
@@ -115,7 +116,9 @@ The *analysis convertion report* contains the following columns for each record:
 - `FieldId` - Id of the field of the souce item.
 - `FieldName` - Name of the field of the source item.
 - `FieldType` - Type of the field of the source item.
+- `FieldValue` - Value of the field of the source item.
 - `FieldValueElementName` - Name of the XML element stored in the field of the source item.
+- `FieldValueElementValue` - Value of the XML element stored in the field of the source item.
 - `FieldValueReferencedItemId` - Id of the item referenced as value of the XML value element.
 - `FieldValueReferencedItemName` - Name of the item referenced as value of the XML value element.
 - `Message` - Analysis result message. Possible values are:
@@ -123,6 +126,21 @@ The *analysis convertion report* contains the following columns for each record:
     - *Form Save Action Not Mapped* - The form save action is not mapped.
     - *Source Field Element Value Not Mapped* - The source field XML element value is not mapped.
     - *Form Field Item Not Mapped - Form Field Type Name = field-type-name* - The form field type is not mapped, because the field is a custom field type. Form fields that are not mapped are still migrated and converted using the default destination *Input* form field type. 
+
+## WFFM Conversion Tool Extensions - NEW !!!
+The v1.1.0 release of the WFFM Conversion Tool introduces the availability of the *WFFM Conversion Tool Extensions*, a group of plugins that add support for the conversion of WFFM forms items that don't exist in the Sitecore Forms out-of-the-box solution, but that are extended using popular Sitecore modules available on the Sitecore Marketplace.
+
+The WFFM Conversion Tool Extensions plugins are available in the `Extensions` folder in the tool root folder. Each *extension* plugin has its own subfolder that contains the plugin files and a `readme_<module_name>.txt` file that describes step-by-step instructions to install each plugin. 
+
+### Sitecore Forms Extensions
+The *extension* plugin for the [Sitecore Forms Extensions](https://github.com/bartverdonck/Sitecore-Forms-Extensions) module developed by Bart Verdonck adds the support for the conversion of the following two form field types:
+- Captcha field
+- File Upload field
+
+NOTE: The data of the File Upload field is converted and migrated using the storage format of the File System storage provider (`FileSystemFileUploadStorageProvider` class).
+
+### Sitecore Forms Send Email Submit Action
+The *extension* plugin for the [Sitecore Forms Send Email Submit Action](https://marketplace.sitecore.net/Modules/S/Sitecore_Forms_Send_Email_Submit_Action.aspx) module developed by Byron Calisto adds the support for the conversion of the *Send Email* submit action.
 
 ## How to Expand the WFFM Conversion Tool to Convert Custom Entities
 Some of the items or fields that cannot be mapped could be custom items created to expand the out-of-the-box functionality of the Sitecore WFFM module. For example, custom entities could be custom form field types or custom save actions. To help developers to automate the conversion and migration of custom entities, the tool allows to expand its default mapping capabilities, as described in the next three sections.

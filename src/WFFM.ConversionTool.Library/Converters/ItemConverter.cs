@@ -147,7 +147,7 @@ namespace WFFM.ConversionTool.Library.Converters
 							var valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
 
 							var filteredValueElementsToMany = convertedField.destFields.Where(f =>
-								valueElements.Contains(f.sourceElementName.ToLower()) && (f.destFieldId == null || f.destFieldId == Guid.Empty));
+								valueElements.Contains(f.sourceElementName.ToLower(), StringComparer.InvariantCultureIgnoreCase) && (f.destFieldId == null || f.destFieldId == Guid.Empty));
 
 							foreach (var valueXmlElementMapping in filteredValueElementsToMany)
 							{
@@ -189,13 +189,13 @@ namespace WFFM.ConversionTool.Library.Converters
 									// Reporting
 									if (convertedFields?.Count > 0 && convertedItems?.Count > 0)
 									{
-										_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, valueXmlElementMapping.sourceElementName);
+										_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, valueXmlElementMapping.sourceElementName, XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName));
 									}
 								}
 							}
 
 							var filteredValueElements =
-								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower()) && (f.destFieldId != null && f.destFieldId != Guid.Empty));
+								convertedField.destFields.Where(f => valueElements.Contains(f.sourceElementName.ToLower(), StringComparer.InvariantCultureIgnoreCase) && (f.destFieldId != null && f.destFieldId != Guid.Empty));
 
 							foreach (var valueXmlElementMapping in filteredValueElements)
 							{
@@ -216,7 +216,7 @@ namespace WFFM.ConversionTool.Library.Converters
 
 							foreach (var unmappedValueElementSourceField in unmappedValueElementSourceFields)
 							{
-								_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, unmappedValueElementSourceField);
+								_conversionReporter.AddUnmappedValueElementSourceField(filteredConvertedField, itemId, unmappedValueElementSourceField, XmlHelper.GetXmlElementValue(filteredConvertedField.Value, unmappedValueElementSourceField));
 							}
 						}
 						// Process fields that have a single dest field

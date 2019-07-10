@@ -57,6 +57,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 				FieldId = field.FieldId.ToString("B").ToUpper(),
 				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
 				FieldType = field.Type.ToString(),
+				FieldValue = field.Value,
 				Message = "Source Field Not Mapped"
 			});
 		}
@@ -96,7 +97,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 			});
 		}
 
-		public void AddUnmappedValueElementSourceField(SCField field, Guid itemId, string sourceFieldValueElementName)
+		public void AddUnmappedValueElementSourceField(SCField field, Guid itemId, string sourceFieldValueElementName, string sourceFieldValueElementValue)
 		{
 			AddReportingRecord(new ReportingRecord()
 			{
@@ -111,6 +112,7 @@ namespace WFFM.ConversionTool.Library.Reporting
 				FieldName = _sourceMasterRepository.GetSitecoreItemName(field.FieldId),
 				FieldType = field.Type.ToString(),
 				FieldValueElementName = sourceFieldValueElementName,
+				FieldValueElementValue = sourceFieldValueElementValue,
 				Message = "Source Field Element Value Not Mapped"
 			});
 		}

@@ -20,7 +20,7 @@ namespace WFFM.ConversionTool.Library.Helpers
 
 				foreach (XmlNode childNode in xmlDocument.ChildNodes.Item(0).ChildNodes)
 				{
-					elementNames.Add(childNode.Name.ToLower());
+					elementNames.Add(childNode.Name);
 				}
 			}
 			catch (Exception e)
