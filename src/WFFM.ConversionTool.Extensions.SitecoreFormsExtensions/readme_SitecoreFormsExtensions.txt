@@ -11,3 +11,10 @@
 //    "name": "FileUploadConverter",
 //    "converterType": "WFFM.ConversionTool.Extensions.SitecoreFormsExtensions.Converters.FieldValueConverter.FileUploadConverter, WFFM.ConversionTool.Extensions.SitecoreFormsExtensions"
 //}
+
+3) In the AppSettings.json file, modify the following settings to configure the File Upload field data conversion process:
+
+"extensions": {
+        "sitecoreFormsExtensions_FileDownloadUrlBase": "https://myfile.com/{0}", // File Download Url Base for Sitecore Forms Extensions File Upload data.
+        "sitecoreFormsExtensions_UseItemIdForFilename": "false" // Default value: "false". If "true", the media item filename for the Sitecore Forms Extension File Upload data is built using the media item ID instead of the media item name. 
+    }
