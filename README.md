@@ -130,14 +130,14 @@ The *analysis convertion report* contains the following columns for each record:
 ## WFFM Conversion Tool Extensions - NEW !!!
 The v1.1.0 release of the WFFM Conversion Tool introduces the availability of the *WFFM Conversion Tool Extensions*, a group of plugins that add support for the conversion of WFFM forms items that don't exist in the Sitecore Forms out-of-the-box solution, but that are extended using popular Sitecore modules available on the Sitecore Marketplace.
 
-The WFFM Conversion Tool Extensions plugins are available in the `Extensions` folder in the tool root folder. Each *extension* plugin has its own subfolder that contains the plugin files and a `readme_<module_name>.txt` file that described step-by-step instructions to install the plugin. 
+The WFFM Conversion Tool Extensions plugins are available in the `Extensions` folder in the tool root folder. Each *extension* plugin has its own subfolder that contains the plugin files and a `readme_<module_name>.txt` file that describes step-by-step instructions to install each plugin. 
 
 ### Sitecore Forms Extensions
 The *extension* plugin for the [Sitecore Forms Extensions](https://github.com/bartverdonck/Sitecore-Forms-Extensions) module developed by Bart Verdonck adds the support for the conversion of the following two form field types:
-- Captcha
-- File Upload
+- Captcha field
+- File Upload field
 
-NOTE: The data of the File Upload fields is converted and migrated using the storage format of the File System storage provider (`FileSystemFileUploadStorageProvider` class).
+NOTE: The data of the File Upload field is converted and migrated using the storage format of the File System storage provider (`FileSystemFileUploadStorageProvider` class).
 
 ### Sitecore Forms Send Email Submit Action
 The *extension* plugin for the [Sitecore Forms Send Email Submit Action](https://marketplace.sitecore.net/Modules/S/Sitecore_Forms_Send_Email_Submit_Action.aspx) module developed by Byron Calisto adds the support for the conversion of the *Send Email* submit action.
