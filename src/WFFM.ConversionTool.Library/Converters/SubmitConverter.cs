@@ -11,6 +11,7 @@ using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Models.Form;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Processors;
@@ -74,6 +75,18 @@ namespace WFFM.ConversionTool.Library.Converters
 			else
 			{
 				buttonItem = _destMasterRepository.GetSitecoreDescendantsItems(buttonMetadata.destTemplateId, pageItem.ID).FirstOrDefault();
+			}
+
+			// Delete pre-existing submit actions
+			if (buttonItem != null)
+			{
+				var submitActionDefinitionMetadata = _metadataProvider.GetItemMetadataByTemplateName("SubmitActionDefinition");
+				var submitActions =
+					_destMasterRepository.GetSitecoreDescendantsItems(submitActionDefinitionMetadata.destTemplateId, buttonItem.ID);
+				foreach (var submitAction in submitActions)
+				{
+					_destMasterRepository.DeleteSitecoreItem(submitAction);
+				}
 			}
 
 			return buttonItem;
@@ -192,19 +205,26 @@ namespace WFFM.ConversionTool.Library.Converters
 			if (!string.IsNullOrEmpty(formSaveActions))
 			{
 				var saveActionElements = XmlHelper.GetXmlElementNodeList(XmlHelper.GetXmlElementNode(formSaveActions, "g").InnerXml, "li");
-				Dictionary<string, string> saveActionItems = new Dictionary<string, string>();
+				List<SaveAction> saveActionItems = new List<SaveAction>();
 				if (saveActionElements != null)
 				{
 					foreach (XmlNode saveActionElement in saveActionElements)
 					{
 						if (saveActionElement.Attributes != null)
-							saveActionItems.Add(saveActionElement.Attributes["id"].Value,
-								XmlHelper.GetXmlElementValue(saveActionElement.InnerXml, "parameters"));
+						{
+							var saveAction = new SaveAction()
+							{
+								Id = saveActionElement.Attributes["id"].Value,
+								UnicId = saveActionElement.Attributes["unicid"].Value,
+								Parameters = XmlHelper.GetXmlElementValue(saveActionElement.InnerXml, "parameters")
+							};
+							saveActionItems.Add(saveAction);
+						}
 					}
 
 					foreach (var saveActionItem in saveActionItems)
 					{
-						if (saveActionItem.Key == FormConstants.FormSaveAction_RegisterCampaignValue)
+						if (saveActionItem.Id == FormConstants.FormSaveAction_RegisterCampaignValue)
 						{
 							var trackingCampaign = XmlHelper.GetXmlElementNodeList(tracking, "campaign");
 							var xmlAttributeCollection = trackingCampaign[0].Attributes;
@@ -226,7 +246,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								}
 							}
 						}
-						else if (saveActionItem.Key == FormConstants.FormSaveAction_SaveToDatabaseValue)
+						else if (saveActionItem.Id == FormConstants.FormSaveAction_SaveToDatabaseValue)
 						{
 							ConvertSaveDataAction(form, buttonItem);
 						}
@@ -234,7 +254,7 @@ namespace WFFM.ConversionTool.Library.Converters
 						{
 							// Convert other save actions if mapped in AppSettings.json
 							var submitAction =
-								_appSettings.submitActions.FirstOrDefault(s => s.sourceSaveActionId == Guid.Parse(saveActionItem.Key));
+								_appSettings.submitActions.FirstOrDefault(s => s.sourceSaveActionId == Guid.Parse(saveActionItem.Id));
 
 							if (submitAction != null)
 							{
@@ -243,12 +263,12 @@ namespace WFFM.ConversionTool.Library.Converters
 								submitActionValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
 									submitAction.destSubmitActionFieldValue);
 								submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
-									converter.ConvertValue(HttpUtility.HtmlDecode((saveActionItem.Value.Replace("&amp;","&")))));
+									converter.ConvertValue(HttpUtility.HtmlDecode((saveActionItem.Parameters.Replace("&amp;","&")))));
 								ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
 							}
 							else
 							{
-								_analysisReporter.AddUnmappedSaveAction(formSaveActionField, form.ID, Guid.Parse(saveActionItem.Key));
+								_analysisReporter.AddUnmappedSaveAction(formSaveActionField, form.ID, Guid.Parse(saveActionItem.Id));
 							}
 						}
 					}
@@ -287,7 +307,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			return WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
 		}
 
-		private void CreateOrUpdateItem(string metadataTemplateName, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
+		private void CreateItem(string metadataTemplateName, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
 			var metadataTemplate = _metadataProvider.GetItemMetadataByTemplateName(metadataTemplateName);
 
@@ -300,28 +320,12 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			submitActionsFolder = CheckItemNotNullForAnalysis(submitActionsFolder);
 
-			var existingConvertedItem = _destMasterRepository
-				.GetSitecoreChildrenItems(metadataTemplate.destTemplateId, submitActionsFolder.ID)
-				.FirstOrDefault(item => string.Equals(item.Name, destItemName, StringComparison.InvariantCultureIgnoreCase));
-			if (existingConvertedItem == null)
+			foreach (var destFieldValue in destFieldValues)
 			{
-				foreach (var destFieldValue in destFieldValues)
-				{
-					metadataTemplate.fields.newFields.First(field => field.destFieldId == destFieldValue.Key).value = destFieldValue.Value;
-				}
-				// Create item
-				WriteNewItem(metadataTemplate.destTemplateId, submitActionsFolder, destItemName, metadataTemplate);
-				
+				metadataTemplate.fields.newFields.First(field => field.destFieldId == destFieldValue.Key).value = destFieldValue.Value;
 			}
-			else
-			{
-				foreach (var destFieldValue in destFieldValues)
-				{
-					existingConvertedItem.Fields.First(field => field.FieldId == destFieldValue.Key).Value = destFieldValue.Value;
-				}
-
-				_destMasterRepository.AddOrUpdateSitecoreItem(existingConvertedItem);
-			}
+			// Create item
+			WriteNewItem(metadataTemplate.destTemplateId, submitActionsFolder, destItemName, metadataTemplate);
 		}
 
 		private void ConvertSourceFieldToSubmitActionItem(SCItem form, Guid sourceFieldId,
@@ -335,13 +339,13 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			if (sourceFieldToConvert == null || sourceFieldToConvert.Value == sourceFieldValue)
 			{
-				CreateOrUpdateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
+				CreateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
 			}
 		}
 
 		private void ConvertFieldsToSubmitActionItem(string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
-			CreateOrUpdateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
+			CreateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
 		}
 	}
 }
