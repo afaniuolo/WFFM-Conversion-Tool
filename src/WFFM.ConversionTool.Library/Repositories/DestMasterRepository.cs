@@ -88,22 +88,8 @@ namespace WFFM.ConversionTool.Library.Repositories
 
 		public List<SCItem> GetSitecoreDescendantsItems(Guid templateId, Guid parentId)
 		{
-			var scItems = new List<SCItem>();
-			var childrenItems = GetChildrenItems(templateId, parentId);
-			if (childrenItems.Any())
-			{
-				foreach (var item in childrenItems)
-				{
-					scItems.Add(GetSourceItemAndFields(item));
-				}
-
-				foreach (var childrenItem in childrenItems)
-				{
-					scItems.AddRange(GetSitecoreDescendantsItems(templateId, childrenItem.ID));
-				}
-			}
-			
-			return scItems;
+			var descendantsItems = GetSitecoreDescendantsItems(parentId);			
+			return descendantsItems.Where(item => item.TemplateID == templateId).ToList();
 		}
 
 		public List<SCItem> GetSitecoreDescendantsItems(Guid parentId)

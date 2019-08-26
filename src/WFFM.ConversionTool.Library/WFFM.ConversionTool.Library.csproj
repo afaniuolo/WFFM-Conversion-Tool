@@ -129,6 +129,7 @@
     <Compile Include="Helpers\XmlHelper.cs" />
     <Compile Include="Migrators\DataMigrator.cs" />
     <Compile Include="Migrators\IDataMigrator.cs" />
+    <Compile Include="Models\Form\SaveAction.cs" />
     <Compile Include="Models\Reporting\ReportingRecord.cs" />
     <Compile Include="Providers\FieldProvider.cs" />
     <Compile Include="Providers\FormsData\IDataProvider.cs" />
