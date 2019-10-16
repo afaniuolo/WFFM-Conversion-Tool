@@ -97,6 +97,12 @@ namespace WFFM.ConversionTool.Library.Processors
 					forms = forms.Where(form => _appSettings.includeOnlyFormIds.Contains(form.ID)).ToList();
 				}
 
+				// Filter forms to exclude forms listed in appSettings "excludeFormIds" parameter
+				if (_appSettings.excludeFormIds != null && _appSettings.excludeFormIds.Any())
+				{
+					forms = forms.Where(form => !_appSettings.excludeFormIds.Contains(form.ID)).ToList();
+				}
+
 				// Filter sample forms out
 				if (_appSettings.excludeSampleWffmForms)
 				{
