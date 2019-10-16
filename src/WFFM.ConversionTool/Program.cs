@@ -28,6 +28,7 @@ namespace WFFM.ConversionTool
 		private static bool help = false;
 		private static bool convert = false;
 		private static bool nodata = false;
+		private static bool onlydata = false;
 
 		static Program()
 		{
@@ -52,6 +53,7 @@ namespace WFFM.ConversionTool
 				Console.WriteLine();
 				Console.WriteLine("  -convert             to convert and migrate items and data in destination databases.");
 				Console.WriteLine("  -convert -nodata     to convert and migrate only items in destination database.");
+				Console.WriteLine("  -convert -onlydata   to convert and migrate only forms data in destination database.");
 				Console.WriteLine();
 				return;
 			}
@@ -84,10 +86,13 @@ namespace WFFM.ConversionTool
 				appSettings.enableOnlyAnalysisByDefault = false;
 			}
 
-			// Read and analyze source data
-			var formProcessor = container.GetInstance<FormProcessor>();
-			formProcessor.ConvertForms();
-			
+			if (!onlydata)
+			{
+				// Read and analyze source data
+				var formProcessor = container.GetInstance<FormProcessor>();
+				formProcessor.ConvertForms();
+			}
+
 			if (convert && !nodata)
 			{
 				// Convert & Migrate data
@@ -118,6 +123,9 @@ namespace WFFM.ConversionTool
 						break;
 					case "nodata":
 						nodata = true;
+						break;
+					case "onlydata":
+						onlydata = true;
 						break;
 				}
 			}

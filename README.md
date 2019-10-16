@@ -59,6 +59,7 @@ In the context of a Sitecore upgrade project, if all Sitecore content items have
     - `WFFM.ConversionTool.exe help` or `WFFM.ConversionTool.exe ?` - Use this option to get a list of available input parameters.
     - `WFFM.ConversionTool.exe -convert` - Use this option to execute the conversion and migration of both forms items and their stored data to the destination databases.
     - `WFFM.ConversionTool.exe -convert -nodata` - Use this option to execute the conversion and migration of forms items only. Stored forms data will not be converted and migrated.
+    - `WFFM.ConversionTool.exe -convert -onlydata` - Use this option to execute the conversion and migration of forms data only. Only data of forms previously converted and migrated on the destination instance will be converted and migrated by this process. Data of forms that don't exist on the destination instance will not be converted and migrated.
 4) After the tool execution is finished successfully, if the destination Sitecore instance was running in IIS while the tool was executed, recycle the app pool of the destination Sitecore web application to clear the Sitecore Items cache.
 5) Once you login in the destination Sitecore instance, the migrated forms will not be listed in the Forms section (accessible from the Sitecore Desktop) until the `sitecore_master_index` index is rebuilt. Use the Indexing Manager in the Sitecore Control Panel to rebuild it.
 
