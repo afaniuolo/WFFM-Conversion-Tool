@@ -115,6 +115,8 @@ The *analysis convertion report* contains the following columns for each record:
 - `ItemLanguage` - Language of the source item.
 - `ItemTemplateId` - Template Id of the source item.
 - `ItemTemplateName` - Template Name of the source item.
+- `FormId` - Id of the related source form item.
+- `FormName` - Name of the related source form item.
 - `FieldId` - Id of the field of the souce item.
 - `FieldName` - Name of the field of the source item.
 - `FieldType` - Type of the field of the source item.
