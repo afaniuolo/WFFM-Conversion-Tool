@@ -20,6 +20,9 @@ namespace WFFM.ConversionTool.Library.Reporting
 		private ISourceMasterRepository _sourceMasterRepository;
 		private AppSettings _appSettings;
 
+		public string CurrentFormId { get; set; }
+		public string CurrentFormName { get; set; }
+
 		private List<string> _convertedFieldIds = new List<string>()
 		{
 			FormConstants.FormTitleFieldId,
@@ -119,6 +122,10 @@ namespace WFFM.ConversionTool.Library.Reporting
 
 		private void AddReportingRecord(ReportingRecord reportingRecord)
 		{
+			// Set global form processing values
+			reportingRecord.FormId = CurrentFormId;
+			reportingRecord.FormName = CurrentFormName;
+
 			_reportingRecords.Add(reportingRecord);
 		}
 

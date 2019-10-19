@@ -133,6 +133,10 @@ namespace WFFM.ConversionTool.Library.Processors
 				{
 					try
 					{
+						// Set current form being processed in a global variable for reporting
+						_conversionReporter.CurrentFormId = form.ID.ToString("B").ToUpper();
+						_conversionReporter.CurrentFormName = form.Name;
+						
 						// Convert and Migrate Form items
 						ConvertAndWriteItem(form, _appSettings.itemReferences["destFormFolderId"]);
 

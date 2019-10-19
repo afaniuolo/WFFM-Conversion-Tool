@@ -17,6 +17,8 @@ namespace WFFM.ConversionTool.Library.Models.Reporting
 		public string ItemLanguage { get; set; }
 		public string ItemTemplateId { get; set; }
 		public string ItemTemplateName { get; set; }
+		public string FormId { get; set; }
+		public string FormName { get; set; }
 		public string FieldId { get; set; }
 		public string FieldName { get; set; }
 		public string FieldType { get; set; }
