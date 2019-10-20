@@ -59,7 +59,7 @@ In the context of a Sitecore upgrade project, if all Sitecore content items have
     - `WFFM.ConversionTool.exe help` or `WFFM.ConversionTool.exe ?` - Use this option to get a list of available input parameters.
     - `WFFM.ConversionTool.exe -convert` - Use this option to execute the conversion and migration of both forms items and their stored data to the destination databases.
     - `WFFM.ConversionTool.exe -convert -nodata` - Use this option to execute the conversion and migration of forms items only. Stored forms data will not be converted and migrated.
-    - `WFFM.ConversionTool.exe -convert -onlydata` - Use this option to execute the conversion and migration of forms data only. Only data of forms previously converted and migrated on the destination instance will be converted and migrated by this process. Data of forms that don't exist on the destination instance will not be converted and migrated.
+    - `WFFM.ConversionTool.exe -convert -onlydata` - Use this option to execute the conversion and migration of forms data only. Only data of forms previously converted and migrated on the destination instance will be converted and migrated by this process. Data of forms which items don't exist on the destination instance will not be converted and migrated.
 4) After the tool execution is finished successfully, if the destination Sitecore instance was running in IIS while the tool was executed, recycle the app pool of the destination Sitecore web application to clear the Sitecore Items cache.
 5) Once you login in the destination Sitecore instance, the migrated forms will not be listed in the Forms section (accessible from the Sitecore Desktop) until the `sitecore_master_index` index is rebuilt. Use the Indexing Manager in the Sitecore Control Panel to rebuild it.
 
@@ -131,7 +131,7 @@ The *analysis convertion report* contains the following columns for each record:
     - *Source Field Element Value Not Mapped* - The source field XML element value is not mapped.
     - *Form Field Item Not Mapped - Form Field Type Name = field-type-name* - The form field type is not mapped, because the field is a custom field type. Form fields that are not mapped are still migrated and converted using the default destination *Input* form field type. 
 
-## WFFM Conversion Tool Extensions - NEW !!!
+## WFFM Conversion Tool Extensions
 The v1.1.0 release of the WFFM Conversion Tool introduces the availability of the *WFFM Conversion Tool Extensions*, a group of plugins that add support for the conversion of WFFM forms items that don't exist in the Sitecore Forms out-of-the-box solution, but that are extended using popular Sitecore modules available on the Sitecore Marketplace.
 
 The WFFM Conversion Tool Extensions plugins are available in the `Extensions` folder in the tool root folder. Each *extension* plugin has its own subfolder that contains the plugin files and a `readme_<module_name>.txt` file that describes step-by-step instructions to install each plugin. 
@@ -159,7 +159,7 @@ The `baseTemplateMetadataFileName` property should contain the name of the metad
 A useful online resource to validate the content of a metadata file is the [JSON Schema Validator](https://www.jsonschemavalidator.net/). The JSON schema of the metadata file is included in the tool `Schemas` folder and also available [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/blob/master/src/WFFM.ConversionTool/Schemas/metadata-schema.json).
 
 ### How to Customize the Conversion of a Field Value
-The *fieldConverter* property of *convertedField* mapping objects in metadata files allows to specify the name of a converter to process the source value of a field. Converters are defined in the `AppSettings.json` configuratio file in the *converters* property. This property is an array of *converter* objects that have the following properties:
+The *fieldConverter* property of *convertedField* mapping objects in metadata files allows to specify the name of a converter to process the source value of a field. Converters are defined in the `AppSettings.json` configuration file in the *converters* property. This property is an array of *converter* objects that have the following properties:
 - `name` - Name of the converter, used as value in the *fieldConverter* property in metadata files.
 - `converterType` - Type of the class object that defines the converter.
 
