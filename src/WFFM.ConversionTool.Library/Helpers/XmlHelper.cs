@@ -150,7 +150,7 @@ namespace WFFM.ConversionTool.Library.Helpers
 				// Add parent xml element to value
 				fieldValue = string.Format("<ParentNode>{0}</ParentNode>", fieldValue);
 				// Escape special chars in text value
-				fieldValue = fieldValue.Replace(" &", " &amp;");
+				fieldValue = fieldValue.Replace(" & ", " &amp; ").Replace(" &<"," &amp;<");
 			}
 
 			return fieldValue;
@@ -163,7 +163,10 @@ namespace WFFM.ConversionTool.Library.Helpers
 				.Replace("</b<","</b><")
 				.Replace("</a<","</a><")
 				.Replace("</strong<","</strong><")
-				.Replace("</i<","</i><");
+				.Replace("</i<","</i><")
+				.Replace("&rsquo;", "’")
+				.Replace("&lsquo;", "‘")
+				.Replace("&nbsp;"," ");
 		}
 	}
 }

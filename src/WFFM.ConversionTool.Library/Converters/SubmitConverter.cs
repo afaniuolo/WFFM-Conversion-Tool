@@ -48,7 +48,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			string tracking = form.Fields.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormTrackingFieldId))?.Value;
 
 			// Save Data Action
-			ConvertSaveDataAction(form, buttonItem);
+			bool saveToDatabaseActionCreated = ConvertSaveDataAction(form, buttonItem);
 
 			// Convert Submit Mode
 			ConvertSubmitMode(form, buttonItem);
@@ -57,7 +57,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			ConvertTriggerGoal(form, tracking, buttonItem);
 
 			// Convert Other Save Actions
-			ConvertSaveActions(form, tracking, buttonItem);
+			ConvertSaveActions(form, tracking, buttonItem, saveToDatabaseActionCreated);
 		}
 
 		private SCItem ConvertSubmitButton(SCItem form, SCItem pageItem)
@@ -92,12 +92,12 @@ namespace WFFM.ConversionTool.Library.Converters
 			return buttonItem;
 		}
 
-		private void ConvertSaveDataAction(SCItem form, SCItem buttonItem)
+		private bool ConvertSaveDataAction(SCItem form, SCItem buttonItem)
 		{
 			var saveDataValues = new Dictionary<Guid, string>();
 			saveDataValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId), SubmitActionConstants.SubmitActionField_SaveActionValue);
 			saveDataValues.Add(new Guid(BaseTemplateConstants.SortOrderFieldId), "0");
-			ConvertSourceFieldToSubmitActionItem(form, new Guid(FormConstants.FormSaveToDatabaseFieldId), "1", "Save Data", saveDataValues, buttonItem);
+			return ConvertSourceFieldToSubmitActionItem(form, new Guid(FormConstants.FormSaveToDatabaseFieldId), "1", "Save Data", saveDataValues, buttonItem);
 		}
 
 		private void ConvertSubmitMode(SCItem form, SCItem buttonItem)
@@ -196,7 +196,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			}
 		}
 
-		private void ConvertSaveActions(SCItem form, string tracking, SCItem buttonItem)
+		private void ConvertSaveActions(SCItem form, string tracking, SCItem buttonItem, bool saveToDatabaseActionCreated)
 		{
 			var formSaveActionField = form.Fields
 				.FirstOrDefault(field => field.FieldId == new Guid(FormConstants.FormSaveActionFieldId));
@@ -246,7 +246,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								}
 							}
 						}
-						else if (saveActionItem.Id == FormConstants.FormSaveAction_SaveToDatabaseValue)
+						else if (!saveToDatabaseActionCreated && saveActionItem.Id == FormConstants.FormSaveAction_SaveToDatabaseValue)
 						{
 							ConvertSaveDataAction(form, buttonItem);
 						}
@@ -328,7 +328,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			WriteNewItem(metadataTemplate.destTemplateId, submitActionsFolder, destItemName, metadataTemplate);
 		}
 
-		private void ConvertSourceFieldToSubmitActionItem(SCItem form, Guid sourceFieldId,
+		private bool ConvertSourceFieldToSubmitActionItem(SCItem form, Guid sourceFieldId,
 			string sourceFieldValue, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
 			SCField sourceFieldToConvert = null;
@@ -340,7 +340,10 @@ namespace WFFM.ConversionTool.Library.Converters
 			if (sourceFieldToConvert == null || sourceFieldToConvert.Value == sourceFieldValue)
 			{
 				CreateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
+				return true;
 			}
+
+			return false;
 		}
 
 		private void ConvertFieldsToSubmitActionItem(string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)

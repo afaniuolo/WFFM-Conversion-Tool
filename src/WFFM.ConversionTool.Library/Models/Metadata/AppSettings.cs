@@ -22,6 +22,7 @@ namespace WFFM.ConversionTool.Library.Models.Metadata
 		public bool analysis_ExcludeBaseStandardFields { get; set; }
 		public bool excludeSampleWffmForms { get; set; }
 		public List<Guid> includeOnlyFormIds { get; set; }
+		public List<Guid> excludeFormIds { get; set; }
 
 		public Dictionary<string, string> extensions { get; set; }
 

@@ -234,10 +234,13 @@ namespace WFFM.ConversionTool.Library.Converters
 				}
 			}
 
-			// Create new fields
-			foreach (var newField in _itemMetadataTemplate.fields.newFields)
+			if (_itemMetadataTemplate.fields.newFields != null)
 			{
-				destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
+				// Create new fields
+				foreach (var newField in _itemMetadataTemplate.fields.newFields)
+				{
+					destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
+				}
 			}
 
 			destItem.Fields = destFields;
