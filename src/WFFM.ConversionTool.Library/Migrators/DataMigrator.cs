@@ -89,6 +89,11 @@ namespace WFFM.ConversionTool.Library.Migrators
 				// Get Field Data records data from forms data provider
 				var fieldDataRecords = _dataProvider.GetFieldDataRecords(formDataRecord.Id);
 
+				if (fieldDataRecords == null || !fieldDataRecords.Any())
+				{
+					continue;
+				}
+
 				// Convert the source field data records
 				List<FieldData> fieldDataFormsRecords = fieldDataRecords.Select(data => ConvertFieldData(data, fieldValueTypeCollection)).ToList();
 
@@ -112,8 +117,8 @@ namespace WFFM.ConversionTool.Library.Migrators
 				FieldName = wffmFieldData.FieldName,
 				FormEntryID = wffmFieldData.FormId,
 				ID = wffmFieldData.Id,
-				Value = ConvertFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.First(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
-				ValueType = collection.First(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueType ?? "System.String"
+				Value = ConvertFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
+				ValueType = collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueType ?? "System.String"
 			};
 		}
 
