@@ -5,6 +5,8 @@ The tool provides the ability to analyze the source items in the source Sitecore
 
 The tool offers the users the choice to migrate saved WFFM forms data from a SQL database or from a MongoDB database source to the destination Sitecore Experience Forms SQL database.
 
+NEW - Starting from release 1.3.0, the tool migrates WFFM File Upload form fields files (stored in the Media Library) to the new `FileStorage` table in the Experience Forms SQL database (introduced with Sitecore 9.3 Initial Release version).
+
 ## Sitecore Compatibility
 The tool has been designed to support the migration of sitecore items from any version of Sitecore to Sitecore 9.1+. The tool has been tested migrating WFFM forms items and data starting from Sitecore version 6.5.
 
@@ -16,7 +18,8 @@ The tool has been designed to support the migration of sitecore items from any v
 - No particular hardware requirement
 
 ## How to Install the Tool
-The tool is distributed in a ZIP archive. The latest release can be downloaded here: https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/latest.
+The tool is distributed in a ZIP archive. If migrating to Sitecore 9.3+, use the latest release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/latest).
+If migrating to a version of Sitecore prior to 9.3, use the 1.2.x release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.0).
 
 The tool can be installed in any server or local machine that has access to the databases involved in the conversion and migration process. The tool doesn't require the source and destination Sitecore instances to run in IIS while the conversion process occurs, because the tool connects directly to the Sitecore databases, without using Sitecore APIs or other Sitecore modules.
 
@@ -139,7 +142,7 @@ The WFFM Conversion Tool Extensions plugins are available in the `Extensions` fo
 ### Sitecore Forms Extensions
 The *extension* plugin for the [Sitecore Forms Extensions](https://github.com/bartverdonck/Sitecore-Forms-Extensions) module developed by Bart Verdonck adds the support for the conversion of the following two form field types:
 - Captcha field
-- File Upload field
+- File Upload field - Only in versions supporting Sitecore 9.2 or prior. In Sitecore 9.3, the File Upload field has become natively available in the Sitecore Forms.
 
 NOTE: The data of the File Upload field is converted and migrated using the storage format of the File System storage provider (`FileSystemFileUploadStorageProvider` class).
 
