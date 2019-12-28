@@ -5,24 +5,31 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Models.Metadata;
+using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Providers
 {
 	public class MetadataProvider : IMetadataProvider
 	{
 		private AppSettings _appSettings;
+		private IDestMasterRepository _destMasterRepository;
 		private List<MetadataTemplate> _metadataTemplates = new List<MetadataTemplate>();
 		private string[] _metadataFiles;
 
-		public MetadataProvider(AppSettings appSettings)
+		public MetadataProvider(AppSettings appSettings, IDestMasterRepository destMasterRepository)
 		{
 			_appSettings = appSettings;
+			_destMasterRepository = destMasterRepository;
 
 			_metadataFiles = GetMetadataFileList();
 
 			foreach (string filePath in _metadataFiles)
 			{
-				_metadataTemplates.Add(GetItemMetadataByFilePath(filePath));
+				var metadataTemplate = GetItemMetadataByFilePath(filePath);
+				if (destMasterRepository.ItemExists(metadataTemplate.destTemplateId))
+				{
+					_metadataTemplates.Add(metadataTemplate);
+				}
 			}
 		}
 
