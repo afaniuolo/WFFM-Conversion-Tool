@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Helpers;
@@ -106,6 +108,15 @@ namespace WFFM.ConversionTool.Library.Migrators
 				};
 
 				_sitecoreFormsDbRepository.CreateOrUpdateFormData(formEntry);
+
+				// Migrate file upload storage records, if any
+				foreach (FieldData fieldDataFormsRecord in fieldDataFormsRecords)
+				{
+					if (fieldDataFormsRecord.ValueType.Contains("Sitecore.ExperienceForms.Data.Entities.StoredFileInfo"))
+					{
+						MigrateFileUploadMediaItem(fieldDataFormsRecord);
+					}
+				}
 			}
 		}
 
@@ -182,6 +193,37 @@ namespace WFFM.ConversionTool.Library.Migrators
 			}
 
 			return collection;
+		}
+
+		private void MigrateFileUploadMediaItem(FieldData fieldDataFormsRecord)
+		{
+			if (string.IsNullOrEmpty(fieldDataFormsRecord.Value) || !Guid.TryParse(fieldDataFormsRecord.Value, out var mediaItemGuid))
+			{
+				return;
+			}
+
+			var mediaItem = _sourceMasterRepository.GetSitecoreItem(mediaItemGuid);
+
+			if (string.IsNullOrEmpty(mediaItem.Name)) return;
+
+			var mediaItemName = mediaItem.Name;
+			var mediaItemExtension =
+				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.ExtensionFieldId))?.Value;
+			var mediaItemMediaBlobId =
+				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.MediaFieldId))?.Value;
+
+			if (string.IsNullOrEmpty(mediaItemMediaBlobId)) return;
+
+			FileStorage fileStorage = new FileStorage()
+			{
+				Id = mediaItemGuid,
+				FileName = $"{mediaItemName}.{mediaItemExtension}",
+				Committed = true,
+				Created = mediaItem.Created,
+				FileContent = _sourceMasterRepository.GetSitecoreBlobData(new Guid(mediaItemMediaBlobId))
+			};
+
+			_sitecoreFormsDbRepository.CreateOrUpdateFileStorageFormRecord(fileStorage);
 		}
 	}
 }

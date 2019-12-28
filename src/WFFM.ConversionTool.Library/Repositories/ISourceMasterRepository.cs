@@ -17,5 +17,6 @@ namespace WFFM.ConversionTool.Library.Repositories
 		string GetSitecoreItemName(Guid itemId);
 		string GetItemPath(Guid itemId);
 		Guid GetItemTemplateId(Guid itemId);
+		byte[] GetSitecoreBlobData(Guid blobId);
 	}
 }

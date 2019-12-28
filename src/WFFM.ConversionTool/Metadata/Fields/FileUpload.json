@@ -1,0 +1,33 @@
+﻿{
+    "sourceMappingFieldValue": "{827BDF4A-D886-4B36-9D32-C443EBCA1806}", // File Upload
+    "destTemplateId": "{17203DAA-0DED-4160-A23C-EC1114AB4FEF}",
+    "destTemplateName": "File Upload",
+    "baseTemplateMetadataFileName": "Input.json",
+    "dataValueType": "System.Collections.Generic.List`1[Sitecore.ExperienceForms.Data.Entities.StoredFileInfo]",
+    "dataValueConverter": "FileUploadConverter",
+    "fields": {
+        "newFields": [
+            {
+                "fieldType": "shared",
+                "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
+                "value": "{7E9A0903-A52C-4843-BBE1-5B26BD162BED}"
+            }
+        ],
+        "convertedFields": [
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{358E7AA0-E3E6-4EF6-92DF-EC1301737B50}", // Parameters
+                "destFields": [
+
+                ]
+            },
+            {
+                "fieldConverter": "",
+                "sourceFieldId": "{26CDC7C2-5307-4591-A7F9-5C034A05630A}", // Localized Parameters
+                "destFields": [
+
+                ]
+            }
+        ]
+    }
+}

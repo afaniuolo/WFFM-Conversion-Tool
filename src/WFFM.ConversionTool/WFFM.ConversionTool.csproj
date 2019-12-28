@@ -94,6 +94,9 @@
     <None Include="Metadata\Fields\Email.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Metadata\Fields\FileUpload.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Metadata\Fields\Input.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
