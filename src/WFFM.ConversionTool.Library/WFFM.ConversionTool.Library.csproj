@@ -108,6 +108,7 @@
     <Compile Include="Converters\SubmitConverter.cs" />
     <Compile Include="Database\ConnectionTester.cs" />
     <Compile Include="Database\Forms\FieldData.cs" />
+    <Compile Include="Database\Forms\FileStorage.cs" />
     <Compile Include="Database\Forms\FormEntry.cs" />
     <Compile Include="Database\Forms\SitecoreForms.cs" />
     <Compile Include="Database\Master\Item.cs" />

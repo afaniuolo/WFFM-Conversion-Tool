@@ -28,7 +28,7 @@ namespace WFFM.ConversionTool.Library.Repositories
 
 		public void DeleteFieldDataByFormRecordId(Guid formRecordId)
 		{
-			_sitecoreFormsDb.FieldDatas.RemoveRange(_sitecoreFormsDb.FieldDatas.Where(f => f.FormEntryID == formRecordId));
+			_sitecoreFormsDb.FieldDatas.RemoveRange(_sitecoreFormsDb.FieldDatas.Where(f => f.FormEntryId == formRecordId));
 		}
 	}
 }

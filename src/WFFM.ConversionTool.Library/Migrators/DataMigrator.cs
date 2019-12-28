@@ -99,8 +99,8 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 				FormEntry formEntry = new FormEntry()
 				{
-					ID = formDataRecord.Id,
-					FormItemID = formDataRecord.FormItemId,
+					Id = formDataRecord.Id,
+					FormDefinitionId = formDataRecord.FormItemId,
 					Created = formDataRecord.TimeStamp,
 					FieldDatas = fieldDataFormsRecords
 				};
@@ -113,10 +113,10 @@ namespace WFFM.ConversionTool.Library.Migrators
 		{
 			return new FieldData()
 			{
-				FieldItemID = wffmFieldData.FieldItemId,
+				FieldDefinitionId = wffmFieldData.FieldItemId,
 				FieldName = wffmFieldData.FieldName,
-				FormEntryID = wffmFieldData.FormId,
-				ID = wffmFieldData.Id,
+				FormEntryId = wffmFieldData.FormId,
+				Id = wffmFieldData.Id,
 				Value = ConvertFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
 				ValueType = collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueType ?? "System.String"
 			};

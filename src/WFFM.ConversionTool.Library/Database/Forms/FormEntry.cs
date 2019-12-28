@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace WFFM.ConversionTool.Library.Database.Forms
 {
-	[Table("FormEntry")]
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("sitecore_forms_storage.FormEntries")]
     public partial class FormEntry
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -13,10 +15,11 @@ namespace WFFM.ConversionTool.Library.Database.Forms
             FieldDatas = new HashSet<FieldData>();
         }
 
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
 
-        public Guid FormItemID { get; set; }
+        public Guid FormDefinitionId { get; set; }
 
+        [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
