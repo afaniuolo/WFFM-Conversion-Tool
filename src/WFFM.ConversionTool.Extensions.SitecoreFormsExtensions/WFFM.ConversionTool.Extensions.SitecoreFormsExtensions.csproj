@@ -40,8 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\MediaItemConstants.cs" />
-    <Compile Include="Converters\FieldValueConverter\FileUploadConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +55,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Metadata\Custom\FileUpload.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Metadata\Custom\Recaptcha.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

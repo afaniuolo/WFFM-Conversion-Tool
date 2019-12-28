@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using WFFM.ConversionTool.Extensions.SitecoreFormsExtensions.Constants;
-using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Repositories;
 
-namespace WFFM.ConversionTool.Extensions.SitecoreFormsExtensions.Converters.FieldValueConverter
+namespace WFFM.ConversionTool.Library.Converters.FieldValueConverters
 {
 	public class FileUploadConverter : BaseFieldConverter
 	{
@@ -37,28 +35,13 @@ namespace WFFM.ConversionTool.Extensions.SitecoreFormsExtensions.Converters.Fiel
 			{
 				return sourceValue;
 			}
-			
+
 			// Get the media item from source master db and map fields
 			var mediaItem = _sourceMasterRepository.GetSitecoreItem(mediaItemGuid);
 
 			if (string.IsNullOrEmpty(mediaItem.Name)) return sourceValue;
 
-			var mediaItemName = mediaItem.Name;
-			var mediaItemExtension =
-				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.ExtensionFieldId))?.Value;
-			var mediaItemContentType =
-				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.MimeTypeFieldId))?.Value;
-			var mediaItemContentLength =
-				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.SizeFieldId))?.Value;
-
-			var useItemIdForFileName =
-				_appSettings.extensions["sitecoreFormsExtensions_UseItemIdForFilename"].ToLower() == "true";
-			var mediaItemFileName = useItemIdForFileName ? $"{mediaItemGuid.ToString("D").ToLower()}.{mediaItemExtension}" : $"{mediaItemName}.{mediaItemExtension}";
-
-			var mediaItemUrl = _appSettings.extensions["sitecoreFormsExtensions_FileDownloadUrlBase"]
-				.Replace("{0}", mediaItemFileName);
-
-			return $"{{\"Url\":\"{mediaItemUrl}\",\"OriginalFileName\":\"{mediaItemName}.{mediaItemExtension}\",\"ContentType\":\"{mediaItemContentType}\",\"ContentLength\":{mediaItemContentLength},\"StoredFileName\":\"{mediaItemFileName}\",\"StoredFilePath\":\"\"}}";
+			return mediaItemGuid.ToString("D");
 		}
 	}
 }

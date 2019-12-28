@@ -62,7 +62,7 @@ namespace WFFM.ConversionTool
 			System.Console.WriteLine();
 			System.Console.WriteLine("  ***********************************************************************");
 			System.Console.WriteLine("  *                                                                     *");
-			System.Console.WriteLine("  *                 WFFM Conversion Tool - v1.2.0                       *");
+			System.Console.WriteLine("  *                 WFFM Conversion Tool - v1.3.0                       *");
 			System.Console.WriteLine("  *                                                                     *");
 			System.Console.WriteLine("  ***********************************************************************");
 			System.Console.WriteLine();

@@ -1,17 +1,19 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace WFFM.ConversionTool.Library.Database.Forms
 {
-	[Table("FieldData")]
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("sitecore_forms_storage.FieldData")]
     public partial class FieldData
     {
-        public Guid ID { get; set; }
+        public Guid Id { get; set; }
 
-        public Guid FormEntryID { get; set; }
+        public Guid FormEntryId { get; set; }
 
-        public Guid FieldItemID { get; set; }
+        public Guid FieldDefinitionId { get; set; }
 
         [Required]
         [StringLength(256)]

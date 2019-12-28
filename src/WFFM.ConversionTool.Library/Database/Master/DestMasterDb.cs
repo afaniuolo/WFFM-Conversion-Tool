@@ -12,6 +12,7 @@ namespace WFFM.ConversionTool.Library.Database.Master
 		{
 		}
 
+		public virtual DbSet<Blob> Blobs { get; set; }
 		public virtual DbSet<Item> Items { get; set; }
 		public virtual DbSet<SharedField> SharedFields { get; set; }
 		public virtual DbSet<UnversionedField> UnversionedFields { get; set; }

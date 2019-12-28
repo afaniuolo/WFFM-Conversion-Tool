@@ -85,6 +85,13 @@ namespace WFFM.ConversionTool.Library.Repositories
 			return _sourceMasterDb.Items.FirstOrDefault(item => item.ID == itemId)?.TemplateID ?? Guid.Empty;
 		}
 
+		public byte[] GetSitecoreBlobData(Guid blobId)
+		{
+			var blobRecord = _sourceMasterDb.Blobs.FirstOrDefault(blob => blob.BlobId == blobId);
+
+			return blobRecord?.Data;
+		}
+
 		private SCItem GetSourceItemAndFields(Item sourceItem)
 		{
 			return new SCItem()

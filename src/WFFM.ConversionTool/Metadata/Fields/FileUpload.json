@@ -1,16 +1,16 @@
 ﻿{
     "sourceMappingFieldValue": "{827BDF4A-D886-4B36-9D32-C443EBCA1806}", // File Upload
-    "destTemplateId": "{27686F73-AA5C-4E0E-AC6B-E3000D129E4F}",
-    "destTemplateName": "FileUploadField",
+    "destTemplateId": "{17203DAA-0DED-4160-A23C-EC1114AB4FEF}",
+    "destTemplateName": "File Upload",
     "baseTemplateMetadataFileName": "Input.json",
-    "dataValueType": "Feature.FormsExtensions.Business.FileUpload.StoredFile",
+    "dataValueType": "System.Collections.Generic.List`1[Sitecore.ExperienceForms.Data.Entities.StoredFileInfo]",
     "dataValueConverter": "FileUploadConverter",
     "fields": {
         "newFields": [
             {
                 "fieldType": "shared",
                 "destFieldId": "{589A7ADE-81D4-4A60-B9E2-7EAF6AE8A563}", // Field Type
-                "value": "{687A7B09-47E3-4FAA-AB2D-A4BF83DB0F1B}"
+                "value": "{7E9A0903-A52C-4843-BBE1-5B26BD162BED}"
             }
         ],
         "convertedFields": [

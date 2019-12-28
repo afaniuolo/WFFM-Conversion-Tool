@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using WFFM.ConversionTool.Library.Database.Forms;
 
 namespace WFFM.ConversionTool.Library.Repositories
@@ -7,5 +8,6 @@ namespace WFFM.ConversionTool.Library.Repositories
 	{
 		void CreateOrUpdateFormData(FormEntry formEntry);
 		void DeleteFieldDataByFormRecordId(Guid formRecordId);
+		void CreateOrUpdateFileStorageFormRecord(FileStorage fileStorage);
 	}
 }

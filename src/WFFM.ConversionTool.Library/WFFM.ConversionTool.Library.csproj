@@ -88,9 +88,11 @@
     <Compile Include="Constants\BaseTemplateConstants.cs" />
     <Compile Include="Constants\ButtonConstants.cs" />
     <Compile Include="Constants\FormConstants.cs" />
+    <Compile Include="Constants\MediaItemConstants.cs" />
     <Compile Include="Constants\SectionConstants.cs" />
     <Compile Include="Constants\SubmitActionConstants.cs" />
     <Compile Include="Constants\TextConstants.cs" />
+    <Compile Include="Converters\FieldValueConverters\FileUploadConverter.cs" />
     <Compile Include="Converters\SectionAppearanceConverter.cs" />
     <Compile Include="Converters\FormAppearanceConverter.cs" />
     <Compile Include="Converters\BaseFieldConverter.cs" />
@@ -108,8 +110,10 @@
     <Compile Include="Converters\SubmitConverter.cs" />
     <Compile Include="Database\ConnectionTester.cs" />
     <Compile Include="Database\Forms\FieldData.cs" />
+    <Compile Include="Database\Forms\FileStorage.cs" />
     <Compile Include="Database\Forms\FormEntry.cs" />
     <Compile Include="Database\Forms\SitecoreForms.cs" />
+    <Compile Include="Database\Master\Blob.cs" />
     <Compile Include="Database\Master\Item.cs" />
     <Compile Include="Database\Master\DestMasterDb.cs" />
     <Compile Include="Database\Master\SourceMasterDb.cs" />

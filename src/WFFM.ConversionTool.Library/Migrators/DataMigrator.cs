@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Database.Forms;
 using WFFM.ConversionTool.Library.Database.WFFM;
 using WFFM.ConversionTool.Library.Helpers;
@@ -99,13 +101,22 @@ namespace WFFM.ConversionTool.Library.Migrators
 
 				FormEntry formEntry = new FormEntry()
 				{
-					ID = formDataRecord.Id,
-					FormItemID = formDataRecord.FormItemId,
+					Id = formDataRecord.Id,
+					FormDefinitionId = formDataRecord.FormItemId,
 					Created = formDataRecord.TimeStamp,
 					FieldDatas = fieldDataFormsRecords
 				};
 
 				_sitecoreFormsDbRepository.CreateOrUpdateFormData(formEntry);
+
+				// Migrate file upload storage records, if any
+				foreach (FieldData fieldDataFormsRecord in fieldDataFormsRecords)
+				{
+					if (fieldDataFormsRecord.ValueType.Contains("Sitecore.ExperienceForms.Data.Entities.StoredFileInfo"))
+					{
+						MigrateFileUploadMediaItem(fieldDataFormsRecord);
+					}
+				}
 			}
 		}
 
@@ -113,10 +124,10 @@ namespace WFFM.ConversionTool.Library.Migrators
 		{
 			return new FieldData()
 			{
-				FieldItemID = wffmFieldData.FieldItemId,
+				FieldDefinitionId = wffmFieldData.FieldItemId,
 				FieldName = wffmFieldData.FieldName,
-				FormEntryID = wffmFieldData.FormId,
-				ID = wffmFieldData.Id,
+				FormEntryId = wffmFieldData.FormId,
+				Id = wffmFieldData.Id,
 				Value = ConvertFieldDataValue(wffmFieldData.Value, wffmFieldData.Data, collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueConverter),
 				ValueType = collection.FirstOrDefault(f => f.fieldId == wffmFieldData.FieldItemId)?.dataValueType ?? "System.String"
 			};
@@ -182,6 +193,37 @@ namespace WFFM.ConversionTool.Library.Migrators
 			}
 
 			return collection;
+		}
+
+		private void MigrateFileUploadMediaItem(FieldData fieldDataFormsRecord)
+		{
+			if (string.IsNullOrEmpty(fieldDataFormsRecord.Value) || !Guid.TryParse(fieldDataFormsRecord.Value, out var mediaItemGuid))
+			{
+				return;
+			}
+
+			var mediaItem = _sourceMasterRepository.GetSitecoreItem(mediaItemGuid);
+
+			if (string.IsNullOrEmpty(mediaItem.Name)) return;
+
+			var mediaItemName = mediaItem.Name;
+			var mediaItemExtension =
+				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.ExtensionFieldId))?.Value;
+			var mediaItemMediaBlobId =
+				mediaItem.Fields.FirstOrDefault(f => f.FieldId == new Guid(MediaItemConstants.MediaFieldId))?.Value;
+
+			if (string.IsNullOrEmpty(mediaItemMediaBlobId)) return;
+
+			FileStorage fileStorage = new FileStorage()
+			{
+				Id = mediaItemGuid,
+				FileName = $"{mediaItemName}.{mediaItemExtension}",
+				Committed = true,
+				Created = mediaItem.Created,
+				FileContent = _sourceMasterRepository.GetSitecoreBlobData(new Guid(mediaItemMediaBlobId))
+			};
+
+			_sitecoreFormsDbRepository.CreateOrUpdateFileStorageFormRecord(fileStorage);
 		}
 	}
 }
