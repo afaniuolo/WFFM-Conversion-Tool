@@ -117,6 +117,14 @@ namespace WFFM.ConversionTool.Library.Factories
 			IEnumerable<Tuple<string, int>> langVersions = parentItem.Fields.Where(f => f.Version != null && f.Language != null).Select(f => new Tuple<string, int>(f.Language, (int)f.Version)).Distinct();
 			var languages = parentItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
 
+			var fieldLangVersions = _itemMetadataTemplate?.fields?.newFields?.Where(f => f.values != null).SelectMany(f => f.values.Select(v => v.Key).Distinct()).Distinct();
+
+			if (fieldLangVersions != null && fieldLangVersions.Any())
+			{
+				langVersions = fieldLangVersions;
+				languages = fieldLangVersions.Select(lv => lv.Item1).Distinct();
+			}
+
 			foreach (var newField in _itemMetadataTemplate.fields.newFields)
 			{
 				destFields.AddRange(_fieldFactory.CreateFields(newField, itemId, langVersions, languages));
