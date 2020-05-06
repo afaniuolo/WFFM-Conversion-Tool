@@ -28,6 +28,8 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 		{
 			List<SCItem> convertedItems = new List<SCItem>();
 
+			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
+
 			var decodedElementValue = Uri.UnescapeDataString(elementValue).Replace("+", " ");
 
 			var queryElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "query");
@@ -42,12 +44,16 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 						{
 							var value = XmlHelper.GetXmlElementValue(queryElement.InnerXml, "value");
 							var displayName = value;
+							var displayNames = new Dictionary<Tuple<string, int>, string>();
 							var queryChildrenElements = XmlHelper.GetXmlElementNames(queryElement.InnerXml);
 							foreach (string queryChildrenElementName in queryChildrenElements)
 							{
 								if (!string.Equals(queryChildrenElementName, "value", StringComparison.InvariantCultureIgnoreCase))
 								{
 									displayName = XmlHelper.GetXmlElementValue(queryElement.InnerXml, queryChildrenElementName);
+									
+										displayNames.Add(new Tuple<string, int>(queryChildrenElementName, 1), displayName);
+																	
 								}
 							}
 
@@ -57,8 +63,16 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 								metadataTemplate.fields.newFields
 									.First(field => field.destFieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}")).value = value;
 								// Set display name
-								metadataTemplate.fields.newFields
-									.First(field => field.destFieldId == new Guid("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}")).value = displayName;
+								if (displayNames.Any())
+								{
+									metadataTemplate.fields.newFields
+										.First(field => field.destFieldId == new Guid("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}")).values = displayNames;
+								}
+								else
+								{
+									metadataTemplate.fields.newFields
+										.First(field => field.destFieldId == new Guid("{B5E02AD9-D56F-4C41-A065-A133DB87BDEB}")).value = displayName;
+								}
 								SCItem convertedItem = _itemFactory.Create(metadataTemplate.destTemplateId, sourceItem, value, metadataTemplate);
 								convertedItems.Add(convertedItem);							
 							}
