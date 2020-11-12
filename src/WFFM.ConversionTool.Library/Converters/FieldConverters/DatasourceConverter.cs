@@ -28,8 +28,6 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 		{
 			List<SCItem> convertedItems = new List<SCItem>();
 
-			var languages = sourceItem.Fields.Where(f => f.Language != null).Select(f => f.Language).Distinct();
-
 			var decodedElementValue = Uri.UnescapeDataString(elementValue).Replace("+", " ");
 
 			var queryElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "query");
