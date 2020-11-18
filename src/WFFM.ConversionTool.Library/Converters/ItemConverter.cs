@@ -181,6 +181,7 @@ namespace WFFM.ConversionTool.Library.Converters
 									List<SCItem> convertedItems = converter?.ConvertValueElementToItems(filteredConvertedField,
 										XmlHelper.GetXmlElementValue(filteredConvertedField.Value, valueXmlElementMapping.sourceElementName),
 										listItemMetadataTemplate, lastDescendantItem ?? destItem);
+
 									if (convertedItems != null && convertedItems.Any())
 									{
 										destItems.AddRange(convertedItems);
@@ -246,6 +247,9 @@ namespace WFFM.ConversionTool.Library.Converters
 			destItem.Fields = destFields;
 			destItems.Add(destItem);
 
+			// Merge multi-language List items with same value
+			destItems = MergeListItems(destItems);
+
 			// Reporting
 			var unmappedSourceFields = sourceFields?.Where(f => (_itemMetadataTemplate.fields.existingFields == null || !_itemMetadataTemplate.fields.existingFields.Select(mf => mf.fieldId).Contains(f.FieldId))
 															   && (_itemMetadataTemplate.fields.convertedFields == null || !_itemMetadataTemplate.fields.convertedFields.Select(mf => mf.sourceFieldId).Contains(f.FieldId)));
@@ -256,6 +260,47 @@ namespace WFFM.ConversionTool.Library.Converters
 			}
 
 			return destItems;
+		}
+
+		private List<SCItem> MergeListItems(List<SCItem> convertedListItems)
+		{
+			List<SCItem> mergedListItems = new List<SCItem>();
+			foreach (var convertedListItem in convertedListItems)
+			{
+				if (convertedListItem.TemplateID == new Guid("{B3BDFE59-6667-4432-B261-05D0E3F7FDF6}"))
+				{
+					var existingListItem = mergedListItems.FirstOrDefault(i =>
+						string.Equals(
+							i.Fields.First(f => f.FieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}"))
+								.Value,
+							convertedListItem.Fields.First(f =>
+									f.FieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}"))
+								.Value, StringComparison.InvariantCultureIgnoreCase));
+
+					if (existingListItem != null)
+					{
+						foreach (var field in convertedListItem.Fields)
+						{
+							convertedListItem.Fields.ForEach(f => f.ItemId = existingListItem.ID);
+						}
+						
+						mergedListItems.FirstOrDefault(i =>
+								string.Equals(
+									i.Fields.First(f => f.FieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}"))
+										.Value,
+									convertedListItem.Fields.First(f =>
+											f.FieldId == new Guid("{3A07C171-9BCA-464D-8670-C5703C6D3F11}"))
+										.Value, StringComparison.InvariantCultureIgnoreCase))?.Fields
+							.AddRange(convertedListItem.Fields);
+						
+						continue;
+					}
+				}
+				
+				mergedListItems.Add(convertedListItem);
+				
+			}
+			return mergedListItems;
 		}
 	}
 }
