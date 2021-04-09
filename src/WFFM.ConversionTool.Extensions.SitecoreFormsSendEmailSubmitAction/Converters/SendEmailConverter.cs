@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Text.RegularExpressions;
 using WFFM.ConversionTool.Library.Converters;
 using WFFM.ConversionTool.Library.Helpers;
@@ -29,9 +30,18 @@ namespace WFFM.ConversionTool.Extensions.SitecoreFormsSendEmailSubmitAction.Conv
 			var subject = ConvertFieldTokens(XmlHelper.GetXmlElementValue(sourceValue, "subject"));
 			var mail = ConvertFieldTokens(XmlHelper.GetXmlElementValue(sourceValue, "mail"));
 
-			var formValue = !string.IsNullOrEmpty(from) ? from : localfrom;
+			var fromValue = !string.IsNullOrEmpty(from) ? from : localfrom;
 
-			return $"{{\"from\":\"{formValue}\",\"to\":\"{to}\",\"cc\":\"{cc}\",\"bcc\":\"{bcc}\",\"subject\":\"{subject}\",\"message\":\"{mail}\",\"isHtml\":{isbodyhtml},\"customSmtpConfig\":\"<Host>{host}</Host>\"}}";
+			return JsonConvert.SerializeObject(new { 
+				from = fromValue,
+				to = to,
+				cc = cc,
+				bcc = bcc,
+				subject = subject,
+				message = mail,
+				isHtml = isbodyhtml,
+				customSmtpConfig = $"<Host>{host}</Host>"
+			});
 		}
 
 		private string ConvertFieldTokens(string fieldText)
