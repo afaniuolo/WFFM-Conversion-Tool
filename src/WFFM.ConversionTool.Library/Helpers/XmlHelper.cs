@@ -29,6 +29,9 @@ namespace WFFM.ConversionTool.Library.Helpers
 				Console.WriteLine("XmlHelper - GetXmlElementNames - Failed to parse Xml value - Value = " + fieldValue);
 				Console.WriteLine(e);
 				Console.WriteLine();
+				Console.WriteLine("See logs for more details in the logs folder.");
+				Console.WriteLine();
+				throw;
 			}
 
 			return elementNames;
