@@ -8,6 +8,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Reporting;
@@ -27,8 +28,9 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IItemFactory _itemFactory;
 		private IDestMasterRepository _destMasterRepository;
 		private IReporter _conversionReporter;
+		private ILogger _logger;
 
-		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository, IReporter conversionReporter)
+		public ItemConverter(IFieldFactory fieldFactory, AppSettings appSettings, IMetadataProvider metadataProvider, IItemFactory itemFactory, IDestMasterRepository destMasterRepository, IReporter conversionReporter, ILogger logger)
 		{
 			_fieldFactory = fieldFactory;
 			_appSettings = appSettings;
@@ -36,6 +38,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			_itemFactory = itemFactory;
 			_destMasterRepository = destMasterRepository;
 			_conversionReporter = conversionReporter;
+			_logger = logger;
 		}
 
 		public List<SCItem> Convert(SCItem scItem, Guid destParentId)
@@ -144,7 +147,16 @@ namespace WFFM.ConversionTool.Library.Converters
 						// Process fields that have multiple dest fields
 						if (convertedField.destFields != null && convertedField.destFields.Any())
 						{
-							var valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
+
+							var valueElements = new List<string>();
+							try
+							{
+								valueElements = XmlHelper.GetXmlElementNames(filteredConvertedField.Value);
+							}
+							catch (Exception ex)
+							{
+								_logger.Log(new LogEntry(LoggingEventType.Error, string.Format("ItemConverter - Failed to parse Xml value for form field item. ItemID = {0} - FieldID = {1} - FieldValue_Decoded = {2}", itemId, filteredConvertedField.Id, filteredConvertedField.Value), ex));
+							}
 
 							var filteredValueElementsToMany = convertedField.destFields.Where(f =>
 								valueElements.Contains(f.sourceElementName.ToLower(), StringComparer.InvariantCultureIgnoreCase) && (f.destFieldId == null || f.destFieldId == Guid.Empty));
