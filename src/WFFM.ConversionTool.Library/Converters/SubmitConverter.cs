@@ -28,8 +28,10 @@ namespace WFFM.ConversionTool.Library.Converters
 		private IFieldProvider _fieldProvider;
 		private AppSettings _appSettings;
 		private IReporter _analysisReporter;
+		private ILogger _logger;
 		
-		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, IFieldProvider fieldProvider, AppSettings appSettings, IReporter analysisReporter)
+		public SubmitConverter(IMetadataProvider metadataProvider, IDestMasterRepository destMasterRepository, IItemConverter itemConverter, IItemFactory itemFactory, 
+			IFieldProvider fieldProvider, AppSettings appSettings, IReporter analysisReporter, ILogger logger)
 			: base(destMasterRepository, itemConverter, itemFactory, appSettings)
 		{
 			_destMasterRepository = destMasterRepository;
@@ -37,6 +39,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			_fieldProvider = fieldProvider;
 			_appSettings = appSettings;
 			_analysisReporter = analysisReporter;
+			_logger = logger;
 		}
 
 		public void Convert(SCItem form, SCItem pageItem)
@@ -262,8 +265,19 @@ namespace WFFM.ConversionTool.Library.Converters
 								var submitActionValues = new Dictionary<Guid, string>();
 								submitActionValues.Add(new Guid(SubmitActionConstants.SubmitActionFieldId),
 									submitAction.destSubmitActionFieldValue);
-								submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
-									converter.ConvertValue(HttpUtility.HtmlDecode((saveActionItem.Parameters.Replace("&amp;","&")))));
+								try
+								{
+									submitActionValues.Add(new Guid(SubmitActionConstants.ParametersFieldId),
+										converter.ConvertValue(
+											HttpUtility.HtmlDecode((saveActionItem.Parameters.Replace("&amp;", "&")))));
+								}
+								catch (Exception ex)
+								{
+									_logger.Log(new LogEntry(LoggingEventType.Error, 
+										string.Format("SubmitConverter - Failed to parse Xml value of Parameters field of Submit Action. FormID = {0} - FieldID = {1} - FieldValue_Decoded = {2}",
+											form.ID, SubmitActionConstants.ParametersFieldId, saveActionItem.Parameters), ex));
+								}
+
 								ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
 							}
 							else

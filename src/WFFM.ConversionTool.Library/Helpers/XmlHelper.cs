@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using WFFM.ConversionTool.Library.Logging;
 
 namespace WFFM.ConversionTool.Library.Helpers
 {
@@ -37,7 +38,7 @@ namespace WFFM.ConversionTool.Library.Helpers
 			return elementNames;
 		}
 
-		public static string GetXmlElementValue(string fieldValue, string elementName)
+		public static string GetXmlElementValue(string fieldValue, string elementName, bool throwOnError = false)
 		{
 			if (!string.IsNullOrEmpty(fieldValue) && !string.IsNullOrEmpty(elementName))
 			{
@@ -61,6 +62,12 @@ namespace WFFM.ConversionTool.Library.Helpers
 					Console.WriteLine("XmlHelper - GetXmlElementValue - Failed to parse Xml value - Value = " + fieldValue);
 					Console.WriteLine(e);
 					Console.WriteLine();
+					if (throwOnError)
+					{
+						Console.WriteLine("See logs for more details in the logs folder.");
+						Console.WriteLine();
+						throw;
+					}
 				}			
 			}
 			return string.Empty;
