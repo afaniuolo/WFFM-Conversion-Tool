@@ -274,7 +274,7 @@ namespace WFFM.ConversionTool.Library.Converters
 								catch (Exception ex)
 								{
 									_logger.Log(new LogEntry(LoggingEventType.Error, 
-										string.Format("SubmitConverter - Failed to parse Xml value of Parameters field of Submit Action. FormID = {0} - FieldID = {1} - FieldValue_Decoded = {2}",
+										string.Format("SubmitConverter - Failed to parse Xml value of Parameters field of Submit Action. FormID = {0} - FieldID = {1} - FieldValue = {2}",
 											form.ID, formSaveActionField.Id, saveActionItem.Parameters), ex));
 								}
 
