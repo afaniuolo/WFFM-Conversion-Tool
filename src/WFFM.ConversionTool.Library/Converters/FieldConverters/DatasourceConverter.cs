@@ -7,6 +7,7 @@ using System.Web;
 using System.Xml;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
+using WFFM.ConversionTool.Library.Logging;
 using WFFM.ConversionTool.Library.Models.Metadata;
 using WFFM.ConversionTool.Library.Models.Sitecore;
 using WFFM.ConversionTool.Library.Reporting;
@@ -17,11 +18,13 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 	{
 		private IItemFactory _itemFactory;
 		private IReporter _analysisReporter;
+		private ILogger _logger;
 
-		public DatasourceConverter(IItemFactory itemFactory, IReporter analysisReporter)
+		public DatasourceConverter(IItemFactory itemFactory, IReporter analysisReporter, ILogger logger)
 		{
 			_itemFactory = itemFactory;
 			_analysisReporter = analysisReporter;
+			_logger = logger;
 		}
 
 		public override List<SCItem> ConvertValueElementToItems(SCField scField, string elementValue, MetadataTemplate metadataTemplate, SCItem sourceItem)
@@ -30,7 +33,17 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 
 			var decodedElementValue = Uri.UnescapeDataString(elementValue).Replace("+", " ");
 
-			var queryElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "query");
+			XmlNodeList queryElements = null;
+			try
+			{
+				queryElements = XmlHelper.GetXmlElementNodeList(decodedElementValue, "query", true);
+			}
+			catch (Exception ex)
+			{
+				_logger.Log(new LogEntry(LoggingEventType.Error,
+					string.Format("ConvertValueElementToItems - Failed to parse Xml value. ItemID = {0} - FieldID = {1} - ElementName = {2} - ElementValue_Decoded = {3}",
+						scField.ItemId, scField.Id, "query", decodedElementValue), ex));
+			}
 			if (queryElements != null && queryElements.Count > 0)
 			{
 				foreach (XmlNode queryElement in queryElements)
@@ -88,7 +101,18 @@ namespace WFFM.ConversionTool.Library.Converters.FieldConverters
 
 			var decodedElementValue = Uri.UnescapeDataString(elementValue).Replace("+"," ");
 
-			var queryElement = XmlHelper.GetXmlElementNode(decodedElementValue, "query");
+			XmlNode queryElement = null;
+			try
+			{
+				queryElement = XmlHelper.GetXmlElementNode(decodedElementValue, "query", true);
+			}
+			catch (Exception ex)
+			{
+				_logger.Log(new LogEntry(LoggingEventType.Error,
+					string.Format("ConvertValueElementToFields - Failed to parse Xml value. ItemID = {0} - FieldID = {1} - ElementName = {2} - ElementValue_Decoded = {3}",
+						scField.ItemId, scField.Id, "query", decodedElementValue), ex));
+			}
+			 
 			if (queryElement != null)
 			{
 				if (queryElement.Attributes != null && queryElement.Attributes["t"] != null)
