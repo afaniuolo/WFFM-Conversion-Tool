@@ -5,12 +5,21 @@ The tool provides the ability to analyze the source items in the source Sitecore
 
 The tool offers the users the choice to migrate saved WFFM forms data from a SQL database or from a MongoDB database source to the destination Sitecore Experience Forms SQL database.
 
-**NEW** - Starting from release 1.3.0, the tool migrates WFFM File Upload form field files (stored in the Media Library) to the new `FileStorage` table in the Experience Forms SQL database (introduced with Sitecore 9.3 Initial Release version).
+Starting from release 1.3.0, the tool migrates WFFM File Upload form field files (stored in the Media Library) to the new `FileStorage` table in the Experience Forms SQL database (introduced with Sitecore 9.3 Initial Release version).
+
+**NEW** - Starting from release 1.4.0, the tool migrates WFFM Send Email save actions to the new out-of-the-box Sitecore Forms Send Email submit action (introduced with Sitecore 10.1 version).
 
 ## Sitecore Compatibility
-The tool has been designed to support the migration of sitecore items from any version of Sitecore to Sitecore 9.1+. If migrating to Sitecore 9.3+, use the latest release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/latest).
-If migrating to a version of Sitecore prior to 9.3, use the 1.2.x release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.0).
-The tool has been tested migrating WFFM forms items and data starting from Sitecore version 6.5.
+The tool has been designed to support the migration of sitecore items from any version of Sitecore to Sitecore 9.1 or later version. The tool has been tested migrating WFFM forms items and data starting from Sitecore version 6.5.
+
+The following compatibility table lists the correct version of the tool that should be used based on the version of the destination Sitecore instance:
+
+| Destination Sitecore Version | WFFM Conversion Tool Version |  |
+|:------------------------------:|:------------------------------:|---------------|
+| Sitecore 9.1.x<br>Sitecore 9.2 | v1.2.2  | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.2) |
+| Sitecore 9.3<br>Sitecore 10.0.x | v1.3.4 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.3.4) |
+| Sitecore 10.1+ | v1.4.0 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.4.0) |
+
 
 ## Technical Requirements
 ### Software:
@@ -20,13 +29,12 @@ The tool has been tested migrating WFFM forms items and data starting from Sitec
 - No particular hardware requirement
 
 ## How to Install the Tool
-The tool is distributed in a ZIP archive. If migrating to Sitecore 9.3+, use the latest release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/latest).
-If migrating to a version of Sitecore prior to 9.3, use the 1.2.x release of the tool that can be downloaded [here](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.0).
+The tool is distributed in a ZIP archive. Refer to the tool compatibility table above to download the correct version of the tool based on the destination Sitecore version.
 
 The tool can be installed in any server or local machine that has access to the databases involved in the conversion and migration process. The tool doesn't require the source and destination Sitecore instances to run in IIS while the conversion process occurs, because the tool connects directly to the Sitecore databases, without using Sitecore APIs or other Sitecore modules.
 
 ### Installation Steps
-1) Download the correct release of the tool. If migrating to Sitecore 9.3+, download the [latest release](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/latest) of the tool. If migrating to a version of Sitecore prior to 9.3, download the [1.2.x release](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.0) of the tool.
+1) Download the correct release of the tool. Refer to the tool compatibility table above to download the correct version of the tool based on the destination Sitecore version.
 2) Extract the ZIP archive in a folder on the machine where the tool will be executed.
 3) Assign read-write permissions to the folder and its subitems for the user that will execute the tool.
 
@@ -148,8 +156,8 @@ The *extension* plugin for the [Sitecore Forms Extensions](https://github.com/ba
 
 NOTE: The data of the File Upload field is converted and migrated using the storage format of the File System storage provider (`FileSystemFileUploadStorageProvider` class).
 
-### Sitecore Forms Send Email Submit Action
-The *extension* plugin for the [Sitecore Forms Send Email Submit Action](https://marketplace.sitecore.net/Modules/S/Sitecore_Forms_Send_Email_Submit_Action.aspx) module developed by Byron Calisto adds the support for the conversion of the *Send Email* submit action.
+### Sitecore Forms Send Email Submit Action (only for Sitecore 10.0 or prior - removed in latest version for SC 10.1+)
+The *extension* plugin for the [Sitecore Forms Send Email Submit Action](https://marketplace.sitecore.net/Modules/S/Sitecore_Forms_Send_Email_Submit_Action.aspx) module developed by Byron Calisto adds the support for the conversion of the *Send Email* submit action for destination Sitecore versions prior to Sitecore 10.1.
 
 ## How to Expand the WFFM Conversion Tool to Convert Custom Entities
 Some of the items or fields that cannot be mapped could be custom items created to expand the out-of-the-box functionality of the Sitecore WFFM module. For example, custom entities could be custom form field types or custom save actions. To help developers to automate the conversion and migration of custom entities, the tool allows to expand its default mapping capabilities, as described in the next three sections.
