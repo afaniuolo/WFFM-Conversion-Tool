@@ -26,10 +26,7 @@ namespace WFFM.ConversionTool.Library.Providers
 			foreach (string filePath in _metadataFiles)
 			{
 				var metadataTemplate = GetItemMetadataByFilePath(filePath);
-				if (destMasterRepository.ItemExists(metadataTemplate.destTemplateId))
-				{
-					_metadataTemplates.Add(metadataTemplate);
-				}
+				_metadataTemplates.Add(metadataTemplate);
 			}
 		}
 
