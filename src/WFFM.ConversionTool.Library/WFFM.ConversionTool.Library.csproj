@@ -107,6 +107,7 @@
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
+    <Compile Include="Converters\SubmitActionConverters\SendEmailConverter.cs" />
     <Compile Include="Converters\SubmitConverter.cs" />
     <Compile Include="Database\ConnectionTester.cs" />
     <Compile Include="Database\Forms\FieldData.cs" />
@@ -172,6 +173,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
 </Project>
