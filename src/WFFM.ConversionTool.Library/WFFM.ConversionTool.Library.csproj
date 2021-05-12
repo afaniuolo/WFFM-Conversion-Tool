@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Constants\BaseTemplateConstants.cs" />
     <Compile Include="Constants\ButtonConstants.cs" />
+    <Compile Include="Constants\EmailAddressConstants.cs" />
     <Compile Include="Constants\FormConstants.cs" />
     <Compile Include="Constants\MediaItemConstants.cs" />
     <Compile Include="Constants\SectionConstants.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\IFieldConverter.cs" />
     <Compile Include="Converters\IItemConverter.cs" />
+    <Compile Include="Converters\SubmitActionConverters\SendEmailConverter.cs" />
     <Compile Include="Converters\SubmitConverter.cs" />
     <Compile Include="Database\ConnectionTester.cs" />
     <Compile Include="Database\Forms\FieldData.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Migrators\DataMigrator.cs" />
     <Compile Include="Migrators\IDataMigrator.cs" />
     <Compile Include="Models\Form\SaveAction.cs" />
+    <Compile Include="Models\Form\SendEmailAction.cs" />
     <Compile Include="Models\Reporting\ReportingRecord.cs" />
     <Compile Include="Providers\FieldProvider.cs" />
     <Compile Include="Providers\FormsData\IDataProvider.cs" />
@@ -172,6 +175,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions />
 </Project>

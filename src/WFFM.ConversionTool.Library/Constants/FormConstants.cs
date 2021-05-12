@@ -34,5 +34,6 @@ namespace WFFM.ConversionTool.Library.Constants
 		public const string FormSubmitModeField_ShowMessageValue = "{3B8369A0-CC1A-4E9A-A3DB-7B086379C53B}";
 		public const string FormSaveAction_RegisterCampaignValue = "{AD26FE98-EED1-45C8-95AE-F2714EE33C62}";
 		public const string FormSaveAction_SaveToDatabaseValue = "{F03608CC-559B-451E-BC5B-6A7ADFF32C94}";
+		public const string FormSaveAction_SendEmailValue = "{D4502A11-9417-4479-9F2A-485F45D2E2D0}";
 	}
 }

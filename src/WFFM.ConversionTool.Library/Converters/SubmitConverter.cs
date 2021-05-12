@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
+using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Constants;
 using WFFM.ConversionTool.Library.Factories;
 using WFFM.ConversionTool.Library.Helpers;
@@ -278,13 +279,55 @@ namespace WFFM.ConversionTool.Library.Converters
 											form.ID, formSaveActionField.Id, saveActionItem.Parameters), ex));
 								}
 
-								ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
+								var destSubmitActionItemId = ConvertFieldsToSubmitActionItem(submitAction.destSubmitActionItemName, submitActionValues, buttonItem);
+
+								// Only if Save Action is Send Email
+								if (submitAction.sourceSaveActionId == Guid.Parse(FormConstants.FormSaveAction_SendEmailValue))
+								{
+									CreateAddressBookSender(destSubmitActionItemId);
+								}
 							}
 							else
 							{
 								_analysisReporter.AddUnmappedSaveAction(formSaveActionField, form.ID, Guid.Parse(saveActionItem.Id));
 							}
 						}
+					}
+				}
+			}
+		}
+
+		private void CreateAddressBookSender(Guid destSubmitActionItemId)
+		{
+			var destItem = _destMasterRepository.GetSitecoreItem(destSubmitActionItemId);
+			if (destItem != null &&
+			    destItem.Fields.FirstOrDefault(f => f.FieldId == Guid.Parse(SubmitActionConstants.SubmitActionFieldId))?.Value ==
+			    SubmitActionConstants.SubmitActionField_SendEmailActionValue)
+			{
+				var sendEmail = JsonConvert.DeserializeObject<SendEmailAction>(destItem.Fields
+					.First(f => f.FieldId == new Guid(SubmitActionConstants.ParametersFieldId)).Value);
+
+				var emailFromValue = sendEmail.from;
+
+				if (!string.IsNullOrEmpty(emailFromValue) && emailFromValue.IndexOf('@') > 0)
+				{
+					var emailAddressMetadata = _metadataProvider.GetItemMetadataByTemplateName("Email Address");
+					var senderItems = _destMasterRepository.GetSitecoreDescendantsItems(
+						emailAddressMetadata.destTemplateId,
+						new Guid(EmailAddressConstants.EmailAddressSendersFolderId));
+
+					
+					if (!senderItems.Any(item => item.Fields.FirstOrDefault(f => f.FieldId == Guid.Parse(EmailAddressConstants.EmailAddressValueFieldId)) != null 
+					                             && string.Equals(item.Fields.First(f => f.FieldId == Guid.Parse(EmailAddressConstants.EmailAddressValueFieldId)).Value, emailFromValue, StringComparison.InvariantCultureIgnoreCase)))
+					{
+						var addressSenderItemName = emailFromValue.Substring(0, emailFromValue.IndexOf('@'));
+
+						// Set Email Address item fields
+						var addressSenderItemFieldValues = new Dictionary<Guid, string>();
+						addressSenderItemFieldValues.Add(new Guid(EmailAddressConstants.EmailAddressValueFieldId),
+							emailFromValue); // Value field
+
+						CreateEmailAddressItem("Email Address", addressSenderItemName, addressSenderItemFieldValues);
 					}
 				}
 			}
@@ -321,7 +364,7 @@ namespace WFFM.ConversionTool.Library.Converters
 			return WriteNewItem(_metadataProvider.GetItemMetadataByTemplateName("Button").destTemplateId, parentItem, "Submit", buttonMetadata);
 		}
 
-		private void CreateItem(string metadataTemplateName, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
+		private Guid CreateSubmitActionItem(string metadataTemplateName, string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
 			var metadataTemplate = _metadataProvider.GetItemMetadataByTemplateName(metadataTemplateName);
 
@@ -339,7 +382,37 @@ namespace WFFM.ConversionTool.Library.Converters
 				metadataTemplate.fields.newFields.First(field => field.destFieldId == destFieldValue.Key).value = destFieldValue.Value;
 			}
 			// Create item
-			WriteNewItem(metadataTemplate.destTemplateId, submitActionsFolder, destItemName, metadataTemplate);
+			return WriteNewItem(metadataTemplate.destTemplateId, submitActionsFolder, destItemName, metadataTemplate);
+		}
+
+		private Guid CreateEmailAddressItem(string metadataTemplateName, string destItemName,
+			Dictionary<Guid, string> destFieldValues)
+		{
+			var metadataTemplate = _metadataProvider.GetItemMetadataByTemplateName(metadataTemplateName);
+
+			// Create Email Address Senders Folder (not in SQL anymore) with dummy field
+			var addressSendersFolder = new SCItem()
+			{
+				ID = Guid.Parse(EmailAddressConstants.EmailAddressSendersFolderId),
+				Fields = new List<SCField>()
+				{
+					new SCField()
+					{
+						Language = "en",
+						Version = 1
+					}
+				}
+			};
+
+			
+
+			foreach (var destFieldValue in destFieldValues)
+			{
+				metadataTemplate.fields.newFields.First(field => field.destFieldId == destFieldValue.Key).value = destFieldValue.Value;
+			}
+
+			// Create item
+			return WriteNewItem(metadataTemplate.destTemplateId, addressSendersFolder, destItemName, metadataTemplate);
 		}
 
 		private bool ConvertSourceFieldToSubmitActionItem(SCItem form, Guid sourceFieldId,
@@ -353,16 +426,16 @@ namespace WFFM.ConversionTool.Library.Converters
 
 			if (sourceFieldToConvert == null || sourceFieldToConvert.Value == sourceFieldValue)
 			{
-				CreateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
+				CreateSubmitActionItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
 				return true;
 			}
 
 			return false;
 		}
 
-		private void ConvertFieldsToSubmitActionItem(string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
+		private Guid ConvertFieldsToSubmitActionItem(string destItemName, Dictionary<Guid, string> destFieldValues, SCItem buttonItem)
 		{
-			CreateItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
+			return CreateSubmitActionItem("SubmitActionDefinition", destItemName, destFieldValues, buttonItem);
 		}
 	}
 }
