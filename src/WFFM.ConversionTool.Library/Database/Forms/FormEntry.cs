@@ -19,6 +19,10 @@ namespace WFFM.ConversionTool.Library.Database.Forms
 
         public Guid FormDefinitionId { get; set; }
 
+        public Guid? ContactId { get; set; }
+
+        public bool IsRedacted { get; set; }
+
         [Column(TypeName = "datetime2")]
         public DateTime Created { get; set; }
 
