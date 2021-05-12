@@ -68,6 +68,9 @@
     <None Include="Metadata\BaseTemplate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Metadata\EmailAddress.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Metadata\ExtendedListItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

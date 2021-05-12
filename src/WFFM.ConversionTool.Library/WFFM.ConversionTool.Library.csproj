@@ -87,6 +87,7 @@
   <ItemGroup>
     <Compile Include="Constants\BaseTemplateConstants.cs" />
     <Compile Include="Constants\ButtonConstants.cs" />
+    <Compile Include="Constants\EmailAddressConstants.cs" />
     <Compile Include="Constants\FormConstants.cs" />
     <Compile Include="Constants\MediaItemConstants.cs" />
     <Compile Include="Constants\SectionConstants.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Migrators\DataMigrator.cs" />
     <Compile Include="Migrators\IDataMigrator.cs" />
     <Compile Include="Models\Form\SaveAction.cs" />
+    <Compile Include="Models\Form\SendEmailAction.cs" />
     <Compile Include="Models\Reporting\ReportingRecord.cs" />
     <Compile Include="Providers\FieldProvider.cs" />
     <Compile Include="Providers\FormsData\IDataProvider.cs" />

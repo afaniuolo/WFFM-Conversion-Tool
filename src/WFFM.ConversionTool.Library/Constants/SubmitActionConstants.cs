@@ -17,5 +17,6 @@ namespace WFFM.ConversionTool.Library.Constants
 		public const string SubmitActionField_RedirectToPageActionValue = "{3F3E2093-9DEA-4199-86CA-44FC69EF624D}";
 		public const string SubmitActionField_TriggerGoalActionValue = "{106587B9-1B9C-4DDB-AE96-BAC8416C21B5}";
 		public const string SubmitActionField_TriggerCampaignActivityActionValue = "{4A937D74-7986-4E19-9D8E-EC14675B17F0}";
+		public const string SubmitActionField_SendEmailActionValue = "{A082C3F9-D90F-4825-8A38-8D2BE7653FC0}";
 	}
 }

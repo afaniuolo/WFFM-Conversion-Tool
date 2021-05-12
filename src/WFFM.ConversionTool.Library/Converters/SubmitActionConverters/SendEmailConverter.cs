@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WFFM.ConversionTool.Library.Helpers;
 using WFFM.ConversionTool.Library.Logging;
+using WFFM.ConversionTool.Library.Models.Form;
 using WFFM.ConversionTool.Library.Repositories;
 
 namespace WFFM.ConversionTool.Library.Converters.SubmitActionConverters
@@ -39,7 +40,7 @@ namespace WFFM.ConversionTool.Library.Converters.SubmitActionConverters
 			var fromValue = !string.IsNullOrEmpty(from) ? from : localfrom;
 
 			return JsonConvert.SerializeObject(new
-			{
+				SendEmailAction() {
 				from = fromValue,
 				to = to,
 				cc = cc,
