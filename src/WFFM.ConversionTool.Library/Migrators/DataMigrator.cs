@@ -104,6 +104,8 @@ namespace WFFM.ConversionTool.Library.Migrators
 					Id = formDataRecord.Id,
 					FormDefinitionId = formDataRecord.FormItemId,
 					Created = formDataRecord.TimeStamp,
+					ContactId = null,
+					IsRedacted = false,
 					FieldDatas = fieldDataFormsRecords
 				};
 
