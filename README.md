@@ -19,7 +19,8 @@ The following compatibility table lists the correct version of the tool that sho
 | Sitecore 9.1.x<br>Sitecore 9.2 | v1.2.2  | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.2.2) |
 | Sitecore 9.3 | v1.3.4 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.3.4) |
 | Sitecore 10.0.x | v1.4.0 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.4.0) |
-| Sitecore 10.1+ | v1.5.0 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.5.0) |
+| Sitecore 10.1 | v1.5.0 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.5.0) |
+| Sitecore 10.2+ | v1.6.0 | [download](https://github.com/afaniuolo/WFFM-Conversion-Tool/releases/tag/v1.6.0) |
 
 
 ## Technical Requirements
